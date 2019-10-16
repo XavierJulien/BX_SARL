@@ -1,82 +1,94 @@
 package components;
 
-import data.EolienneD;
+import java.util.concurrent.TimeUnit;
+
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.interfaces.DataOfferedI;
-import fr.sorbonne_u.components.interfaces.DataOfferedI.DataI;
 import interfaces.ControleurI;
 import launcher.CVM;
-import ports.ControleurDataInboundPort;
-import ports.ControleurDataOutboundPort;
-import ports.EolienneDataInboundPort;
-import ports.EolienneDataOutboundPort;
+import ports.ControleurInboundPort;
+import ports.ControleurOutboundPort;
 
 public class Controleur extends AbstractComponent implements ControleurI {
 
 	
 	
-	/** URI of the component (controleur).									*/
+	/** URI of the component (controleur).*/
 	protected final String				uri ;
-	/** The data inbound port URI for the controleur.		*/
-	protected final String				controleurDataInboundPortURI ;	
-	/** The data outbound port URI for the eolienne.		*/
-	protected final String				controleurDataOutboundPortURI ;
-	/** Data outbound port for the component (controleur).						*/
-	protected ControleurDataOutboundPort	controleurDataOutboundPort ;
-	/** Data inbound port for the component (controleur).						*/
-	protected ControleurDataInboundPort	controleurDataInboundPort ;
-
-	/** 	The data, used in the pull parts.								*/
-	
-	/** 	The data, used in the pull parts.								*/
-	protected EolienneD					eolienneD ;
+	/** The  inbound port URI for the controleur.*/
+	protected final String				controleurInboundPortURI ;	
+	/** The  outbound port URI for the controleur.*/
+	protected final String				controleurOutboundPortURI ;
+	/**  outbound port for the component (controleur).*/
+	protected ControleurOutboundPort	controleurOutboundPort ;
+	/**  inbound port for the component (controleur).*/
+	protected ControleurInboundPort	controleurInboundPort ;
 
 	
-	
-	public Controleur(String uri,String eolienneDataOutboundPortURI,String eolienneDataInboundPortURI) throws Exception{
+	protected Controleur(String uri,String controleurOutboundPortURI,String controleurInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		//check arguments 
 		assert uri != null;
-		assert eolienneDataOutboundPortURI != null;
-		assert eolienneDataOutboundPortURI != null;
+		assert controleurOutboundPortURI != null;
+		assert controleurOutboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
-		this.controleurDataInboundPortURI = eolienneDataInboundPortURI;
-		this.controleurDataOutboundPortURI = eolienneDataOutboundPortURI;
+		this.controleurInboundPortURI = controleurInboundPortURI;
+		this.controleurOutboundPortURI = controleurOutboundPortURI;
 		
-		// The data interfaces and ports.
+		// The  interfaces and ports.
 		//ici on n'est producteur du coup on garde que les OfferedI
-		this.addOfferedInterface(DataOfferedI.PullI.class) ;
-		this.addRequiredInterface(DataOfferedI.PushI.class) ;
+		this.addOfferedInterface(ControleurI.class) ;
+		this.addRequiredInterface(ControleurI.class) ;
 		
 		// init des ports avec les uri et de la donnée qui circule
-		this.eolienneD = new EolienneD(0);
-		this.controleurDataInboundPort = new ControleurDataInboundPort(this.controleurDataInboundPortURI, this) ;
-		this.controleurDataOutboundPort = new ControleurDataOutboundPort(this.controleurDataOutboundPortURI, this) ;
+		this.controleurInboundPort = new ControleurInboundPort(this.controleurInboundPortURI, this) ;
+		this.controleurOutboundPort = new ControleurOutboundPort(this.controleurOutboundPortURI, this) ;
 		
 		//publish des ports (voir avec le prof ce que ça fait)
-		this.controleurDataOutboundPort.publishPort() ;
-		this.controleurDataInboundPort.publishPort() ;
+		this.controleurOutboundPort.publishPort() ;
+		this.controleurInboundPort.publishPort() ;
 		
 		this.tracer.setTitle(uri) ;
-		if (uri.equals(CVM.EOLIENNE_COMPONENT_URI)) {
+		if (uri.equals(CVM.CONTROLEUR_COMPONENT_URI)) {
 			this.tracer.setRelativePosition(1, 0) ;
 		} else {
 			this.tracer.setRelativePosition(1, 1) ;
 		}
 	}
 
-	public DataI getEolienneD() {
-		return eolienneD;
+	@Override
+	public void startEolienne() {
+		this.logMessage("Controleur "+this.uri+" : tell eolienne to start.") ;
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							((Controleur)this.getTaskOwner()).startEolienne();
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS) ;
 	}
 
-
-	public void shutdownEolienne(EolienneD d) {
-		
-		
+	@Override
+	public void stopEolienne() {
+		this.logMessage("Controleur "+this.uri+" : tell eolienne to stop.") ;
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							((Controleur)this.getTaskOwner()).stopEolienne();
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS) ;
 	}
-	
-	
 }

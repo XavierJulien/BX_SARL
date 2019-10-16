@@ -2,9 +2,9 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/users/Etu4/3521024/Téléchargements/BCM-17092019.jar/BCM-17092019.jar"/>
-	<classpathentry kind="lib" path="/users/nfs/Etu4/3521024/Téléchargements/commons-math3-3.5.jar/commons-math3-3.5.jar"/>
-	<classpathentry kind="lib" path="/users/nfs/Etu4/3521024/Téléchargements/javassist.jar/javassist.jar"/>
-	<classpathentry kind="lib" path="/users/nfs/Etu4/3521024/Téléchargements/jing.jar/jing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Julien/git/BX_SARL/commons-math3-3.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Julien/git/BX_SARL/javassist.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Julien/git/BX_SARL/jing.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Julien/git/BX_SARL/BCM-17092019.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,6 +1,12 @@
 package launcher;
 
 
+import components.Controleur;
+import components.Eolienne;
+import connectors.EolienneControleurConnector;
+import data.URI;
+import fr.sorbonne_u.components.AbstractComponent;
+
 //Copyright Jacques Malenfant, Sorbonne Universite.
 //
 //Jacques.Malenfant@lip6.fr
@@ -59,24 +65,170 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				CVM
-extends		AbstractCVM
-{
+public class CVM extends AbstractCVM {
 	/** URI of the provider component (convenience).						*/
 	public static final String	EOLIENNE_COMPONENT_URI = "my-URI-eolienne" ;
 	/** URI of the provider component (convenience).						*/
-	protected static final String	PROVIDER_COMPONENT_URI = "my-URI-provider" ;
+	public static final String	CONTROLEUR_COMPONENT_URI = "my-URI-controleur" ;
 	/** URI of the consumer component (convenience).						*/
 	protected static final String	CONSUMER_COMPONENT_URI = "my-URI-consumer" ;
 	/** URI of the provider outbound port (simplifies the connection).	*/
-	protected static final String	URIGetterOutboundPortURI = "oport" ;
+	protected static final String	URIControleurOutboundPortURI = "oport" ;
 	/** URI of the consumer inbound port (simplifies the connection).		*/
-	protected static final String	URIProviderInboundPortURI = "iport" ;
+	protected static final String	URIEolienneInboundPortURI = "iport" ;
 
-	public				CVM() throws Exception
-	{
+	protected CVM() throws Exception{
 		super() ;
 	}
 
+	/** Reference to the eolienne component to share between deploy
+	 *  and shutdown.													*/
+	protected String uriEolienneURI ;
+	/** Reference to the controleur component to share between deploy
+	 *  and shutdown.													*/
+	protected String uriControleurURI ;
+	
+	
+	/**
+	 * instantiate the components, publish their port and interconnect them.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	!this.deploymentDone()
+	 * post	this.deploymentDone()
+	 * </pre>
+	 * 
+	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
+	 */
+	@Override
+	public void	deploy() throws Exception
+	{
+		assert	!this.deploymentDone() ;
+
+		// --------------------------------------------------------------------
+		// Configuration phase
+		// --------------------------------------------------------------------
+
+		// debugging mode configuration; comment and uncomment the line to see
+		// the difference
+		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.PUBLIHSING) ;
+		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING) ;
+		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT) ;
+
+		// --------------------------------------------------------------------
+		// Creation phase
+		// --------------------------------------------------------------------
+
+		// create the eolienne component
+		this.uriEolienneURI =
+			AbstractComponent.createComponent(
+					Eolienne.class.getCanonicalName(),
+					new Object[]{EOLIENNE_COMPONENT_URI,
+								 URI.URIEolienneOutboundPortURI,
+								 URI.URIEolienneInboundPortURI}) ;
+		assert	this.isDeployedComponent(this.uriEolienneURI) ;
+		// make it trace its operations; comment and uncomment the line to see
+		// the difference
+		this.toggleTracing(this.uriEolienneURI) ;
+		this.toggleLogging(this.uriEolienneURI) ;
+
+		// create the consumer component
+		this.uriControleurURI =
+			AbstractComponent.createComponent(
+					Controleur.class.getCanonicalName(),
+					new Object[]{CONTROLEUR_COMPONENT_URI,
+							 	URI.URIControleurOutboundPortURI,
+							 	URI.URIControleurInboundPortURI}) ;
+		assert	this.isDeployedComponent(this.uriControleurURI) ;
+		// make it trace its operations; comment and uncomment the line to see
+		// the difference
+		this.toggleTracing(this.uriControleurURI) ;
+		this.toggleLogging(this.uriControleurURI) ;
+		
+		// --------------------------------------------------------------------
+		// Connection phase
+		// --------------------------------------------------------------------
+
+		// do the connection
+		this.doPortConnection(
+				this.uriEolienneURI,
+				URI.URIControleurOutboundPortURI,
+				URI.URIEolienneInboundPortURI,
+				EolienneControleurConnector.class.getCanonicalName()) ;
+		
+		this.doPortConnection(
+				this.uriEolienneURI,
+				URI.URIControleurOutboundPortURI,
+				URI.URIEolienneInboundPortURI,
+				EolienneControleurConnector.class.getCanonicalName()) ;
+		// Nota: the above use of the reference to the object representing
+		// the URI consumer component is allowed only in the deployment
+		// phase of the component virtual machine (to perform the static
+		// interconnection of components in a static architecture) and
+		// inside the concerned component (i.e., where the method
+		// doPortConnection can be called with the this destination
+		// (this.doPortConenction(...)). It must never be used in another
+		// component as the references to objects used to implement component
+		// features must not be shared among components.
+
+		// --------------------------------------------------------------------
+		// Deployment done
+		// --------------------------------------------------------------------
+
+		super.deploy();
+		assert	this.deploymentDone() ;
+	}
+
+	/**
+	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#finalise()
+	 */
+	@Override
+	public void	finalise() throws Exception
+	{
+		// Port disconnections can be done here for static architectures
+		// otherwise, they can be done in the finalise methods of components.
+		this.doPortDisconnection(
+				this.uriEolienneURI,
+				URI.URIEolienneOutboundPortURI) ;
+
+		super.finalise();
+	}
+
+	/**
+	 * disconnect the components and then call the base shutdown method.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true				// no more preconditions.
+	 * post	true				// no more postconditions.
+	 * </pre>
+	 * 
+	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#shutdown()
+	 */
+	@Override
+	public void	shutdown() throws Exception
+	{
+		assert	this.allFinalised() ;
+		// any disconnection not done yet can be performed here
+
+		super.shutdown();
+	}
+
+	public static void main(String[] args) {
+		try {
+			// Create an instance of the defined component virtual machine.
+			CVM a = new CVM() ;
+			// Execute the application.
+			a.startStandardLifeCycle(20000L) ;
+			// Give some time to see the traces (convenience).
+			Thread.sleep(5000L) ;
+			// Simplifies the termination (termination has yet to be treated
+			// properly in BCM).
+			System.exit(0) ;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
-//-----------------------------------------------------------------------------
