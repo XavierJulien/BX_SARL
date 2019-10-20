@@ -11,6 +11,7 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	private static final long serialVersionUID = 1L;
 
 	public ControleurInboundPort(String uri, ComponentI owner) throws Exception {
+		
 		super(uri, ControleurI.class, owner);
 	}
 	
@@ -36,6 +37,18 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 					@Override
 					public Void call() throws Exception {
 						((Controleur)this.getServiceOwner()).stopEolienne();
+						return null;
+					}
+				}) ;
+	}
+
+	@Override
+	public void getProd(double prod) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).getProd(prod);
 						return null;
 					}
 				}) ;

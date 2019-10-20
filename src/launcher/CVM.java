@@ -3,6 +3,7 @@ package launcher;
 
 import components.Controleur;
 import components.Eolienne;
+import connectors.ControleurEolienneConnector;
 import connectors.EolienneControleurConnector;
 import data.URI;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -42,6 +43,7 @@ import fr.sorbonne_u.components.AbstractComponent;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.ports.PortI;
 
 //-----------------------------------------------------------------------------
 /**
@@ -70,12 +72,14 @@ public class CVM extends AbstractCVM {
 	public static final String	EOLIENNE_COMPONENT_URI = "my-URI-eolienne" ;
 	/** URI of the provider component (convenience).						*/
 	public static final String	CONTROLEUR_COMPONENT_URI = "my-URI-controleur" ;
-	/** URI of the consumer component (convenience).						*/
-	protected static final String	CONSUMER_COMPONENT_URI = "my-URI-consumer" ;
 	/** URI of the provider outbound port (simplifies the connection).	*/
-	protected static final String	URIControleurOutboundPortURI = "oport" ;
+	protected static final String	URIEolienneOutboundPortURI = "oport" ;
 	/** URI of the consumer inbound port (simplifies the connection).		*/
-	protected static final String	URIEolienneInboundPortURI = "iport" ;
+	protected static final String	URIControleurInboundPortURI = "iport" ;
+	
+	protected static final String	URIEolienneInboundPortURI = "iport2" ;
+	/** URI of the consumer inbound port (simplifies the connection).		*/
+	protected static final String	URIControleurOutboundPortURI = "oport2" ;
 
 	protected CVM() throws Exception{
 		super() ;
@@ -125,8 +129,9 @@ public class CVM extends AbstractCVM {
 			AbstractComponent.createComponent(
 					Eolienne.class.getCanonicalName(),
 					new Object[]{EOLIENNE_COMPONENT_URI,
-								 URI.URIEolienneOutboundPortURI,
-								 URI.URIEolienneInboundPortURI}) ;
+							URIEolienneOutboundPortURI,
+							URIEolienneInboundPortURI}) ;
+		
 		assert	this.isDeployedComponent(this.uriEolienneURI) ;
 		// make it trace its operations; comment and uncomment the line to see
 		// the difference
@@ -138,9 +143,10 @@ public class CVM extends AbstractCVM {
 			AbstractComponent.createComponent(
 					Controleur.class.getCanonicalName(),
 					new Object[]{CONTROLEUR_COMPONENT_URI,
-							 	URI.URIControleurOutboundPortURI,
-							 	URI.URIControleurInboundPortURI}) ;
+							URIControleurOutboundPortURI,
+							URIControleurInboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriControleurURI) ;
+		
 		// make it trace its operations; comment and uncomment the line to see
 		// the difference
 		this.toggleTracing(this.uriControleurURI) ;
@@ -149,19 +155,21 @@ public class CVM extends AbstractCVM {
 		// --------------------------------------------------------------------
 		// Connection phase
 		// --------------------------------------------------------------------
-
+		
 		// do the connection
-		this.doPortConnection(
-				this.uriEolienneURI,
-				URI.URIControleurOutboundPortURI,
-				URI.URIEolienneInboundPortURI,
-				EolienneControleurConnector.class.getCanonicalName()) ;
+		
 		
 		this.doPortConnection(
 				this.uriEolienneURI,
-				URI.URIControleurOutboundPortURI,
-				URI.URIEolienneInboundPortURI,
+				URIEolienneOutboundPortURI,
+				URIControleurInboundPortURI,
 				EolienneControleurConnector.class.getCanonicalName()) ;
+		
+		this.doPortConnection(
+				this.uriControleurURI,
+				URIControleurOutboundPortURI,
+				URIEolienneInboundPortURI,
+				ControleurEolienneConnector.class.getCanonicalName()) ;
 		// Nota: the above use of the reference to the object representing
 		// the URI consumer component is allowed only in the deployment
 		// phase of the component virtual machine (to perform the static
@@ -191,6 +199,10 @@ public class CVM extends AbstractCVM {
 		this.doPortDisconnection(
 				this.uriEolienneURI,
 				URI.URIEolienneOutboundPortURI) ;
+
+		this.doPortDisconnection(
+				this.uriControleurURI,
+				URI.URIControleurOutboundPortURI) ;
 
 		super.finalise();
 	}

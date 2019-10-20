@@ -64,9 +64,9 @@ import interfaces.EolienneI;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				EolienneControleurConnector
+public class				ControleurEolienneConnector
 extends		AbstractConnector
-implements	EolienneI
+implements ControleurI
 {
 
 	/**
@@ -84,7 +84,7 @@ implements	EolienneI
 	 */
 	@Override
 	public void startEolienne() throws Exception {
-		((ControleurI)this.offering).startEolienne();
+		((EolienneI)this.offering).startEolienne();
 	}
 
 	/**
@@ -102,12 +102,12 @@ implements	EolienneI
 	 */
 	@Override
 	public void stopEolienne() throws Exception {
-		((ControleurI)this.offering).stopEolienne();
+		((EolienneI)this.offering).stopEolienne();
 	}
 
 	@Override
-	public void sendProduction(double prod) throws Exception {
-		((ControleurI)this.offering).getProd(prod);
+	public void getProd(double prod) throws Exception {
+		// TODO Auto-generated method stub
 		
 	}
 

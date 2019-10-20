@@ -42,4 +42,10 @@ public class EolienneInboundPort extends AbstractInboundPort implements Eolienne
 				}) ;
 	}
 
+	@Override
+	public void sendProduction(double prod) throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
