@@ -43,14 +43,14 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	}
 
 	@Override
-	public void getProd(double prod) throws Exception {
-		this.owner.handleRequestAsync(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).getProd(prod);
-						return null;
-					}
-				}) ;
+	public double getProd() throws Exception {
+		System.out.println("ERREUR");
+		return 0;
+	}
+
+	@Override
+	public double getVent() throws Exception {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

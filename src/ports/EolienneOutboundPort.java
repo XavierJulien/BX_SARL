@@ -34,8 +34,8 @@ public class EolienneOutboundPort extends AbstractOutboundPort implements Eolien
 	}
 
 	@Override
-	public void sendProduction(double prod) throws Exception {
-		((EolienneI)this.connector).sendProduction(prod);
+	public double sendProduction() throws Exception {
+		return 0;
 		
 	}
 	

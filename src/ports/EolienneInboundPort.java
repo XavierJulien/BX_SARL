@@ -43,8 +43,9 @@ public class EolienneInboundPort extends AbstractInboundPort implements Eolienne
 	}
 
 	@Override
-	public void sendProduction(double prod) throws Exception {
-		// TODO Auto-generated method stub
+	public double sendProduction() throws Exception {
+		return this.getOwner().handleRequestSync(
+				owner -> ((Eolienne)owner).sendProduction()) ;
 		
 	}
 

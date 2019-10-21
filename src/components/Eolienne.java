@@ -16,7 +16,7 @@ import ports.EolienneInboundPort;
 import ports.EolienneInboundPort;
 import ports.EolienneOutboundPort;
 
-public class Eolienne extends AbstractComponent implements EolienneI{
+public class Eolienne extends AbstractComponent /*implements EolienneI*/{
 
 	/** URI of the component (eolienne).*/
 	protected final String				uri ;
@@ -32,6 +32,7 @@ public class Eolienne extends AbstractComponent implements EolienneI{
 	
 	/** utility vars */
 	protected double prod;
+	protected boolean isOn=false;
 
 	protected Eolienne(String uri,String eolienneOutboundPortURI,String eolienneInboundPortURI) throws Exception{
 		super(uri, 1, 1);
@@ -97,50 +98,38 @@ public class Eolienne extends AbstractComponent implements EolienneI{
 	// Services
 	// ------------------------------------------------------------------------
 
-	@Override
-	public void startEolienne() {
+	public void startEolienne() throws Exception{
 		this.logMessage("The eolienne is starting his job....") ;
-		this.logMessage("Eolienne "+this.uri+" : start.") ;
+		isOn = true;
+		/*this.logMessage("Eolienne "+this.uri+" : start.") ;
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
 					public void run() {
 						try {
-							
-							((Eolienne)this.getTaskOwner()).sendProduction(prod);
+							((Eolienne)this.getTaskOwner()).sendProduction();
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
 					}
 				},
-				1000, TimeUnit.MILLISECONDS) ;
+				1000, TimeUnit.MILLISECONDS) ;*/
 	}
+	
+	
 
-	public void sendProduction(double prod) throws Exception {
+	public double sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
 		
-		this.scheduleTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							
-							((Eolienne)this.getTaskOwner()).sendProduction(Math.random()*10);
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				},
-				1000, TimeUnit.MILLISECONDS) ;
-		this.eolienneOutboundPort.sendProduction(Math.random()*10);
+		return Math.random()*10;
 		
 	}
 
 
-	@Override
-	public void stopEolienne() {
+	public void stopEolienne() throws Exception{
 		this.logMessage("The eolienne is stopping his job....") ;
-		this.logMessage("Eolienne "+this.uri+" : stop.") ;
+		isOn =false;
+		/*this.logMessage("Eolienne "+this.uri+" : stop.") ;
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -152,11 +141,10 @@ public class Eolienne extends AbstractComponent implements EolienneI{
 						}
 					}
 				},
-				1000, TimeUnit.MILLISECONDS) ;
+				1000, TimeUnit.MILLISECONDS) ;*/
 	}
 	
 	
-	@Override
 	public void			start() throws ComponentStartException
 	{
 		super.start() ;

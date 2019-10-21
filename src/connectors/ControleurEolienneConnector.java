@@ -35,11 +35,7 @@ package connectors;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import fr.sorbonne_u.components.exceptions.PostconditionException;
-import fr.sorbonne_u.components.exceptions.PreconditionException;
-import fr.sorbonne_u.components.interfaces.OfferedI;
-import fr.sorbonne_u.components.interfaces.RequiredI;
-import fr.sorbonne_u.components.ports.PortI;
+import interfaces.CapteurVentI;
 import interfaces.ControleurI;
 import interfaces.EolienneI;
 
@@ -106,9 +102,14 @@ implements ControleurI
 	}
 
 	@Override
-	public void getProd(double prod) throws Exception {
-		// TODO Auto-generated method stub
+	public double getProd() throws Exception {
+		return ((EolienneI)this.offering).sendProduction() ;
 		
+	}
+
+	@Override
+	public double getVent() throws Exception {
+		return ((CapteurVentI)this.offering).sendWind();
 	}
 
 	

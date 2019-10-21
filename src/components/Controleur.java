@@ -3,9 +3,12 @@ package components;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.ComponentState;
+import fr.sorbonne_u.components.ComponentStateI;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.examples.basic_cs.components.URIConsumer;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.components.exceptions.PreconditionException;
 import fr.sorbonne_u.components.ports.PortI;
 import interfaces.ControleurI;
 import launcher.CVM;
@@ -13,7 +16,7 @@ import ports.ControleurInboundPort;
 import ports.ControleurOutboundPort;
 import ports.EolienneOutboundPort;
 
-public class Controleur extends AbstractComponent implements ControleurI {
+public class Controleur extends AbstractComponent /*implements ControleurI*/ {
 
 	
 	
@@ -23,19 +26,32 @@ public class Controleur extends AbstractComponent implements ControleurI {
 	protected final String				controleurInboundPortURI ;	
 	/** The  outbound port URI for the controleur.*/
 	protected final String				controleurOutboundPortURI ;
+	/***/
+	protected final String				controleurCapteurOutboundPortURI ;
 	/**  outbound port for the component (controleur).*/
 	protected ControleurOutboundPort	controleurOutboundPort ;
 	/**  inbound port for the component (controleur).*/
 	protected ControleurInboundPort	controleurInboundPort ;
+	/***/
+	protected ControleurOutboundPort controleurCapteurOutboundPort;
+	
+	
+	
+	protected double windSpeed = 0;
+	
+	public boolean isEolienneOn = false;
+	
+	protected double prod = 0;
 
 	
-	protected Controleur(String uri,String controleurOutboundPortURI,String controleurInboundPortURI) throws Exception{
-		super(uri, 1, 1);
+	protected Controleur(String uri,String controleurOutboundPortURI,String controleurInboundPortURI, String controleurCapteurOutboundPortURI) throws Exception{
+		super(uri, 2, 2);
 
 		//check arguments 
 		assert uri != null;
 		assert controleurOutboundPortURI != null;
 		assert controleurOutboundPortURI != null;
+		assert controleurCapteurOutboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
@@ -49,6 +65,7 @@ public class Controleur extends AbstractComponent implements ControleurI {
 		
 		this.controleurInboundPortURI = controleurInboundPortURI;
 		this.controleurOutboundPortURI = controleurOutboundPortURI;
+		this.controleurCapteurOutboundPortURI = controleurCapteurOutboundPortURI;
 		
 		
 		// The  interfaces and ports.
@@ -60,7 +77,12 @@ public class Controleur extends AbstractComponent implements ControleurI {
 				new ControleurOutboundPort(controleurOutboundPortURI, this) ;
 			// publish the port (an outbound port is always local)
 			this.controleurOutboundPort.localPublishPort() ;
-		
+			
+		this.controleurCapteurOutboundPort =
+				new ControleurOutboundPort(controleurCapteurOutboundPortURI, this) ;
+			// publish the port (an outbound port is always local)
+			this.controleurCapteurOutboundPort.localPublishPort() ;
+	
 		// init des ports avec les uri et de la donnée qui circule
 //		this.controleurInboundPort = new ControleurInboundPort(this.controleurInboundPortURI, this) ;
 //		this.controleurOutboundPort = new ControleurOutboundPort(this.controleurOutboundPortURI, this) ;
@@ -80,8 +102,8 @@ public class Controleur extends AbstractComponent implements ControleurI {
 		this.tracer.setRelativePosition(1, 1) ;
 	}
 
-	@Override
 	public void startEolienne() throws Exception {
+		
 		this.logMessage("Controleur "+this.uri+" : tell eolienne to start.") ;
 		/*this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
@@ -98,10 +120,10 @@ public class Controleur extends AbstractComponent implements ControleurI {
 				},
 				1000, TimeUnit.MILLISECONDS) ;*/
 		this.controleurOutboundPort.startEolienne();
+
 	}
 
-	@Override
-	public void stopEolienne() {
+	public void stopEolienne() throws Exception{
 		this.logMessage("Controleur "+this.uri+" : tell eolienne to stop.") ;
 		/*this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
@@ -115,9 +137,9 @@ public class Controleur extends AbstractComponent implements ControleurI {
 					}
 				},
 				1000, TimeUnit.MILLISECONDS) ;*/
+		this.controleurOutboundPort.stopEolienne();
 	}
 	
-	@Override
 	public void			start() throws ComponentStartException
 	{
 		
@@ -129,7 +151,30 @@ public class Controleur extends AbstractComponent implements ControleurI {
 				@Override
 				public void run() {
 					try {
-						((Controleur)this.getTaskOwner()).startEolienne();						
+						
+						while(true) {
+							System.out.println("WIndspeed = "+windSpeed);
+							synchronized(this){
+								((Controleur)this.getTaskOwner()).getVent() ;
+								if(isEolienneOn) {
+									if(windSpeed < 0.5) {
+										((Controleur)this.getTaskOwner()).getProd() ;
+									}else {
+										((Controleur)this.getTaskOwner()).stopEolienne();
+										isEolienneOn = false;
+									}
+								}else {
+									if(windSpeed < 0.5) {
+										((Controleur)this.getTaskOwner()).startEolienne();
+										isEolienneOn = true;
+									}
+								}
+								Thread.sleep(1000);
+							}
+						}
+						
+						//((Controleur)this.getTaskOwner()).getVent() ;
+						
 					} catch (Exception e) {
 						throw new RuntimeException(e) ;
 					}
@@ -138,28 +183,40 @@ public class Controleur extends AbstractComponent implements ControleurI {
 			1000, TimeUnit.MILLISECONDS);
 	}
 
-	@Override
-	public void getProd(double prod) throws Exception {
-		this.logMessage("The controleur is getting "+prod+" units of energy from the eolienne") ;
-//		this.scheduleTask(
-//				new AbstractComponent.AbstractTask() {
-//					@Override
-//					public void run() {
-//						try {
-//							((Controleur)this.getTaskOwner()).getProd(prod);
-//						} catch (Exception e) {
-//							throw new RuntimeException(e) ;
-//						}
-//					}
-//				},
-//				1000, TimeUnit.MILLISECONDS) ;
+	public void getProd() throws Exception {
+		double prod = this.controleurOutboundPort.getProd() ;
 		
+		this.logMessage("The controleur is getting "+prod+" units of energy from the eolienne") ;
+		/*this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							((Controleur)this.getTaskOwner()).getProd();
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS) ;*/
 	}
 	
-	
-	
-	
-	
-	
-	
+	public void getVent() throws Exception{
+		double prod = this.controleurCapteurOutboundPort.getVent() ;
+		windSpeed = prod;
+		this.logMessage("The controleur is informed that the wind power is"+prod) ;
+		/*this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							((Controleur)this.getTaskOwner()).getVent();
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS) ;*/
+		
+	}	
 }

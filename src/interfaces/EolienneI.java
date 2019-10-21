@@ -10,5 +10,5 @@ public interface EolienneI extends OfferedI,RequiredI{
 	public void stopEolienne() throws Exception;
 	
 	
-	public void sendProduction(double prod) throws Exception;
+	public double sendProduction() throws Exception;
 }

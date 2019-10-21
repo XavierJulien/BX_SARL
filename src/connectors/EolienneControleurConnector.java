@@ -106,9 +106,9 @@ implements	EolienneI
 	}
 
 	@Override
-	public void sendProduction(double prod) throws Exception {
-		((ControleurI)this.offering).getProd(prod);
-		
+	public double sendProduction() throws Exception {
+//		((ControleurI)this.offering).getProd(prod);
+		return 0;
 	}
 
 	

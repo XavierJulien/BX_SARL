@@ -7,6 +7,7 @@ public interface ControleurI extends OfferedI,RequiredI{
 
 	public void startEolienne() throws Exception;
 	public void stopEolienne() throws Exception;
-	public void getProd(double prod) throws Exception;
+	public double getProd() throws Exception;
+	public double getVent() throws Exception;
 	
 }
