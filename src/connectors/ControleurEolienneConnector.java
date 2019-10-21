@@ -112,6 +112,18 @@ implements ControleurI
 		return ((CapteurVentI)this.offering).sendWind();
 	}
 
+	@Override
+	public void startBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 	

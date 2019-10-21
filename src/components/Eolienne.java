@@ -1,18 +1,10 @@
 package components;
 
-import java.util.concurrent.TimeUnit;
-
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-import fr.sorbonne_u.components.examples.basic_cs.components.URIProvider;
-import fr.sorbonne_u.components.examples.basic_cs.interfaces.URIProviderI;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.InvariantException;
-import fr.sorbonne_u.components.exceptions.PostconditionException;
 import fr.sorbonne_u.components.ports.PortI;
-import interfaces.EolienneI;
 import launcher.CVM;
-import ports.EolienneInboundPort;
 import ports.EolienneInboundPort;
 import ports.EolienneOutboundPort;
 
@@ -164,15 +156,4 @@ public class Eolienne extends AbstractComponent /*implements EolienneI*/{
 			},
 			1000, TimeUnit.MILLISECONDS);*/
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

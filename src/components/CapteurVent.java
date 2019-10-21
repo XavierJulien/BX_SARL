@@ -3,11 +3,8 @@ package components;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.ComponentState;
-import fr.sorbonne_u.components.ComponentStateI;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.PreconditionException;
 import fr.sorbonne_u.components.ports.PortI;
 import interfaces.CapteurVentI;
 import ports.CapteurVentInboundPort;

@@ -35,8 +35,8 @@ package connectors;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
+import interfaces.BouilloireI;
 import interfaces.ControleurI;
-import interfaces.EolienneI;
 
 //-----------------------------------------------------------------------------
 /**
@@ -59,9 +59,9 @@ import interfaces.EolienneI;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				EolienneControleurConnector
+public class				BouilloireControleurConnector
 extends		AbstractConnector
-implements	EolienneI
+implements	BouilloireI
 {
 
 	/**
@@ -78,8 +78,8 @@ implements	EolienneI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURI()
 	 */
 	@Override
-	public void startEolienne() throws Exception {
-		((ControleurI)this.offering).startEolienne();
+	public void startBouilloire() throws Exception {
+		((ControleurI)this.offering).startBouilloire();
 	}
 
 	/**
@@ -96,14 +96,8 @@ implements	EolienneI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURIs(int)
 	 */
 	@Override
-	public void stopEolienne() throws Exception {
-		((ControleurI)this.offering).stopEolienne();
-	}
-
-	@Override
-	public double sendProduction() throws Exception {
-//		((ControleurI)this.offering).getProd(prod);
-		return 0;
+	public void stopBouilloire() throws Exception {
+		((ControleurI)this.offering).stopBouilloire();
 	}
 
 	

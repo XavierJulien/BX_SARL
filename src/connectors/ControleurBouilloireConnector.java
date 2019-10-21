@@ -35,8 +35,8 @@ package connectors;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
+import interfaces.BouilloireI;
 import interfaces.ControleurI;
-import interfaces.EolienneI;
 
 //-----------------------------------------------------------------------------
 /**
@@ -59,9 +59,9 @@ import interfaces.EolienneI;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				EolienneControleurConnector
+public class				ControleurBouilloireConnector
 extends		AbstractConnector
-implements	EolienneI
+implements ControleurI
 {
 
 	/**
@@ -78,12 +78,12 @@ implements	EolienneI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURI()
 	 */
 	@Override
-	public void startEolienne() throws Exception {
-		((ControleurI)this.offering).startEolienne();
+	public void startBouilloire() throws Exception {
+		((BouilloireI)this.offering).startBouilloire();
 	}
 
 	/**
-	 * implement the required interface by simply calling the inbound port with
+	 * implement the re	quired interface by simply calling the inbound port with
 	 * the corresponding offered method.
 	 * 
 	 * <p><strong>Contract</strong></p>
@@ -96,19 +96,33 @@ implements	EolienneI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURIs(int)
 	 */
 	@Override
-	public void stopEolienne() throws Exception {
-		((ControleurI)this.offering).stopEolienne();
+	public void stopBouilloire() throws Exception {
+		((BouilloireI)this.offering).stopBouilloire();
 	}
 
 	@Override
-	public double sendProduction() throws Exception {
-//		((ControleurI)this.offering).getProd(prod);
+	public double getProd() throws Exception {
+		return 0;
+		
+	}
+
+	@Override
+	public double getVent() throws Exception {
 		return 0;
 	}
 
-	
-	
-	
-	
+	//A SUPPRIMER OU A GARDER ??
+	@Override
+	public void startEolienne() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopEolienne() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
 //-----------------------------------------------------------------------------

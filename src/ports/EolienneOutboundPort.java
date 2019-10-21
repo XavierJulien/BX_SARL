@@ -1,14 +1,7 @@
 package ports;
 
 import fr.sorbonne_u.components.ComponentI;
-import fr.sorbonne_u.components.connectors.ConnectorI;
-import fr.sorbonne_u.components.cvm.AbstractCVM;
-import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
-import fr.sorbonne_u.components.exceptions.PostconditionException;
-import fr.sorbonne_u.components.exceptions.PreconditionException;
-import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import fr.sorbonne_u.components.ports.PortI;
 import interfaces.EolienneI;
 
 public class EolienneOutboundPort extends AbstractOutboundPort implements EolienneI {

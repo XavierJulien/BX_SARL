@@ -3,18 +3,11 @@ package components;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
-import fr.sorbonne_u.components.ComponentState;
-import fr.sorbonne_u.components.ComponentStateI;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
-import fr.sorbonne_u.components.examples.basic_cs.components.URIConsumer;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.exceptions.PreconditionException;
 import fr.sorbonne_u.components.ports.PortI;
-import interfaces.ControleurI;
-import launcher.CVM;
 import ports.ControleurInboundPort;
 import ports.ControleurOutboundPort;
-import ports.EolienneOutboundPort;
 
 public class Controleur extends AbstractComponent /*implements ControleurI*/ {
 
@@ -140,7 +133,17 @@ public class Controleur extends AbstractComponent /*implements ControleurI*/ {
 		this.controleurOutboundPort.stopEolienne();
 	}
 	
-	public void			start() throws ComponentStartException
+	public void startBouilloire() throws Exception{	
+		this.logMessage("Controleur "+this.uri+" : tell bouilloire to start.") ;
+		this.controleurOutboundPort.startBouilloire();
+	}
+
+	public void stopBouilloire() throws Exception{
+		this.logMessage("Controleur "+this.uri+" : tell bouilloire to stop.") ;
+		this.controleurOutboundPort.stopBouilloire();
+	}
+	
+	public void	start() throws ComponentStartException
 	{
 		
 		super.start() ;
