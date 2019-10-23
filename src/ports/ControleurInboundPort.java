@@ -53,4 +53,16 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	@Override
+	public void startBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

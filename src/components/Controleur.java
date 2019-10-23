@@ -26,12 +26,21 @@ public class Controleur extends AbstractComponent {
 	protected final String				controleurOutboundPortURI ;
 	/***/
 	protected final String				controleurCapteurOutboundPortURI ;
+	
+	/***/
+	protected final String				controleurBouilloireOutboundPortURI ;
+	
+	protected final String				controleurBouilloireInboundPortURI ;
+	
+	
 	/**  outbound port for the component (controleur).*/
 	protected ControleurOutboundPort	controleurOutboundPort ;
 	/**  inbound port for the component (controleur).*/
 	protected ControleurInboundPort	controleurInboundPort ;
 	/***/
 	protected ControleurOutboundPort controleurCapteurOutboundPort;
+	
+	protected ControleurOutboundPort controleurBouilloireOutboundPort;
 	
 	
 	
@@ -40,16 +49,19 @@ public class Controleur extends AbstractComponent {
 	public boolean isEolienneOn = false;
 	
 	protected double prod = 0;
+	
 
 	
-	protected Controleur(String uri,String controleurOutboundPortURI,String controleurInboundPortURI, String controleurCapteurOutboundPortURI) throws Exception{
+	protected Controleur(String uri,String controleurOutboundPortURI,String controleurInboundPortURI, String controleurCapteurOutboundPortURI, String controleurBouilloireOutboundPortURI, String controleurBouilloireInboundPortURI) throws Exception{
 		super(uri, 2, 2);
 
 		//check arguments 
 		assert uri != null;
 		assert controleurOutboundPortURI != null;
-		assert controleurOutboundPortURI != null;
+		assert controleurInboundPortURI != null;
 		assert controleurCapteurOutboundPortURI != null;
+		assert controleurBouilloireOutboundPortURI != null;
+		assert controleurBouilloireInboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
@@ -59,11 +71,18 @@ public class Controleur extends AbstractComponent {
 		// publish the port
 		p.publishPort() ;
 		
+		PortI pB = new ControleurInboundPort(controleurBouilloireInboundPortURI, this) ;
+		
+		// publish the port
+		pB.publishPort() ;
+		
 		
 		
 		this.controleurInboundPortURI = controleurInboundPortURI;
 		this.controleurOutboundPortURI = controleurOutboundPortURI;
 		this.controleurCapteurOutboundPortURI = controleurCapteurOutboundPortURI;
+		this.controleurBouilloireOutboundPortURI = controleurBouilloireOutboundPortURI;
+		this.controleurBouilloireInboundPortURI = controleurBouilloireInboundPortURI;
 		
 		
 		// The  interfaces and ports.
@@ -76,10 +95,15 @@ public class Controleur extends AbstractComponent {
 			// publish the port (an outbound port is always local)
 			this.controleurOutboundPort.localPublishPort() ;
 			
-		this.controleurCapteurOutboundPort =
-				new ControleurOutboundPort(controleurCapteurOutboundPortURI, this) ;
+			this.controleurCapteurOutboundPort =
+					new ControleurOutboundPort(controleurCapteurOutboundPortURI, this) ;
+				// publish the port (an outbound port is always local)
+				this.controleurCapteurOutboundPort.localPublishPort() ;
+				
+		this.controleurBouilloireOutboundPort =
+				new ControleurOutboundPort(controleurBouilloireOutboundPortURI, this) ;
 			// publish the port (an outbound port is always local)
-			this.controleurCapteurOutboundPort.localPublishPort() ;
+			this.controleurBouilloireOutboundPort.localPublishPort() ;
 	
 		// init des ports avec les uri et de la donnée qui circule
 //		this.controleurInboundPort = new ControleurInboundPort(this.controleurInboundPortURI, this) ;
@@ -161,8 +185,7 @@ public class Controleur extends AbstractComponent {
 					try {
 						
 						while(true) {
-							System.out.println("WIndspeed = "+windSpeed);
-							synchronized(this){
+							//synchronized(this){
 								((Controleur)this.getTaskOwner()).getVent() ;
 								if(isEolienneOn) {
 									if(windSpeed < 0.5) {
@@ -178,7 +201,7 @@ public class Controleur extends AbstractComponent {
 									}
 								}
 								Thread.sleep(1000);
-							}
+							//}
 						}
 						
 						//((Controleur)this.getTaskOwner()).getVent() ;

@@ -28,7 +28,6 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 
 	@Override
 	public double getProd() throws Exception {
-		System.out.println("getprod controleur outbound");
 		return ((ControleurI)this.connector).getProd();
 		
 	}
@@ -36,6 +35,18 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 	@Override
 	public double getVent() throws Exception {
 		return ((ControleurI)this.connector).getVent();
+	}
+
+	@Override
+	public void startBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void stopBouilloire() throws Exception {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	

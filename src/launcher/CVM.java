@@ -9,7 +9,6 @@ import connectors.BouilloireControleurConnector;
 import connectors.ControleurBouilloireConnector;
 import connectors.ControleurEolienneConnector;
 import connectors.EolienneControleurConnector;
-import data.URI;
 import fr.sorbonne_u.components.AbstractComponent;
 
 //Copyright Jacques Malenfant, Sorbonne Universite.
@@ -94,6 +93,14 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControleurOutboundPortURI = "controleurOPort" ;
 	/** URI of the controleur inbound port (simplifies the connection).		*/
 	protected static final String	URIControleurInboundPortURI = "controleurIPort" ;
+	/** URI of the controleur outbound port (simplifies the connection).		*/
+	protected static final String	URIControleurBouilloireOutboundPortURI = "controleurBouilloireOPort" ;
+	/** URI of the controleur inbound port (simplifies the connection).		*/
+	protected static final String	URIControleurBouilloireInboundPortURI = "controleurBouilloireIPort" ;
+	
+	
+	
+	
 
 	/** URI of the capteurVent outbound port (simplifies the connection).	*/
 	protected static final String	URICapteurVentOutboundPortURI = "capteurVentOPort" ;
@@ -184,7 +191,9 @@ public class CVM extends AbstractCVM {
 						new Object[]{CONTROLEUR_COMPONENT_URI,
 								URIControleurOutboundPortURI,
 								URIControleurInboundPortURI,
-								URICapteurVentOutboundPortURI}) ;
+								URICapteurVentOutboundPortURI,
+								URIControleurBouilloireOutboundPortURI,
+								URIControleurBouilloireInboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriControleurURI) ;
 		this.toggleTracing(this.uriControleurURI) ;
 		this.toggleLogging(this.uriControleurURI) ;
@@ -209,15 +218,16 @@ public class CVM extends AbstractCVM {
 		this.doPortConnection(
 				this.uriBouilloireURI,
 				URIBouilloireOutboundPortURI,
-				URIControleurInboundPortURI,
+				URIControleurBouilloireInboundPortURI,
 				BouilloireControleurConnector.class.getCanonicalName()) ;
-		
+		assert	this.isDeployedComponent(uriBouilloireURI) ;
 		this.doPortConnection(
 				this.uriControleurURI,
-				URIControleurOutboundPortURI,
+				URIControleurBouilloireOutboundPortURI,
 				URIBouilloireInboundPortURI,
 				ControleurBouilloireConnector.class.getCanonicalName()) ;	
-		
+		assert	this.isDeployedComponent(uriControleurURI) ;
+
 		//EOLIENNE <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriEolienneURI,
@@ -266,11 +276,9 @@ public class CVM extends AbstractCVM {
 	{
 		// Port disconnections can be done here for static architectures
 		// otherwise, they can be done in the finalise methods of components.
-		System.out.println(URI.URIEolienneOutboundPortURI);
 		this.doPortDisconnection(
 				this.uriEolienneURI,
 				URIEolienneOutboundPortURI) ;
-
 		this.doPortDisconnection(
 				this.uriControleurURI,
 				URIControleurOutboundPortURI) ;
@@ -311,7 +319,7 @@ public class CVM extends AbstractCVM {
 			// Create an instance of the defined component virtual machine.
 			CVM a = new CVM() ;
 			// Execute the application.
-			a.startStandardLifeCycle(200000L) ;
+			a.startStandardLifeCycle(20000L) ;
 			// Give some time to see the traces (convenience).
 			Thread.sleep(5000L) ;
 			// Simplifies the termination (termination has yet to be treated
@@ -337,7 +345,6 @@ public class CVM extends AbstractCVM {
 		assert	componentURI != null && outboundPortURI != null &&
 				inboundPortURI != null && connectorClassname != null ;
 		assert	this.isDeployedComponent(componentURI) ;
-		System.out.println(outboundPortURI);
 		this.uri2component.get(componentURI).doPortConnection(
 				outboundPortURI, inboundPortURI, connectorClassname);
 	}
