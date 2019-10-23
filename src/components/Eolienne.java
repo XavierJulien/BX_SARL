@@ -4,8 +4,8 @@ import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.components.ports.PortI;
 import interfaces.EolienneI;
 import launcher.CVM;
 import ports.EolienneInboundPort;
@@ -37,24 +37,24 @@ public class Eolienne extends AbstractComponent {
 		//check arguments 
 		assert uri != null;
 		assert eolienneOutboundPortURI != null;
-		assert eolienneOutboundPortURI != null;
+		assert eolienneInboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
 
-		PortI p = new EolienneInboundPort(eolienneInboundPortURI, this) ;
+		eolienneInboundPort = new EolienneInboundPort(eolienneInboundPortURI, this) ;
 
 		// publish the port
-		p.publishPort() ;
+		eolienneInboundPort.publishPort() ;
 
 
 		this.eolienneInboundPortURI = eolienneInboundPortURI;
 		this.eolienneOutboundPortURI = eolienneOutboundPortURI;
 
-		this.eolienneOutboundPort =
+		eolienneOutboundPort =
 				new EolienneOutboundPort(eolienneOutboundPortURI, this) ;
 		// publish the port (an outbound port is always local)
-		this.eolienneOutboundPort.localPublishPort() ;
+		eolienneOutboundPort.localPublishPort() ;
 
 		//		
 		//		// The  interfaces and ports.
@@ -98,19 +98,6 @@ public class Eolienne extends AbstractComponent {
 	public void startEolienne() throws Exception{
 		this.logMessage("The eolienne is starting his job....") ;
 		isOn = true;
-		/*this.logMessage("Eolienne "+this.uri+" : start.") ;
-		this.scheduleTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							((Eolienne)this.getTaskOwner()).sendProduction();
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				},
-				1000, TimeUnit.MILLISECONDS) ;*/
 	}
 
 
@@ -126,19 +113,6 @@ public class Eolienne extends AbstractComponent {
 	public void stopEolienne() throws Exception{
 		this.logMessage("The eolienne is stopping his job....") ;
 		isOn =false;
-		/*this.logMessage("Eolienne "+this.uri+" : stop.") ;
-		this.scheduleTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							((Eolienne)this.getTaskOwner()).stopEolienne();
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				},
-				1000, TimeUnit.MILLISECONDS) ;*/
 	}
 
 
@@ -146,19 +120,28 @@ public class Eolienne extends AbstractComponent {
 	{
 		super.start() ;
 		this.logMessage("starting Eolienne component.") ;
-		/*// Schedule the first service method invocation in one second.
-		this.scheduleTask(
-			new AbstractComponent.AbstractTask() {
-				@Override
-				public void run() {
-					try {
-						System.out.println(this.getTaskOwner());
-						((Eolienne)this.getTaskOwner()).startEolienne(); ;
-					} catch (Exception e) {
-						throw new RuntimeException(e) ;
-					}
-				}
-			},
-			1000, TimeUnit.MILLISECONDS);*/
+	}
+
+	// ------------------------------------------------------------------------
+	// FINALISE / SHUTDOWN
+	// ------------------------------------------------------------------------
+
+
+	@Override
+	public void finalise() throws Exception {
+		eolienneOutboundPort.doDisconnection();
+		super.finalise();
+	}
+
+	@Override
+	public void shutdown() throws ComponentShutdownException {
+		try {
+			eolienneInboundPort.unpublishPort();
+			eolienneOutboundPort.unpublishPort();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.shutdown();
 	}
 }

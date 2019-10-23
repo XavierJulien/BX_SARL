@@ -36,7 +36,10 @@ package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.BouilloireI;
+import interfaces.CapteurVentI;
+import interfaces.ChauffageI;
 import interfaces.ControleurI;
+import interfaces.EolienneI;
 
 //-----------------------------------------------------------------------------
 /**
@@ -59,70 +62,59 @@ import interfaces.ControleurI;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				ControleurBouilloireConnector
+public class				ControleurConnector
 extends		AbstractConnector
 implements ControleurI
 {
 
-	/**
-	 * implement the required interface by simply calling the inbound port with
-	 * the corresponding offered method.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true				// no more preconditions.
-	 * post	ret != null
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURI()
-	 */
+	//---------------------------------------------------
+	//--------------------EOLIENNE-----------------------
+	//---------------------------------------------------
+	@Override
+	public void startEolienne() throws Exception {
+		((EolienneI)this.offering).startEolienne();
+	}
+
+	@Override
+	public void stopEolienne() throws Exception {
+		((EolienneI)this.offering).stopEolienne();
+	}
+
+	@Override
+	public double getProd() throws Exception {
+		return ((EolienneI)this.offering).sendProduction() ;	
+	}
+
+	//---------------------------------------------------
+	//--------------------CAPTEUR------------------------
+	//---------------------------------------------------
+	@Override
+	public double getVent() throws Exception {
+		return ((CapteurVentI)this.offering).sendWind();
+	}
+
+	//---------------------------------------------------
+	//--------------------BOUILLOIRE---------------------
+	//---------------------------------------------------
 	@Override
 	public void startBouilloire() throws Exception {
 		((BouilloireI)this.offering).startBouilloire();
 	}
-
-	/**
-	 * implement the re	quired interface by simply calling the inbound port with
-	 * the corresponding offered method.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	numberOfURIs &gt; 0
-	 * post	ret != null and ret.length == numberOfURIs
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURIs(int)
-	 */
 	@Override
 	public void stopBouilloire() throws Exception {
 		((BouilloireI)this.offering).stopBouilloire();
 	}
 
+	//---------------------------------------------------
+	//--------------------BOUILLOIRE---------------------
+	//---------------------------------------------------
 	@Override
-	public double getProd() throws Exception {
-		return 0;
-		
+	public void startChauffage() throws Exception {
+		((ChauffageI)this.offering).startChauffage();
 	}
-
 	@Override
-	public double getVent() throws Exception {
-		return 0;
+	public void stopChauffage() throws Exception {
+		((ChauffageI)this.offering).stopChauffage();
 	}
-
-	//A SUPPRIMER OU A GARDER ??
-	@Override
-	public void startEolienne() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void stopEolienne() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
 }
 //-----------------------------------------------------------------------------

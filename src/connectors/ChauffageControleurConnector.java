@@ -35,9 +35,8 @@ package connectors;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.CapteurVentI;
+import interfaces.ChauffageI;
 import interfaces.ControleurI;
-import interfaces.EolienneI;
 
 //-----------------------------------------------------------------------------
 /**
@@ -60,9 +59,9 @@ import interfaces.EolienneI;
  * 
  * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
  */
-public class				ControleurEolienneConnector
+public class				ChauffageControleurConnector
 extends		AbstractConnector
-implements ControleurI
+implements	ChauffageI
 {
 
 	/**
@@ -79,8 +78,8 @@ implements ControleurI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURI()
 	 */
 	@Override
-	public void startEolienne() throws Exception {
-		((EolienneI)this.offering).startEolienne();
+	public void startChauffage() throws Exception {
+		((ControleurI)this.offering).startChauffage();
 	}
 
 	/**
@@ -97,36 +96,8 @@ implements ControleurI
 	 * @see fr.sorbonne_u.components.examples.basic_cs.interfaces.URIConsumerI#getURIs(int)
 	 */
 	@Override
-	public void stopEolienne() throws Exception {
-		((EolienneI)this.offering).stopEolienne();
+	public void stopChauffage() throws Exception {
+		((ControleurI)this.offering).stopChauffage();
 	}
-
-	@Override
-	public double getProd() throws Exception {
-		return ((EolienneI)this.offering).sendProduction() ;
-		
-	}
-
-	@Override
-	public double getVent() throws Exception {
-		return ((CapteurVentI)this.offering).sendWind();
-	}
-
-	@Override
-	public void startBouilloire() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void stopBouilloire() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	
-	
-	
 }
 //-----------------------------------------------------------------------------
