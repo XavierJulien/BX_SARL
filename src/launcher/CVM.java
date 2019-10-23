@@ -266,21 +266,22 @@ public class CVM extends AbstractCVM {
 	{
 		// Port disconnections can be done here for static architectures
 		// otherwise, they can be done in the finalise methods of components.
+		System.out.println(URI.URIEolienneOutboundPortURI);
 		this.doPortDisconnection(
 				this.uriEolienneURI,
-				URI.URIEolienneOutboundPortURI) ;
+				URIEolienneOutboundPortURI) ;
 
 		this.doPortDisconnection(
 				this.uriControleurURI,
-				URI.URIControleurOutboundPortURI) ;
+				URIControleurOutboundPortURI) ;
 		
 		this.doPortDisconnection(
 				this.uriBouilloireURI,
-				URI.URIBouilloireOutboundPortURI) ;
+				URIBouilloireOutboundPortURI) ;
 
 		this.doPortDisconnection(
 				this.uriControleurURI,
-				URI.URICapteurVentOutboundPortURI) ;
+				URICapteurVentOutboundPortURI) ;
 
 		super.finalise();
 	}
@@ -302,7 +303,6 @@ public class CVM extends AbstractCVM {
 	{
 		assert	this.allFinalised() ;
 		// any disconnection not done yet can be performed here
-
 		super.shutdown();
 	}
 
@@ -311,7 +311,7 @@ public class CVM extends AbstractCVM {
 			// Create an instance of the defined component virtual machine.
 			CVM a = new CVM() ;
 			// Execute the application.
-			a.startStandardLifeCycle(20000000L) ;
+			a.startStandardLifeCycle(200000L) ;
 			// Give some time to see the traces (convenience).
 			Thread.sleep(5000L) ;
 			// Simplifies the termination (termination has yet to be treated

@@ -3,13 +3,17 @@ package components;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
 import interfaces.CapteurVentI;
 import ports.CapteurVentInboundPort;
 
-public class CapteurVent extends AbstractComponent implements CapteurVentI {
+@RequiredInterfaces(required = {CapteurVentI.class})
+@OfferedInterfaces(offered = {CapteurVentI.class})
+public class CapteurVent extends AbstractComponent {
 
 	protected final String				uri ;
 	/** The inbound port URI for the eolienne.*/
@@ -39,7 +43,6 @@ public class CapteurVent extends AbstractComponent implements CapteurVentI {
 		this.tracer.setRelativePosition(2, 1) ;
 	}
 
-	@Override
 	public double sendWind() throws Exception {
 		this.logMessage("Sending wind power....") ;
 		power+=0.2;

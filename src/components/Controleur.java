@@ -3,13 +3,18 @@ package components;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
+import interfaces.ControleurI;
 import ports.ControleurInboundPort;
 import ports.ControleurOutboundPort;
 
-public class Controleur extends AbstractComponent /*implements ControleurI*/ {
+@RequiredInterfaces(required = {ControleurI.class})
+@OfferedInterfaces(offered = {ControleurI.class})
+public class Controleur extends AbstractComponent {
 
 	
 	

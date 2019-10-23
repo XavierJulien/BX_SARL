@@ -1,6 +1,8 @@
 package components;
 
 import fr.sorbonne_u.components.AbstractComponent;
+import fr.sorbonne_u.components.annotations.OfferedInterfaces;
+import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.components.ports.PortI;
@@ -9,7 +11,9 @@ import launcher.CVM;
 import ports.BouilloireInboundPort;
 import ports.BouilloireOutboundPort;
 
-public class Bouilloire extends AbstractComponent implements BouilloireI {
+@RequiredInterfaces(required = {BouilloireI.class})
+@OfferedInterfaces(offered = {BouilloireI.class})
+public class Bouilloire extends AbstractComponent{
 	/** URI of the component (bouilloire).*/
 	protected final String				uri ;
 	/** The inbound port URI for the bouilloire.*/
