@@ -210,6 +210,11 @@ public class Controleur extends AbstractComponent {
 
 		super.start() ;
 		this.logMessage("starting Controleur component.") ;
+		
+	}
+	
+	public void execute() throws Exception {
+		super.execute();
 		// Schedule the first service method invocation in one second.
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
