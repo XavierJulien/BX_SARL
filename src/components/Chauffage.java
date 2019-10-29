@@ -97,6 +97,11 @@ public class Chauffage extends AbstractComponent {
 		super.start() ;
 		this.logMessage("starting Chauffage component.") ;
 	}
+	
+	@Override
+	public void execute() throws Exception{
+		super.execute();
+	}
 
 	// ------------------------------------------------------------------------
 	// FINALISE / SHUTDOWN

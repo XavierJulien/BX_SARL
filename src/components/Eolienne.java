@@ -121,6 +121,11 @@ public class Eolienne extends AbstractComponent {
 		super.start() ;
 		this.logMessage("starting Eolienne component.") ;
 	}
+	
+	@Override
+	public void execute() throws Exception {
+		super.execute();
+	}
 
 	// ------------------------------------------------------------------------
 	// FINALISE / SHUTDOWN

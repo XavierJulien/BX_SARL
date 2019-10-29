@@ -57,20 +57,26 @@ public class CapteurVent extends AbstractComponent {
 	{
 		super.start() ;
 		this.logMessage("starting CapteurVent component.") ;
+		
+	}
+	@Override
+	public void execute() throws Exception {
+		super.execute();
 		// Schedule the first service method invocation in one second.
-		this.scheduleTask(
-				new AbstractComponent.AbstractTask() {
-					@Override
-					public void run() {
-						try {
-							((CapteurVent)this.getTaskOwner()).sendWind() ;
+		
+				this.scheduleTask(
+						new AbstractComponent.AbstractTask() {
+							@Override
+							public void run() {
+								try {
+									((CapteurVent)this.getTaskOwner()).sendWind() ;
 
-						} catch (Exception e) {
-							throw new RuntimeException(e) ;
-						}
-					}
-				},
-				1000, TimeUnit.MILLISECONDS);
+								} catch (Exception e) {
+									throw new RuntimeException(e) ;
+								}
+							}
+						},
+						1000, TimeUnit.MILLISECONDS);
 	}
 
 	// ------------------------------------------------------------------------
