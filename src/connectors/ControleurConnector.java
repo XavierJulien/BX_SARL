@@ -37,6 +37,7 @@ package connectors;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.BouilloireI;
 import interfaces.CapteurVentI;
+import interfaces.ChargeurI;
 import interfaces.ChauffageI;
 import interfaces.ControleurI;
 import interfaces.EolienneI;
@@ -115,6 +116,23 @@ implements ControleurI
 	@Override
 	public void stopChauffage() throws Exception {
 		((ChauffageI)this.offering).stopChauffage();
+	}
+	
+	
+
+	//---------------------------------------------------
+	//---------------------Chargeur----------------------
+	//---------------------------------------------------
+	@Override
+	public void startChargeur() throws Exception {
+		((ChargeurI)this.offering).startChargeur();
+		
+	}
+
+	@Override
+	public void stopChargeur() throws Exception {
+		((ChargeurI)this.offering).stopChargeur();
+		
 	}
 }
 //-----------------------------------------------------------------------------

@@ -56,13 +56,76 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 
 	@Override
 	public void startBouilloire() throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).startBouilloire();
+						return null;
+					}
+				}) ;		
 	}
 
 	@Override
 	public void stopBouilloire() throws Exception {
-		// TODO Auto-generated method stub
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).stopBouilloire();
+						return null;
+					}
+				}) ;		
+	}
+
+	@Override
+	public void startChauffage() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).startChauffage();
+						return null;
+					}
+				}) ;
 		
+	}
+
+	@Override
+	public void stopChauffage() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).stopChauffage();
+						return null;
+					}
+				}) ;		
+	}
+
+	@Override
+	public void startChargeur() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).startChargeur();
+						return null;
+					}
+				}) ;
+		
+		
+	}
+
+	@Override
+	public void stopChargeur() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).stopChargeur();
+						return null;
+					}
+				}) ;		
 	}
 }

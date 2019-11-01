@@ -31,10 +31,14 @@ public class Controleur extends AbstractComponent {
 	protected final String				controleurBouilloireOutboundPortURI ;
 
 	protected final String				controleurBouilloireInboundPortURI ;
-	
+
 	protected final String				controleurChauffageOutboundPortURI ;
 
 	protected final String				controleurChauffageInboundPortURI ;
+
+	protected final String				controleurChargeurOutboundPortURI ;
+
+	protected final String				controleurChargeurInboundPortURI ;
 
 	//--------------------------------------------------------------
 	//-------------------------INBOUND PORT-------------------------
@@ -45,6 +49,8 @@ public class Controleur extends AbstractComponent {
 	protected ControleurInboundPort		controleurBouilloireInboundPort ;
 	/**  inbound port for the component (controleur).*/
 	protected ControleurInboundPort		controleurChauffageInboundPort ;
+	
+	protected ControleurInboundPort		controleurChargeurInboundPort ;
 	//--------------------------------------------------------------
 	//-------------------------OUTBOUND PORT------------------------
 	//--------------------------------------------------------------
@@ -56,6 +62,8 @@ public class Controleur extends AbstractComponent {
 	protected ControleurOutboundPort 	controleurBouilloireOutboundPort;
 	/***/
 	protected ControleurOutboundPort 	controleurChauffageOutboundPort;
+	
+	protected ControleurOutboundPort 	controleurChargeurOutboundPort;
 
 
 
@@ -74,7 +82,9 @@ public class Controleur extends AbstractComponent {
 						 String controleurBouilloireOutboundPortURI, 
 						 String controleurBouilloireInboundPortURI, 
 						 String controleurChauffageOutboundPortURI, 
-						 String controleurChauffageInboundPortURI) throws Exception{
+						 String controleurChauffageInboundPortURI,
+						 String controleurChargeurOutboundPortURI, 
+						 String controleurChargeurInboundPortURI) throws Exception{
 		super(uri, 2, 2);
 
 		//check arguments 
@@ -82,11 +92,13 @@ public class Controleur extends AbstractComponent {
 		assert controleurEolienneInboundPortURI != null;
 		assert controleurBouilloireInboundPortURI != null;
 		assert controleurChauffageInboundPortURI != null;
+		assert controleurChargeurInboundPortURI != null;
 
 		assert controleurEolienneOutboundPortURI != null;
 		assert controleurChauffageOutboundPortURI != null;
 		assert controleurCapteurOutboundPortURI != null;
 		assert controleurBouilloireOutboundPortURI != null;
+		assert controleurChargeurOutboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
@@ -105,6 +117,11 @@ public class Controleur extends AbstractComponent {
 
 		// publish the port
 		controleurChauffageInboundPort.publishPort() ;
+		
+		controleurChargeurInboundPort = new ControleurInboundPort(controleurChargeurInboundPortURI, this) ;
+
+		// publish the port
+		controleurChargeurInboundPort.publishPort() ;
 
 		//AJOUTER DANS SHUTDOWN
 		//pB.destroyPort();
@@ -116,6 +133,8 @@ public class Controleur extends AbstractComponent {
 		this.controleurBouilloireInboundPortURI = controleurBouilloireInboundPortURI;
 		this.controleurChauffageOutboundPortURI = controleurChauffageOutboundPortURI;
 		this.controleurChauffageInboundPortURI = controleurChauffageInboundPortURI;
+		this.controleurChargeurOutboundPortURI = controleurChargeurOutboundPortURI;
+		this.controleurChargeurInboundPortURI = controleurChargeurInboundPortURI;
 
 		this.controleurEolienneOutboundPort =
 				new ControleurOutboundPort(controleurEolienneOutboundPortURI, this) ;
@@ -136,6 +155,14 @@ public class Controleur extends AbstractComponent {
 				new ControleurOutboundPort(controleurChauffageOutboundPortURI, this) ;
 		// publish the port (an outbound port is always local)
 		this.controleurChauffageOutboundPort.localPublishPort() ;
+
+		this.controleurChargeurOutboundPort =
+				new ControleurOutboundPort(controleurChargeurOutboundPortURI, this) ;
+		// publish the port (an outbound port is always local)
+		this.controleurChargeurOutboundPort.localPublishPort() ;
+		
+		
+		
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -195,6 +222,16 @@ public class Controleur extends AbstractComponent {
 		this.controleurBouilloireOutboundPort.stopBouilloire();
 	}
 
+	public void startChargeur() throws Exception{	
+		this.logMessage("Controleur "+this.uri+" : tell chargeur to start.") ;
+		this.controleurChargeurOutboundPort.startChargeur();
+	}
+
+	public void stopChargeur() throws Exception{
+		this.logMessage("Controleur "+this.uri+" : tell chargeur to stop.") ;
+		this.controleurChargeurOutboundPort.stopChargeur();
+	}	
+	
 	public void startChauffage() throws Exception{	
 		this.logMessage("Controleur "+this.uri+" : tell chauffage to start.") ;
 		this.controleurChauffageOutboundPort.startChauffage();

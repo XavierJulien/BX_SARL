@@ -11,6 +11,8 @@ public interface ControleurI extends OfferedI,RequiredI{
 	public void stopBouilloire() throws Exception;
 	public void startChauffage() throws Exception;
 	public void stopChauffage() throws Exception;
+	public void startChargeur() throws Exception;
+	public void stopChargeur() throws Exception;
 	public double getProd() throws Exception;
 	public double getVent() throws Exception;
 	

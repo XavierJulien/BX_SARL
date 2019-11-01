@@ -39,14 +39,32 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 
 	@Override
 	public void startBouilloire() throws Exception {
-		// TODO Auto-generated method stub
-		
+		((ControleurI)this.connector).startBouilloire() ;		
 	}
 
 	@Override
 	public void stopBouilloire() throws Exception {
-		// TODO Auto-generated method stub
-		
+		((ControleurI)this.connector).stopBouilloire() ;		
+	}
+
+	@Override
+	public void startChauffage() throws Exception {
+		((ControleurI)this.connector).startChauffage() ;		
+	}
+
+	@Override
+	public void stopChauffage() throws Exception {
+		((ControleurI)this.connector).stopChauffage() ;		
+	}
+
+	@Override
+	public void startChargeur() throws Exception {
+		((ControleurI)this.connector).startChargeur() ;				
+	}
+
+	@Override
+	public void stopChargeur() throws Exception {
+		((ControleurI)this.connector).stopChargeur() ;						
 	}
 	
 	
