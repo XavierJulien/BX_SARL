@@ -39,6 +39,10 @@ public class Controleur extends AbstractComponent {
 	protected final String				controleurChargeurOutboundPortURI ;
 
 	protected final String				controleurChargeurInboundPortURI ;
+	
+	protected final String				controleurBatterieOutboundPortURI ;
+
+	protected final String				controleurBatterieInboundPortURI ;
 
 	//--------------------------------------------------------------
 	//-------------------------INBOUND PORT-------------------------
@@ -51,6 +55,8 @@ public class Controleur extends AbstractComponent {
 	protected ControleurInboundPort		controleurChauffageInboundPort ;
 	
 	protected ControleurInboundPort		controleurChargeurInboundPort ;
+	
+	protected ControleurInboundPort		controleurBatterieInboundPort ;
 	//--------------------------------------------------------------
 	//-------------------------OUTBOUND PORT------------------------
 	//--------------------------------------------------------------
@@ -64,6 +70,8 @@ public class Controleur extends AbstractComponent {
 	protected ControleurOutboundPort 	controleurChauffageOutboundPort;
 	
 	protected ControleurOutboundPort 	controleurChargeurOutboundPort;
+	
+	protected ControleurOutboundPort 	controleurBatterieOutboundPort;
 
 
 
@@ -84,7 +92,9 @@ public class Controleur extends AbstractComponent {
 						 String controleurChauffageOutboundPortURI, 
 						 String controleurChauffageInboundPortURI,
 						 String controleurChargeurOutboundPortURI, 
-						 String controleurChargeurInboundPortURI) throws Exception{
+						 String controleurChargeurInboundPortURI,
+						 String controleurBatterieOutboundPortURI, 
+						 String controleurBatterieInboundPortURI) throws Exception{
 		super(uri, 2, 2);
 
 		//check arguments 
@@ -93,12 +103,14 @@ public class Controleur extends AbstractComponent {
 		assert controleurBouilloireInboundPortURI != null;
 		assert controleurChauffageInboundPortURI != null;
 		assert controleurChargeurInboundPortURI != null;
+		assert controleurBatterieInboundPortURI != null;
 
 		assert controleurEolienneOutboundPortURI != null;
 		assert controleurChauffageOutboundPortURI != null;
 		assert controleurCapteurOutboundPortURI != null;
 		assert controleurBouilloireOutboundPortURI != null;
 		assert controleurChargeurOutboundPortURI != null;
+		assert controleurBatterieOutboundPortURI != null;
 
 		// init variables 
 		this.uri = uri;
@@ -122,6 +134,11 @@ public class Controleur extends AbstractComponent {
 
 		// publish the port
 		controleurChargeurInboundPort.publishPort() ;
+		
+		controleurBatterieInboundPort = new ControleurInboundPort(controleurBatterieInboundPortURI, this) ;
+
+		// publish the port
+		controleurBatterieInboundPort.publishPort() ;
 
 		//AJOUTER DANS SHUTDOWN
 		//pB.destroyPort();
@@ -135,6 +152,8 @@ public class Controleur extends AbstractComponent {
 		this.controleurChauffageInboundPortURI = controleurChauffageInboundPortURI;
 		this.controleurChargeurOutboundPortURI = controleurChargeurOutboundPortURI;
 		this.controleurChargeurInboundPortURI = controleurChargeurInboundPortURI;
+		this.controleurBatterieOutboundPortURI = controleurChargeurOutboundPortURI;
+		this.controleurBatterieInboundPortURI = controleurChargeurInboundPortURI;
 
 		this.controleurEolienneOutboundPort =
 				new ControleurOutboundPort(controleurEolienneOutboundPortURI, this) ;
@@ -160,6 +179,11 @@ public class Controleur extends AbstractComponent {
 				new ControleurOutboundPort(controleurChargeurOutboundPortURI, this) ;
 		// publish the port (an outbound port is always local)
 		this.controleurChargeurOutboundPort.localPublishPort() ;
+		
+		this.controleurBatterieOutboundPort =
+				new ControleurOutboundPort(controleurBatterieOutboundPortURI, this) ;
+		// publish the port (an outbound port is always local)
+		this.controleurBatterieOutboundPort.localPublishPort() ;
 		
 		
 		
@@ -240,6 +264,16 @@ public class Controleur extends AbstractComponent {
 	public void stopChauffage() throws Exception{
 		this.logMessage("Controleur "+this.uri+" : tell chauffage to stop.") ;
 		this.controleurChauffageOutboundPort.stopChauffage();
+	}
+	
+	public void startBatterie() throws Exception{	
+		this.logMessage("Controleur "+this.uri+" : tell batterie to start.") ;
+		this.controleurBatterieOutboundPort.startBatterie();
+	}
+
+	public void stopBatterie() throws Exception{
+		this.logMessage("Controleur "+this.uri+" : tell batterie to stop.") ;
+		this.controleurBatterieOutboundPort.stopBatterie();
 	}
 
 	public void	start() throws ComponentStartException

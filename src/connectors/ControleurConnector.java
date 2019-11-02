@@ -35,6 +35,7 @@ package connectors;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
+import interfaces.BatterieI;
 import interfaces.BouilloireI;
 import interfaces.CapteurVentI;
 import interfaces.ChargeurI;
@@ -133,6 +134,32 @@ implements ControleurI
 	public void stopChargeur() throws Exception {
 		((ChargeurI)this.offering).stopChargeur();
 		
+	}
+	
+	//---------------------------------------------------
+	//---------------------Batterie----------------------
+	//---------------------------------------------------
+
+	@Override
+	public void startBatterie() throws Exception {
+		((BatterieI)this.offering).startBatterie();
+		
+	}
+
+	@Override
+	public void stopBatterie() throws Exception {
+		((BatterieI)this.offering).stopBatterie();
+		
+	}
+
+	@Override
+	public double getBatteryChargePercentage() throws Exception {
+		return ((BatterieI)this.offering).sendChargePercentage();
+	}
+
+	@Override
+	public double getBatteryProduction() throws Exception {
+		return ((BatterieI)this.offering).sendEnergy();
 	}
 }
 //-----------------------------------------------------------------------------

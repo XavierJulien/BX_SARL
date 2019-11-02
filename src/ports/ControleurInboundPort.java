@@ -113,9 +113,7 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 						return null;
 					}
 				}) ;
-		
-		
-	}
+		}
 
 	@Override
 	public void stopChargeur() throws Exception {
@@ -127,5 +125,41 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 						return null;
 					}
 				}) ;		
+	}
+
+	@Override
+	public void startBatterie() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).startBatterie();
+						return null;
+					}
+				}) ;
+	}
+
+	@Override
+	public void stopBatterie() throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controleur)this.getServiceOwner()).stopBatterie();
+						return null;
+					}
+				}) ;		
+	}
+
+	@Override
+	public double getBatteryChargePercentage() throws Exception {
+		// shouldn't be used
+		return 0;
+	}
+
+	@Override
+	public double getBatteryProduction() throws Exception {
+		// shouldn't be used
+		return 0;
 	}
 }

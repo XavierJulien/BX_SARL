@@ -13,7 +13,13 @@ public interface ControleurI extends OfferedI,RequiredI{
 	public void stopChauffage() throws Exception;
 	public void startChargeur() throws Exception;
 	public void stopChargeur() throws Exception;
+	public void startBatterie() throws Exception;
+	public void stopBatterie() throws Exception;
+	
 	public double getProd() throws Exception;
 	public double getVent() throws Exception;
+	
+	public double getBatteryChargePercentage() throws Exception;
+	public double getBatteryProduction() throws Exception;
 	
 }
