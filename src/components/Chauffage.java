@@ -14,43 +14,30 @@ import ports.ChauffageOutboundPort;
 @OfferedInterfaces(offered = {ChauffageI.class})
 public class Chauffage extends AbstractComponent {
 	
-	/** URI of the component (chauffage).*/
 	protected final String				uri ;
-	/** The inbound port URI for the chauffage.*/
 	protected final String				chauffageInboundPortURI ;	
-	/** The outbound port URI for the chauffage.*/
 	protected final String				chauffageOutboundPortURI ;
-	/** outbound port for the component (chauffage).*/
-	protected ChauffageOutboundPort	chauffageOutboundPort ;
-	/** inbound port for the component (chauffage).*/
+	protected ChauffageOutboundPort		chauffageOutboundPort ;
 	protected ChauffageInboundPort		chauffageInboundPort ;
+	protected boolean 					isOn=false;
 
-
-	/** utility vars */
-	protected boolean isOn=false;
-
-	protected Chauffage(String uri,String chauffageOutboundPortURI,String chauffageInboundPortURI) throws Exception{
+	protected Chauffage(String uri,
+						String chauffageOutboundPortURI,
+						String chauffageInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
-		//check arguments 
 		assert uri != null;
 		assert chauffageOutboundPortURI != null;
 		assert chauffageInboundPortURI != null;
 
-		// init variables 
 		this.uri = uri;
-
-		chauffageInboundPort = new ChauffageInboundPort(chauffageInboundPortURI, this) ;
-
-		// publish the port
-		chauffageInboundPort.publishPort() ;
-
 		this.chauffageInboundPortURI = chauffageInboundPortURI;
 		this.chauffageOutboundPortURI = chauffageOutboundPortURI;
 
-		this.chauffageOutboundPort =
-				new ChauffageOutboundPort(chauffageOutboundPortURI, this) ;
-		// publish the port (an outbound port is always local)
+		//-------------------PUBLISH-------------------
+		chauffageInboundPort = new ChauffageInboundPort(chauffageInboundPortURI, this) ;
+		chauffageInboundPort.publishPort() ;
+		this.chauffageOutboundPort = new ChauffageOutboundPort(chauffageOutboundPortURI, this) ;
 		this.chauffageOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
@@ -59,41 +46,32 @@ public class Chauffage extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}	
 
+		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
-		this.tracer.setRelativePosition(2, 3) ;
-
-
-
-
+		this.tracer.setRelativePosition(3, 2) ;
 	}
 
 
-	// ------------------------------------------------------------------------
-	// Services
-	// ------------------------------------------------------------------------
-
+//------------------------------------------------------------------------
+//----------------------------SERVICES------------------------------------
+//------------------------------------------------------------------------
+	
 	public void startChauffage() throws Exception{
 		this.logMessage("The chauffage is starting his job....") ;
 		isOn = true;
 	}
-
-
-
-	public double sendConsommation() throws Exception {
-		this.logMessage("Sending consommation....") ;
-
-		return Math.random()*10;
-
-	}
-
 
 	public void stopChauffage() throws Exception{
 		this.logMessage("The chauffage is stopping his job....") ;
 		isOn =false;
 	}
 
+	public double sendConsommation() throws Exception {
+		this.logMessage("Sending consommation....") ;
+		return Math.random()*10;
+	}
 
-	public void			start() throws ComponentStartException{
+	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Chauffage component.") ;
 	}
@@ -103,27 +81,25 @@ public class Chauffage extends AbstractComponent {
 		super.execute();
 	}
 
-	// ------------------------------------------------------------------------
-	// FINALISE / SHUTDOWN
-	// ------------------------------------------------------------------------
 
-
+//------------------------------------------------------------------------
+//----------------------------FINALISE------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
 		chauffageOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
+//------------------------------------------------------------------------
+//----------------------------SHUTDOWN------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			chauffageInboundPort.unpublishPort();
 			chauffageOutboundPort.unpublishPort();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}
-
 }

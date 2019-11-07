@@ -6,6 +6,5 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 public interface ChargeurI extends DataOfferedI,DataRequiredI{
 
 	public void startChargeur() throws Exception;
-	
 	public void stopChargeur() throws Exception;
 }

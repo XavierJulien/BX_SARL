@@ -7,7 +7,10 @@ import interfaces.EolienneI;
 public class EolienneOutboundPort extends AbstractOutboundPort implements EolienneI {
 	
 	private static final long serialVersionUID = 1L;
-
+	
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public EolienneOutboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, EolienneI.class, owner);
 	}
@@ -16,6 +19,9 @@ public class EolienneOutboundPort extends AbstractOutboundPort implements Eolien
 		super(EolienneI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	@Override
 	public void startEolienne() throws Exception {
 		((EolienneI)this.connector).startEolienne() ;
@@ -29,9 +35,5 @@ public class EolienneOutboundPort extends AbstractOutboundPort implements Eolien
 	@Override
 	public double sendProduction() throws Exception {
 		return 0;
-		
 	}
-	
-	
-	
 }

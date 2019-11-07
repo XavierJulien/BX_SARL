@@ -13,43 +13,35 @@ import ports.BouilloireOutboundPort;
 @RequiredInterfaces(required = {BouilloireI.class})
 @OfferedInterfaces(offered = {BouilloireI.class})
 public class Bouilloire extends AbstractComponent{
-	/** URI of the component (bouilloire).*/
+	
 	protected final String				uri ;
-	/** The inbound port URI for the bouilloire.*/
 	protected final String				bouilloireInboundPortURI ;	
-	/** The outbound port URI for the bouilloire.*/
 	protected final String				bouilloireOutboundPortURI ;
-	/** outbound port for the component (bouilloire).*/
 	protected BouilloireOutboundPort	bouilloireOutboundPort ;
-	/** inbound port for the component (bouilloire).*/
 	protected BouilloireInboundPort		bouilloireInboundPort ;
+	protected boolean 					isOn=false;
 
-
-	/** utility vars */
-	protected boolean isOn=false;
-
-	protected Bouilloire(String uri,String bouilloireOutboundPortURI,String bouilloireInboundPortURI) throws Exception{
+	
+	//------------------------------------------------------------------------
+	//----------------------------CONSTRUCTOR---------------------------------
+	//------------------------------------------------------------------------
+	protected Bouilloire(String uri,
+						 String bouilloireOutboundPortURI,
+						 String bouilloireInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
-		//check arguments 
 		assert uri != null;
 		assert bouilloireOutboundPortURI != null;
 		assert bouilloireInboundPortURI != null;
 
-		// init variables 
 		this.uri = uri;
-
-		bouilloireInboundPort = new BouilloireInboundPort(bouilloireInboundPortURI, this) ;
-
-		// publish the port
-		bouilloireInboundPort.publishPort() ;
-
 		this.bouilloireInboundPortURI = bouilloireInboundPortURI;
 		this.bouilloireOutboundPortURI = bouilloireOutboundPortURI;
 
-		this.bouilloireOutboundPort =
-				new BouilloireOutboundPort(bouilloireOutboundPortURI, this) ;
-		// publish the port (an outbound port is always local)
+		//-------------------PUBLISH-------------------
+		bouilloireInboundPort = new BouilloireInboundPort(bouilloireInboundPortURI, this) ;
+		bouilloireInboundPort.publishPort() ;
+		this.bouilloireOutboundPort = new BouilloireOutboundPort(bouilloireOutboundPortURI, this) ;
 		this.bouilloireOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
@@ -58,66 +50,60 @@ public class Bouilloire extends AbstractComponent{
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}	
 
+		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 2) ;
-
-
-
-
 	}
 
 
-	// ------------------------------------------------------------------------
-	// Services
-	// ------------------------------------------------------------------------
-
+//------------------------------------------------------------------------
+//----------------------------SERVICES------------------------------------
+//------------------------------------------------------------------------
+	
 	public void startBouilloire() throws Exception{
 		this.logMessage("The bouilloire is starting his job....") ;
 		isOn = true;
 	}
 
-
-
-	public double sendConsommation() throws Exception {
-		this.logMessage("Sending consommation....") ;
-
-		return Math.random()*10;
-
-	}
-
-
 	public void stopBouilloire() throws Exception{
 		this.logMessage("The bouilloire is stopping his job....") ;
 		isOn =false;
 	}
+	
+	public double sendConsommation() throws Exception {
+		this.logMessage("Sending consommation....") ;
+		return Math.random()*10;
+	}
 
-
-	public void			start() throws ComponentStartException{
+	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Bouilloire component.") ;
 	}
 
-	// ------------------------------------------------------------------------
-	// FINALISE / SHUTDOWN
-	// ------------------------------------------------------------------------
+	@Override
+	public void execute() throws Exception {
+		super.execute();
+	}
 
 
+//------------------------------------------------------------------------
+//----------------------------FINALISE------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
 		bouilloireOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
+//------------------------------------------------------------------------
+//----------------------------SHUTDOWN------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			bouilloireInboundPort.unpublishPort();
 			bouilloireOutboundPort.unpublishPort();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}
-
 }

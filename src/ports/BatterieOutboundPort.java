@@ -8,6 +8,9 @@ public class BatterieOutboundPort extends AbstractOutboundPort implements Batter
 	
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public BatterieOutboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, BatterieI.class, owner);
 	}
@@ -16,30 +19,26 @@ public class BatterieOutboundPort extends AbstractOutboundPort implements Batter
 		super(BatterieI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-------------------------
+//--------------------------------------------------------------
 	@Override
 	public void startBatterie() throws Exception {
 		((BatterieI)this.connector).startBatterie() ;
 	}
-
+	
 	@Override
 	public void stopBatterie() throws Exception {
 		((BatterieI)this.connector).stopBatterie() ;
 	}
-
+	
 	@Override
 	public double sendChargePercentage() throws Exception {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public double sendEnergy() throws Exception {
-		// TODO Auto-generated method stub
 		return 0;
 	}
-
-
-	
-	
-	
 }

@@ -10,6 +10,9 @@ public class ChauffageInboundPort extends AbstractInboundPort implements Chauffa
 
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public ChauffageInboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, ChauffageI.class, owner);
 	}
@@ -18,6 +21,9 @@ public class ChauffageInboundPort extends AbstractInboundPort implements Chauffa
 		super(ChauffageI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	public void startChauffage() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
@@ -40,5 +46,4 @@ public class ChauffageInboundPort extends AbstractInboundPort implements Chauffa
 					}
 				}) ;
 	}
-
 }

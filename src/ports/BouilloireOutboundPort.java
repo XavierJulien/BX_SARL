@@ -8,6 +8,9 @@ public class BouilloireOutboundPort extends AbstractOutboundPort implements Boui
 	
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public BouilloireOutboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, BouilloireI.class, owner);
 	}
@@ -16,6 +19,9 @@ public class BouilloireOutboundPort extends AbstractOutboundPort implements Boui
 		super(BouilloireI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	@Override
 	public void startBouilloire() throws Exception {
 		((BouilloireI)this.connector).startBouilloire() ;

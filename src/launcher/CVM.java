@@ -1,232 +1,152 @@
 package launcher;
 
 
+import components.Batterie;
 import components.Bouilloire;
+import components.CapteurChaleur;
 import components.CapteurVent;
 import components.Chargeur;
 import components.Chauffage;
+import components.Compteur;
 import components.Controleur;
 import components.Eolienne;
 import connectors.BatterieControleurConnector;
 import connectors.BouilloireControleurConnector;
 import connectors.ChargeurControleurConnector;
 import connectors.ChauffageControleurConnector;
+import connectors.CompteurControleurConnector;
 import connectors.ControleurConnector;
 import connectors.EolienneControleurConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 
-//Copyright Jacques Malenfant, Sorbonne Universite.
-//
-//Jacques.Malenfant@lip6.fr
-//
-//This software is a computer program whose purpose is to provide a
-//basic component programming model to program with components
-//distributed applications in the Java programming language.
-//
-//This software is governed by the CeCILL-C license under French law and
-//abiding by the rules of distribution of free software.  You can use,
-//modify and/ or redistribute the software under the terms of the
-//CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
-//URL "http://www.cecill.info".
-//
-//As a counterpart to the access to the source code and  rights to copy,
-//modify and redistribute granted by the license, users are provided only
-//with a limited warranty  and the software's author,  the holder of the
-//economic rights,  and the successive licensors  have only  limited
-//liability. 
-//
-//In this respect, the user's attention is drawn to the risks associated
-//with loading,  using,  modifying and/or developing or reproducing the
-//software by the user in light of its specific status of free software,
-//that may mean  that it is complicated to manipulate,  and  that  also
-//therefore means  that it is reserved for developers  and  experienced
-//professionals having in-depth computer knowledge. Users are therefore
-//encouraged to load and test the software's suitability as regards their
-//requirements in conditions enabling the security of their systems and/or 
-//data to be ensured and,  more generally, to use and operate it in the 
-//same conditions as regards security. 
-//
-//The fact that you are presently reading this means that you have had
-//knowledge of the CeCILL-C license and that you accept its terms.
-
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
-//-----------------------------------------------------------------------------
-/**
- * The class <code>CVM</code> implements the single JVM assembly for the basic
- * client/server example.
- *
- * <p><strong>Description</strong></p>
- * 
- * An URI provider component defined by the class <code>URIProvider</code>
- * offers an URI creation service, which is used by an URI consumer component
- * defined by the class <code>URIConsumer</code>. Both are deployed within a
- * single JVM.
- * 
- * <p><strong>Invariant</strong></p>
- * 
- * <pre>
- * invariant		true
- * </pre>
- * 
- * <p>Created on : 2014-01-22</p>
- * 
- * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
- */
 public class CVM extends AbstractCVM {
-	/** URI of the eolienne component (convenience).						*/
-	public static final String	EOLIENNE_COMPONENT_URI = "my-URI-eolienne" ;
-	/** URI of the bouilloire component (convenience).						*/
-	public static final String	BOUILLOIRE_COMPONENT_URI = "my-URI-bouilloire" ;
-	/** URI of the chauffage component (convenience).						*/
-	public static final String	CHAUFFAGE_COMPONENT_URI = "my-URI-chauffage" ;
-	/** URI of the controleur component (convenience).						*/
+	
+//--------------------------------------------------------------
+//-------------------------VARIABLES----------------------------
+//--------------------------------------------------------------
+	
+	//--------------------------------------------------------------
+	//-------------------------CONTROLEUR---------------------------
+	//--------------------------------------------------------------
 	public static final String	CONTROLEUR_COMPONENT_URI = "my-URI-controleur" ;
-	/** URI of the capteur component (convenience).						*/
-	public static final String	CAPTEUR_COMPONENT_URI = "my-URI-capteur" ;
-	/** URI of the chargeurcomponent (convenience).						*/
-	public static final String	CHARGEUR_COMPONENT_URI = "my-URI-chargeur" ;
-	/** URI of the batterie component (convenience).						*/
-	public static final String	BATTERIE_COMPONENT_URI = "my-URI-batterie" ;
 	
-	
-	
-	
-
-	/** URI of the eolienne outbound port (simplifies the connection).	*/
+	//--------------------------------------------------------------
+	//-------------------------EOLIENNE-----------------------------
+	//--------------------------------------------------------------
+	public static final String	EOLIENNE_COMPONENT_URI = "my-URI-eolienne" ;
 	protected static final String	URIEolienneOutboundPortURI = "eolienneOPort" ;
-	/** URI of the eolienne inbound port (simplifies the connection).		*/
 	protected static final String	URIEolienneInboundPortURI = "eolienneIPort" ;	
-
-	/** URI of the bouilloire outbound port (simplifies the connection).	*/
+	protected static final String	URIControleurEolienneOutboundPortURI = "controleurEolienneOPort" ;
+	protected static final String	URIControleurEolienneInboundPortURI = "controleurEolienneIPort" ;
+	
+	//--------------------------------------------------------------
+	//-------------------------BOUILLOIRE---------------------------
+	//--------------------------------------------------------------	
+	public static final String	BOUILLOIRE_COMPONENT_URI = "my-URI-bouilloire" ;
 	protected static final String	URIBouilloireOutboundPortURI = "bouilloireOPort" ;
-	/** URI of the bouilloire inbound port (simplifies the connection).		*/
-	protected static final String	URIBouilloireInboundPortURI = "bouilloireIPort" ;	
-
-	/** URI of the bouilloire outbound port (simplifies the connection).	*/
-	protected static final String	URIChauffageOutboundPortURI = "chauffageOPort" ;
-	/** URI of the bouilloire inbound port (simplifies the connection).		*/
-	protected static final String	URIChauffageInboundPortURI = "chauffageIPort" ;	
-	
-	/** URI of the bouilloire outbound port (simplifies the connection).	*/
-	protected static final String	URIChargeurOutboundPortURI = "chargeurOPort" ;
-	/** URI of the bouilloire inbound port (simplifies the connection).		*/
-	protected static final String	URIChargeurInboundPortURI = "chargeurIPort" ;	
-	
-	/** URI of the bouilloire outbound port (simplifies the connection).	*/
-	protected static final String	URIBatterieOutboundPortURI = "batterieOPort" ;
-	/** URI of the bouilloire inbound port (simplifies the connection).		*/
-	protected static final String	URIBatterieInboundPortURI = "batterieIPort" ;	
-
-	/** URI of the controleur outbound port (simplifies the connection).		*/
-	protected static final String	URIControleurOutboundPortURI = "controleurOPort" ;
-	/** URI of the controleur inbound port (simplifies the connection).		*/
-	protected static final String	URIControleurInboundPortURI = "controleurIPort" ;
-	/** URI of the controleur outbound port (simplifies the connection).		*/
+	protected static final String	URIBouilloireInboundPortURI = "bouilloireIPort" ;
 	protected static final String	URIControleurBouilloireOutboundPortURI = "controleurBouilloireOPort" ;
-	/** URI of the controleur inbound port (simplifies the connection).		*/
 	protected static final String	URIControleurBouilloireInboundPortURI = "controleurBouilloireIPort" ;
-
-	/** URI of the controleur outbound port (simplifies the connection).		*/
+	
+	//--------------------------------------------------------------
+	//-------------------------CHAUFFAGE----------------------------
+	//--------------------------------------------------------------
+	public static final String	CHAUFFAGE_COMPONENT_URI = "my-URI-chauffage" ;
+	protected static final String	URIChauffageOutboundPortURI = "chauffageOPort" ;
+	protected static final String	URIChauffageInboundPortURI = "chauffageIPort" ;	
 	protected static final String	URIControleurChauffageOutboundPortURI = "controleurChauffageOPort" ;
-	/** URI of the controleur inbound port (simplifies the connection).		*/
 	protected static final String	URIControleurChauffageInboundPortURI = "controleurChauffageIPort" ;
 	
-	/** URI of the controleur outbound port (simplifies the connection).		*/
+	//--------------------------------------------------------------
+	//-------------------------COMPTEUR-----------------------------
+	//--------------------------------------------------------------
+	/** URI of the compteur component (convenience).						*/
+	public static final String	COMPTEUR_COMPONENT_URI = "my-URI-compteur" ;
+	protected static final String	URICompteurOutboundPortURI = "compteurOPort" ;
+	protected static final String	URICompteurInboundPortURI = "compteurIPort" ;	
+	protected static final String	URIControleurCompteurOutboundPortURI = "controleurCompteurOPort" ;
+	protected static final String	URIControleurCompteurInboundPortURI = "controleurCompteurIPort" ;	
+	
+	//--------------------------------------------------------------
+	//-------------------------CHARGEUR-----------------------------
+	//--------------------------------------------------------------
+	public static final String	CHARGEUR_COMPONENT_URI = "my-URI-chargeur" ;
+	protected static final String	URIChargeurOutboundPortURI = "chargeurOPort" ;
+	protected static final String	URIChargeurInboundPortURI = "chargeurIPort" ;
 	protected static final String	URIControleurChargeurOutboundPortURI = "controleurChargeurOPort" ;
-	/** URI of the controleur inbound port (simplifies the connection).		*/
 	protected static final String	URIControleurChargeurInboundPortURI = "controleurChargeurIPort" ;
 	
-	/** URI of the controleur outbound port (simplifies the connection).		*/
+	//--------------------------------------------------------------
+	//-------------------------BATTERIE-----------------------------
+	//--------------------------------------------------------------
+	public static final String	BATTERIE_COMPONENT_URI = "my-URI-batterie" ;
+	protected static final String	URIBatterieOutboundPortURI = "batterieOPort" ;
+	protected static final String	URIBatterieInboundPortURI = "batterieIPort" ;	
 	protected static final String	URIControleurBatterieOutboundPortURI = "controleurBatterieOPort" ;
-	/** URI of the controleur inbound port (simplifies the connection).		*/
 	protected static final String	URIControleurBatterieInboundPortURI = "controleurBatterieIPort" ;
 	
-
-
-
-
-
-	/** URI of the capteurVent outbound port (simplifies the connection).	*/
+	//--------------------------------------------------------------
+	//-------------------------CAPTEUR VENT------------------------
+	//--------------------------------------------------------------
+	public static final String	CAPTEUR_VENT_COMPONENT_URI = "my-URI-capteur-vent" ;
 	protected static final String	URICapteurVentOutboundPortURI = "capteurVentOPort" ;
-	/** URI of the capteurVent inbound port (simplifies the connection).		*/
 	protected static final String	URICapteurVentInboundPortURI = "capteurVentIPort" ;
-
-
-
-	protected CVM() throws Exception{
-		super() ;
-	}
-
-	/** Reference to the eolienne component to share between deploy
-	 *  and shutdown.													*/
+	
+	//--------------------------------------------------------------
+	//-------------------------CAPTEUR CHALEUR----------------------
+	//--------------------------------------------------------------
+	public static final String	CAPTEUR_CHALEUR_COMPONENT_URI = "my-URI-capteur-chaleur" ;
+	protected static final String	URICapteurChaleurOutboundPortURI = "capteurChaleurOPort" ;
+	protected static final String	URICapteurChaleurInboundPortURI = "capteurChaleurIPort" ;
+	
+	
+	
+	//--------------------------------------------------------------
+	//-------------------------URI COMPONENTS-----------------------
+	//--------------------------------------------------------------
 	protected String uriEolienneURI ;
-	/** Reference to the bouilloire component to share between deploy
-	 *  and shutdown.													*/
 	protected String uriBouilloireURI ;
-	/** Reference to the bouilloire component to share between deploy
-	 *  and shutdown.													*/
 	protected String uriChauffageURI ;
-	/** Reference to the controleur component to share between deploy
-	 *  and shutdown.													*/
+	protected String uriCompteurURI ;
 	protected String uriControleurURI ;
-	/** Reference to the Capteur component to share between deploy
-	 *  and shutdown.													*/	
-	protected String uriCapteurURI ;
-	/** Reference to the Chargeur component to share between deploy
-	 *  and shutdown.													*/	
+	protected String uriCapteurVentURI ;
+	protected String uriCapteurChaleurURI ;
 	protected String uriChargeurURI ;
-	/** Reference to the Chargeur component to share between deploy
-	 *  and shutdown.													*/	
 	protected String uriBatterieURI ;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTOR--------------------------
+//--------------------------------------------------------------
+	protected CVM() throws Exception{
+		super();
+	}
 
-	/**
-	 * instantiate the components, publish their port and interconnect them.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	!this.deploymentDone()
-	 * post	this.deploymentDone()
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#deploy()
-	 */
+
+//--------------------------------------------------------------
+//-------------------------DEPLOY-------------------------------
+//--------------------------------------------------------------	
 	@Override
-	public void	deploy() throws Exception
-	{
+	public void	deploy() throws Exception{
 		assert	!this.deploymentDone() ;
 
-		// --------------------------------------------------------------------
-		// Configuration phase
-		// --------------------------------------------------------------------
-
-		// debugging mode configuration; comment and uncomment the line to see
-		// the difference
-		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.PUBLIHSING) ;
-		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.CONNECTING) ;
-		// AbstractCVM.DEBUG_MODE.add(CVMDebugModes.COMPONENT_DEPLOYMENT) ;
-
-		// --------------------------------------------------------------------
-		// Creation phase
-		// --------------------------------------------------------------------
-
-		// create the eolienne component
+		//--------------------------------------------------------------
+		//-------------------------EOLIENNE-----------------------------
+		//--------------------------------------------------------------
 		this.uriEolienneURI =
 				AbstractComponent.createComponent(
 						Eolienne.class.getCanonicalName(),
 						new Object[]{EOLIENNE_COMPONENT_URI,
 								URIEolienneOutboundPortURI,
 								URIEolienneInboundPortURI}) ;
-
 		assert	this.isDeployedComponent(this.uriEolienneURI) ;
-		// make it trace its operations; comment and uncomment the line to see
-		// the difference
 		this.toggleTracing(this.uriEolienneURI) ;
 		this.toggleLogging(this.uriEolienneURI) ;
 
-		// create the bouilloire component
+		//--------------------------------------------------------------
+		//-------------------------BOUILLOIRE---------------------------
+		//--------------------------------------------------------------
 		this.uriBouilloireURI =
 				AbstractComponent.createComponent(
 						Bouilloire.class.getCanonicalName(),
@@ -238,7 +158,9 @@ public class CVM extends AbstractCVM {
 		this.toggleTracing(this.uriBouilloireURI) ;
 		this.toggleLogging(this.uriBouilloireURI) ;
 
-		// create the chauffage component
+		//--------------------------------------------------------------
+		//-------------------------CHAUFFAGE----------------------------
+		//--------------------------------------------------------------
 		this.uriChauffageURI =
 				AbstractComponent.createComponent(
 						Chauffage.class.getCanonicalName(),
@@ -249,55 +171,65 @@ public class CVM extends AbstractCVM {
 		assert	this.isDeployedComponent(this.uriChauffageURI) ;
 		this.toggleTracing(this.uriChauffageURI) ;
 		this.toggleLogging(this.uriChauffageURI) ;
-
-
-		// create the controleur component
-		this.uriControleurURI =
+		
+		//--------------------------------------------------------------
+		//-------------------------COMPTEUR-----------------------------
+		//--------------------------------------------------------------
+		this.uriCompteurURI =
 				AbstractComponent.createComponent(
-						Controleur.class.getCanonicalName(),
-						new Object[]{CONTROLEUR_COMPONENT_URI,
-								URIControleurOutboundPortURI,
-								URIControleurInboundPortURI,
-								URICapteurVentOutboundPortURI,
-								URIControleurBouilloireOutboundPortURI,
-								URIControleurBouilloireInboundPortURI,
-								URIControleurChauffageOutboundPortURI,
-								URIControleurChauffageInboundPortURI,
-								URIControleurChargeurOutboundPortURI,
-								URIControleurChargeurInboundPortURI,
-								URIControleurBatterieOutboundPortURI,
-								URIControleurBatterieInboundPortURI}) ;
-		assert	this.isDeployedComponent(this.uriControleurURI) ;
-		this.toggleTracing(this.uriControleurURI) ;
-		this.toggleLogging(this.uriControleurURI) ;
+						Compteur.class.getCanonicalName(),
+						new Object[]{COMPTEUR_COMPONENT_URI,
+								URICompteurOutboundPortURI,
+								URICompteurInboundPortURI}) ;
 
-		// create the capteurVent component
-		this.uriCapteurURI =
+		assert	this.isDeployedComponent(this.uriCompteurURI) ;
+		this.toggleTracing(this.uriCompteurURI) ;
+		this.toggleLogging(this.uriCompteurURI) ;
+
+		//--------------------------------------------------------------
+		//-------------------------CAPTEUR VENT-------------------------
+		//--------------------------------------------------------------
+		this.uriCapteurVentURI =
 				AbstractComponent.createComponent(
 						CapteurVent.class.getCanonicalName(),
-						new Object[]{CAPTEUR_COMPONENT_URI,
+						new Object[]{CAPTEUR_VENT_COMPONENT_URI,
 								URICapteurVentInboundPortURI}) ;
-		assert	this.isDeployedComponent(this.uriCapteurURI) ;
-		this.toggleTracing(this.uriCapteurURI) ;
-		this.toggleLogging(this.uriCapteurURI) ;
+		assert	this.isDeployedComponent(this.uriCapteurVentURI) ;
+		this.toggleTracing(this.uriCapteurVentURI) ;
+		this.toggleLogging(this.uriCapteurVentURI) ;
 		
+		//--------------------------------------------------------------
+		//-------------------------CAPTEUR CHALEUR----------------------
+		//--------------------------------------------------------------
+		this.uriCapteurChaleurURI =
+				AbstractComponent.createComponent(
+						CapteurChaleur.class.getCanonicalName(),
+						new Object[]{CAPTEUR_CHALEUR_COMPONENT_URI,
+								URICapteurChaleurInboundPortURI}) ;
+		assert	this.isDeployedComponent(this.uriCapteurChaleurURI) ;
+		this.toggleTracing(this.uriCapteurChaleurURI) ;
+		this.toggleLogging(this.uriCapteurChaleurURI) ;
 		
-		// create the chargeur component
-				this.uriChargeurURI =
-						AbstractComponent.createComponent(
-								Chargeur.class.getCanonicalName(),
-								new Object[]{CHARGEUR_COMPONENT_URI,
-										URIChargeurOutboundPortURI,
-										URIChargeurInboundPortURI}) ;
-				assert	this.isDeployedComponent(this.uriChargeurURI) ;
-				this.toggleTracing(this.uriChargeurURI) ;
-				this.toggleLogging(this.uriChargeurURI) ;
-				
-				
-		// create the batterie component
-		this.uriBatterieURI =
+		//--------------------------------------------------------------
+		//-------------------------CHARGEUR-----------------------------
+		//--------------------------------------------------------------
+		this.uriChargeurURI =
 				AbstractComponent.createComponent(
 						Chargeur.class.getCanonicalName(),
+						new Object[]{CHARGEUR_COMPONENT_URI,
+								URIChargeurOutboundPortURI,
+								URIChargeurInboundPortURI}) ;
+		assert	this.isDeployedComponent(this.uriChargeurURI) ;
+		this.toggleTracing(this.uriChargeurURI) ;
+		this.toggleLogging(this.uriChargeurURI) ;
+				
+				
+		//--------------------------------------------------------------
+		//-------------------------BATTERIE-----------------------------
+		//--------------------------------------------------------------
+		this.uriBatterieURI =
+				AbstractComponent.createComponent(
+						Batterie.class.getCanonicalName(),
 						new Object[]{BATTERIE_COMPONENT_URI,
 								URIBatterieOutboundPortURI,
 								URIBatterieInboundPortURI}) ;
@@ -305,11 +237,35 @@ public class CVM extends AbstractCVM {
 		this.toggleTracing(this.uriBatterieURI) ;
 		this.toggleLogging(this.uriBatterieURI) ;
 
-		// --------------------------------------------------------------------
-		// Connection phase
-		// --------------------------------------------------------------------
+		//--------------------------------------------------------------
+		//-------------------------CONTROLEUR---------------------------
+		//--------------------------------------------------------------
+		this.uriControleurURI =
+				AbstractComponent.createComponent(
+						Controleur.class.getCanonicalName(),
+						new Object[]{CONTROLEUR_COMPONENT_URI,
+								URIControleurEolienneOutboundPortURI,
+								URIControleurEolienneInboundPortURI,
+								URIControleurBouilloireOutboundPortURI,
+								URIControleurBouilloireInboundPortURI,
+								URIControleurChauffageOutboundPortURI,
+								URIControleurChauffageInboundPortURI,
+								URIControleurCompteurOutboundPortURI,
+								URIControleurCompteurInboundPortURI,
+								URIControleurChargeurOutboundPortURI,
+								URIControleurChargeurInboundPortURI,
+								URIControleurBatterieOutboundPortURI,
+								URIControleurBatterieInboundPortURI,
+								URICapteurVentOutboundPortURI,
+								URICapteurChaleurOutboundPortURI}) ;
+		assert	this.isDeployedComponent(this.uriControleurURI) ;
+		this.toggleTracing(this.uriControleurURI) ;
+		this.toggleLogging(this.uriControleurURI) ;
 
-		// do the connection
+
+//--------------------------------------------------------------
+//-------------------------CONNECTION PHASE---------------------
+//--------------------------------------------------------------
 
 		//BOUILLOIRE <=> CONTROLEUR
 		this.doPortConnection(
@@ -317,52 +273,71 @@ public class CVM extends AbstractCVM {
 				URIBouilloireOutboundPortURI,
 				URIControleurBouilloireInboundPortURI,
 				BouilloireControleurConnector.class.getCanonicalName()) ;
-
 		this.doPortConnection(
 				this.uriControleurURI,
 				URIControleurBouilloireOutboundPortURI,
 				URIBouilloireInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
 
+		
 		//CHAUFFAGE <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriChauffageURI,
 				URIChauffageOutboundPortURI,
 				URIControleurChauffageInboundPortURI,
 				ChauffageControleurConnector.class.getCanonicalName()) ;
-
 		this.doPortConnection(
 				this.uriControleurURI,
 				URIControleurChauffageOutboundPortURI,
 				URIChauffageInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
+		
+		
+		//COMPTEUR <=> CONTROLEUR
+		this.doPortConnection(
+				this.uriCompteurURI,
+				URICompteurOutboundPortURI,
+				URIControleurCompteurInboundPortURI,
+				CompteurControleurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriControleurURI,
+				URIControleurCompteurOutboundPortURI,
+				URICompteurInboundPortURI,
+				ControleurConnector.class.getCanonicalName()) ;	
+				
+		
 		//EOLIENNE <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriEolienneURI,
 				URIEolienneOutboundPortURI,
-				URIControleurInboundPortURI,
+				URIControleurEolienneInboundPortURI,
 				EolienneControleurConnector.class.getCanonicalName()) ;
-
 		this.doPortConnection(
 				this.uriControleurURI,
-				URIControleurOutboundPortURI,
+				URIControleurEolienneOutboundPortURI,
 				URIEolienneInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
 
+		
 		//CAPTEUR <=> CAPTEUR
 		this.doPortConnection(
 				this.uriControleurURI,
 				URICapteurVentOutboundPortURI,
 				URICapteurVentInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriControleurURI,
+				URICapteurChaleurOutboundPortURI,
+				URICapteurChaleurInboundPortURI,
+				ControleurConnector.class.getCanonicalName()) ;
 		
-		//Chargeur <=> CONTROLEUR
+		
+		//CHARGEUR <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriChargeurURI,
 				URIChargeurOutboundPortURI,
 				URIControleurChargeurInboundPortURI,
 				ChargeurControleurConnector.class.getCanonicalName()) ;
-
 		this.doPortConnection(
 				this.uriControleurURI,
 				URIControleurChargeurOutboundPortURI,
@@ -370,109 +345,67 @@ public class CVM extends AbstractCVM {
 				ControleurConnector.class.getCanonicalName()) ;	
 				
 		
-		//Batterie <=> CONTROLEUR
+		//BATTERIE <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriBatterieURI,
 				URIBatterieOutboundPortURI,
 				URIControleurBatterieInboundPortURI,
 				BatterieControleurConnector.class.getCanonicalName()) ;
-
 		this.doPortConnection(
 				this.uriControleurURI,
 				URIControleurBatterieOutboundPortURI,
 				URIBatterieInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
 
-
-
-		// Nota: the above use of the reference to the object representing
-		// the URI consumer component is allowed only in the deployment
-		// phase of the component virtual machine (to perform the static
-		// interconnection of components in a static architecture) and
-		// inside the concerned component (i.e., where the method
-		// doPortConnection can be called with the this destination
-		// (this.doPortConenction(...)). It must never be used in another
-		// component as the references to objects used to implement component
-		// features must not be shared among components.
-
-		// --------------------------------------------------------------------
-		// Deployment done
-		// --------------------------------------------------------------------
-
+//--------------------------------------------------------------
+//-------------------------DEPLOYMENT PHASE---------------------
+//--------------------------------------------------------------
 		super.deploy();
-		assert	this.deploymentDone() ;
+		assert this.deploymentDone() ;
 	}
-
-	/**
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#finalise()
-	 */
+	
+//--------------------------------------------------------------
+//-------------------------FINALISE-----------------------------
+//--------------------------------------------------------------
 	@Override
-	public void	finalise() throws Exception
-	{
-		// Port disconnections can be done here for static architectures
-		// otherwise, they can be done in the finalise methods of components.
+	public void	finalise() throws Exception{
 		super.finalise();
-
 	}
 
-	/**
-	 * disconnect the components and then call the base shutdown method.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true				// no more preconditions.
-	 * post	true				// no more postconditions.
-	 * </pre>
-	 * 
-	 * @see fr.sorbonne_u.components.cvm.AbstractCVM#shutdown()
-	 */
+//--------------------------------------------------------------
+//-------------------------SHUTDOWN-----------------------------
+//--------------------------------------------------------------
 	@Override
-	public void	shutdown() throws Exception
-	{
-		assert	this.allFinalised() ;
-		// any disconnection not done yet can be performed here
-
+	public void	shutdown() throws Exception{
+		assert this.allFinalised() ;
 		super.shutdown();
 	}
 
+//--------------------------------------------------------------
+//-------------------------MAIN---------------------------------
+//--------------------------------------------------------------	
 	public static void main(String[] args) {
 		try {
-			// Create an instance of the defined component virtual machine.
-			CVM a = new CVM() ;
-			// Execute the application.
-			a.startStandardLifeCycle(20000L) ;
-			// Give some time to see the traces (convenience).
-			Thread.sleep(5000L) ;
-			// Simplifies the termination (termination has yet to be treated
-			// properly in BCM).
-			System.exit(0) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+			CVM a = new CVM();
+			a.startStandardLifeCycle(20000L);
+			Thread.sleep(5000L);
+			System.exit(0);
+		} catch (Exception e) {throw new RuntimeException(e);}
 	}
 
-
-
-
-
+//--------------------------------------------------------------
+//-------------------------DO_PORT_CONNECTION-------------------
+//--------------------------------------------------------------
 	@Override
-	public void			doPortConnection(
+	public void	doPortConnection(
 			String componentURI,
 			String outboundPortURI,
 			String inboundPortURI,
-			String connectorClassname
-			) throws Exception
-	{
-		assert	componentURI != null && outboundPortURI != null &&
+			String connectorClassname) throws Exception{
+		assert componentURI != null && outboundPortURI != null &&
 				inboundPortURI != null && connectorClassname != null ;
-		assert	this.isDeployedComponent(componentURI) ;
-		this.uri2component.get(componentURI).doPortConnection(
-				outboundPortURI, inboundPortURI, connectorClassname);
+		assert this.isDeployedComponent(componentURI) ;
+		this.uri2component.get(componentURI)
+						  .doPortConnection(outboundPortURI, inboundPortURI, connectorClassname);
 	}
-
-
-
-
-
 }

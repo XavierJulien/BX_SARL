@@ -6,11 +6,13 @@ import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.EolienneI;
 
-public class EolienneInboundPort extends AbstractInboundPort implements EolienneI
-{
+public class EolienneInboundPort extends AbstractInboundPort implements EolienneI{
 
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public EolienneInboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, EolienneI.class, owner);
 	}
@@ -19,6 +21,9 @@ public class EolienneInboundPort extends AbstractInboundPort implements Eolienne
 		super(EolienneI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	public void startEolienne() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
@@ -45,8 +50,6 @@ public class EolienneInboundPort extends AbstractInboundPort implements Eolienne
 	@Override
 	public double sendProduction() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Eolienne)owner).sendProduction()) ;
-		
+				owner -> ((Eolienne)owner).sendProduction()) ;	
 	}
-
 }

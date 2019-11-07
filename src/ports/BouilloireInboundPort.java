@@ -10,6 +10,9 @@ public class BouilloireInboundPort extends AbstractInboundPort implements Bouill
 	
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public BouilloireInboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, BouilloireI.class, owner);
 	}
@@ -18,6 +21,9 @@ public class BouilloireInboundPort extends AbstractInboundPort implements Bouill
 		super(BouilloireI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	public void startBouilloire() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
@@ -40,5 +46,4 @@ public class BouilloireInboundPort extends AbstractInboundPort implements Bouill
 					}
 				}) ;
 	}
-
 }

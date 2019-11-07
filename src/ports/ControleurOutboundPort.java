@@ -36,6 +36,11 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 	public double getVent() throws Exception {
 		return ((ControleurI)this.connector).getVent();
 	}
+	
+	@Override
+	public double getChaleur() throws Exception {
+		return ((ControleurI)this.connector).getChaleur();
+	}
 
 	@Override
 	public void startBouilloire() throws Exception {
@@ -57,6 +62,16 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 		((ControleurI)this.connector).stopChauffage() ;		
 	}
 
+	@Override
+	public void startCompteur() throws Exception {
+		((ControleurI)this.connector).startCompteur() ;		
+	}
+
+	@Override
+	public void stopCompteur() throws Exception {
+		((ControleurI)this.connector).stopCompteur() ;		
+	}
+	
 	@Override
 	public void startChargeur() throws Exception {
 		((ControleurI)this.connector).startChargeur() ;				

@@ -8,31 +8,31 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.CapteurVentI;
-import ports.CapteurVentInboundPort;
+import interfaces.CapteurChaleurI;
+import ports.CapteurChaleurInboundPort;
 
-@RequiredInterfaces(required = {CapteurVentI.class})
-@OfferedInterfaces(offered = {CapteurVentI.class})
-public class CapteurVent extends AbstractComponent {
+@RequiredInterfaces(required = {CapteurChaleurI.class})
+@OfferedInterfaces(offered = {CapteurChaleurI.class})
+public class CapteurChaleur extends AbstractComponent {
 
 	protected final String				uri ;
 	/** The inbound port URI for the eolienne.*/
-	protected final String				capteurVentInboundPortURI ;
+	protected final String				capteurChaleurInboundPortURI ;
 
-	protected final CapteurVentInboundPort capteurVentInboundPort;
+	protected final CapteurChaleurInboundPort capteurChaleurInboundPort;
 
 	protected double power = 0;
 
 
 
-	protected CapteurVent(String uri, String capteurVentInboundPortURI) throws Exception{
+	protected CapteurChaleur(String uri, String capteurChaleurInboundPortURI) throws Exception{
 
 		super(uri, 1, 1);
 		this.uri = uri;
-		this.capteurVentInboundPortURI = capteurVentInboundPortURI;
+		this.capteurChaleurInboundPortURI = capteurChaleurInboundPortURI;
 
-		capteurVentInboundPort = new CapteurVentInboundPort(capteurVentInboundPortURI, this) ;
-		capteurVentInboundPort.publishPort() ;
+		capteurChaleurInboundPort = new CapteurChaleurInboundPort(capteurChaleurInboundPortURI, this) ;
+		capteurChaleurInboundPort.publishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -40,12 +40,12 @@ public class CapteurVent extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}	
 
-		this.tracer.setTitle("CapteurVent") ;
-		this.tracer.setRelativePosition(2, 0) ;
+		this.tracer.setTitle("CapteurChaleur") ;
+		this.tracer.setRelativePosition(3, 0) ;
 	}
 
-	public double sendWind() throws Exception {
-		this.logMessage("Sending wind power....") ;
+	public double sendChaleur() throws Exception {
+		this.logMessage("Sending chaleur power....") ;
 		power+=0.2;
 		return Math.abs(Math.sin(power));
 		//		return 0.3;
@@ -53,12 +53,11 @@ public class CapteurVent extends AbstractComponent {
 	}
 
 	@Override
-	public void			start() throws ComponentStartException
-	{
+	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting CapteurVent component.") ;
-		
+		this.logMessage("starting CapteurChaleur component.") ;
 	}
+	
 	@Override
 	public void execute() throws Exception {
 		super.execute();
@@ -69,7 +68,7 @@ public class CapteurVent extends AbstractComponent {
 							@Override
 							public void run() {
 								try {
-									((CapteurVent)this.getTaskOwner()).sendWind() ;
+									((CapteurChaleur)this.getTaskOwner()).sendChaleur() ;
 
 								} catch (Exception e) {
 									throw new RuntimeException(e) ;
@@ -92,7 +91,7 @@ public class CapteurVent extends AbstractComponent {
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			capteurVentInboundPort.unpublishPort();
+			capteurChaleurInboundPort.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

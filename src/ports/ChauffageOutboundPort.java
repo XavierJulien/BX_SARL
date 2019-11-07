@@ -7,6 +7,9 @@ import interfaces.ChauffageI;
 public class ChauffageOutboundPort extends AbstractOutboundPort implements ChauffageI{
 	private static final long serialVersionUID = 1L;
 
+//--------------------------------------------------------------
+//-------------------------CONSTRUCTORS-------------------------
+//--------------------------------------------------------------
 	public ChauffageOutboundPort(String uri, ComponentI owner) throws Exception {
 		super(uri, ChauffageI.class, owner);
 	}
@@ -15,6 +18,9 @@ public class ChauffageOutboundPort extends AbstractOutboundPort implements Chauf
 		super(ChauffageI.class, owner);
 	}
 
+//--------------------------------------------------------------
+//-------------------------SERVICES-----------------------------
+//--------------------------------------------------------------
 	@Override
 	public void startChauffage() throws Exception {
 		((ChauffageI)this.connector).startChauffage() ;
@@ -24,6 +30,4 @@ public class ChauffageOutboundPort extends AbstractOutboundPort implements Chauf
 	public void stopChauffage() throws Exception {
 		((ChauffageI)this.connector).stopChauffage() ;
 	}
-
-
 }

@@ -1,31 +1,31 @@
 package ports;
 
-import components.CapteurVent;
+import components.CapteurChaleur;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.CapteurVentI;
+import interfaces.CapteurChaleurI;
 
-public class CapteurVentInboundPort extends AbstractInboundPort implements CapteurVentI {
+public class CapteurChaleurInboundPort extends AbstractInboundPort implements CapteurChaleurI {
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public CapteurVentInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, CapteurVentI.class, owner);
+	public CapteurChaleurInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, CapteurChaleurI.class, owner);
 	}
 	
-	public CapteurVentInboundPort(ComponentI owner) throws Exception {
-		super(CapteurVentI.class, owner);
+	public CapteurChaleurInboundPort(ComponentI owner) throws Exception {
+		super(CapteurChaleurI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public double sendWind() throws Exception {
+	public double sendChaleur() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((CapteurVent)owner).sendWind()) ;	
-	}	
+				owner -> ((CapteurChaleur)owner).sendChaleur()) ;	
+	}
 }
