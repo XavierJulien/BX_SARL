@@ -20,6 +20,13 @@ public class Chargeur extends AbstractComponent{
 	protected ChargeurOutboundPort		chargeurOutboundPort ;
 	protected ChargeurInboundPort		chargeurInboundPort ;
 	protected boolean 					isOn=false;
+	
+	
+	
+	//Variables
+	
+	protected double conso;
+	
 
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
@@ -52,6 +59,13 @@ public class Chargeur extends AbstractComponent{
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 3) ;
+		
+		
+		
+		
+		//---------------Variables----------------
+		
+		this.conso = 10;
 	}
 
 	
@@ -71,6 +85,11 @@ public class Chargeur extends AbstractComponent{
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Chargeur component.") ;
+	}
+	
+	public double sendConso() throws Exception{
+		this.logMessage("Sending consommation");
+		return conso;
 	}
 	
 	@Override

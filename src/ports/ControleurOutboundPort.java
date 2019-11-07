@@ -101,6 +101,21 @@ public class ControleurOutboundPort extends AbstractOutboundPort implements	Cont
 	public double getBatteryProduction() throws Exception {
 		return ((ControleurI)this.connector).getBatteryProduction();
 	}
+
+	@Override
+	public double getBouilloireConso() throws Exception {
+		return ((ControleurI)this.connector).getBouilloireConso();
+	}
+
+	@Override
+	public double getChauffageConso() throws Exception {
+		return ((ControleurI)this.connector).getChauffageConso();
+	}
+
+	@Override
+	public double getChargeurConso() throws Exception {
+		return ((ControleurI)this.connector).getChargeurConso();
+	}
 	
 	
 	

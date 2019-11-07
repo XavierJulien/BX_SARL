@@ -1,5 +1,6 @@
 package ports;
 
+import components.Bouilloire;
 import components.Chauffage;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
@@ -45,5 +46,11 @@ public class ChauffageInboundPort extends AbstractInboundPort implements Chauffa
 						return null;
 					}
 				}) ;
+	}
+
+	@Override
+	public double sendConso() throws Exception {
+		return this.getOwner().handleRequestSync(
+				owner -> ((Chauffage)owner).sendConso()) ;	
 	}
 }

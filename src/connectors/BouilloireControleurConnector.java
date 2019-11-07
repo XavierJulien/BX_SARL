@@ -15,4 +15,9 @@ public class BouilloireControleurConnector extends	AbstractConnector implements 
 	public void stopBouilloire() throws Exception {
 		((ControleurI)this.offering).stopBouilloire();
 	}
+
+	@Override
+	public double sendConso() throws Exception {
+		return 0;
+	}
 }

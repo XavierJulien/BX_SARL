@@ -46,4 +46,10 @@ public class BouilloireInboundPort extends AbstractInboundPort implements Bouill
 					}
 				}) ;
 	}
+
+	@Override
+	public double sendConso() throws Exception {
+		return this.getOwner().handleRequestSync(
+				owner -> ((Bouilloire)owner).sendConso()) ;	
+	}
 }

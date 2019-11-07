@@ -10,29 +10,37 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.CapteurChaleurI;
 import ports.CapteurChaleurInboundPort;
+import ports.CapteurChauffageOutboundPort;
 
 @RequiredInterfaces(required = {CapteurChaleurI.class})
 @OfferedInterfaces(offered = {CapteurChaleurI.class})
 public class CapteurChaleur extends AbstractComponent {
 
 	protected final String				uri ;
-	/** The inbound port URI for the eolienne.*/
+
 	protected final String				capteurChaleurInboundPortURI ;
+	
+	protected final String				linkWithChauffageOutboundPortURI ;
 
 	protected final CapteurChaleurInboundPort capteurChaleurInboundPort;
+	
+	protected final CapteurChauffageOutboundPort capteurChauffageOutboundPort;
 
 	protected double power = 0;
 
 
 
-	protected CapteurChaleur(String uri, String capteurChaleurInboundPortURI) throws Exception{
+	protected CapteurChaleur(String uri, String capteurChaleurInboundPortURI, String linkWithChauffageOutboundPortURI) throws Exception{
 
 		super(uri, 1, 1);
 		this.uri = uri;
 		this.capteurChaleurInboundPortURI = capteurChaleurInboundPortURI;
+		this.linkWithChauffageOutboundPortURI = linkWithChauffageOutboundPortURI;
 
 		capteurChaleurInboundPort = new CapteurChaleurInboundPort(capteurChaleurInboundPortURI, this) ;
 		capteurChaleurInboundPort.publishPort() ;
+		capteurChauffageOutboundPort = new CapteurChauffageOutboundPort(linkWithChauffageOutboundPortURI, this);
+		capteurChauffageOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -77,14 +85,19 @@ public class CapteurChaleur extends AbstractComponent {
 						},
 						1000, TimeUnit.MILLISECONDS);
 	}
+	
+	public void getHeating() throws Exception {
+		double heat = this.capteurChauffageOutboundPort.getHeating();
+		this.logMessage("The CapteurChaleur is getting "+heat+" degrees from the Chauffage") ;
+	}
 
 	// ------------------------------------------------------------------------
 	// FINALISE / SHUTDOWN
 	// ------------------------------------------------------------------------
 
-
 	@Override
 	public void finalise() throws Exception {
+		capteurChauffageOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -92,6 +105,7 @@ public class CapteurChaleur extends AbstractComponent {
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			capteurChaleurInboundPort.unpublishPort();
+			capteurChauffageOutboundPort.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

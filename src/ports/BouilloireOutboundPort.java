@@ -32,5 +32,11 @@ public class BouilloireOutboundPort extends AbstractOutboundPort implements Boui
 		((BouilloireI)this.connector).stopBouilloire() ;
 	}
 
+	@Override
+	public double sendConso() throws Exception {
+		//shouldn't be used
+		return 0;
+	}
+
 
 }

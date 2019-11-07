@@ -1,5 +1,6 @@
 package ports;
 
+import components.Bouilloire;
 import components.Chargeur;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
@@ -47,5 +48,11 @@ public class ChargeurInboundPort extends AbstractInboundPort implements Chargeur
 					}
 				}) ;
 		
+	}
+
+	@Override
+	public double sendConso() throws Exception {
+		return this.getOwner().handleRequestSync(
+				owner -> ((Chargeur)owner).sendConso()) ;	
 	}
 }

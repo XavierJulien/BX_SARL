@@ -7,6 +7,7 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.ChauffageI;
+import ports.ChauffageCapteurInboundPort;
 import ports.ChauffageInboundPort;
 import ports.ChauffageOutboundPort;
 
@@ -15,26 +16,34 @@ import ports.ChauffageOutboundPort;
 public class Chauffage extends AbstractComponent {
 	
 	protected final String				uri ;
-	protected final String				chauffageInboundPortURI ;	
+	protected final String				chauffageInboundPortURI ;
+	protected final String				chauffageToCapteurInboundPortURI ;
 	protected final String				chauffageOutboundPortURI ;
+	
 	protected ChauffageOutboundPort		chauffageOutboundPort ;
 	protected ChauffageInboundPort		chauffageInboundPort ;
+	protected ChauffageCapteurInboundPort		chauffageToCapteurInboundPort ;
 	protected boolean 					isOn=false;
 
 	protected Chauffage(String uri,
 						String chauffageOutboundPortURI,
-						String chauffageInboundPortURI) throws Exception{
+						String chauffageInboundPortURI,
+						String chauffageToCapteurInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
 		assert chauffageOutboundPortURI != null;
 		assert chauffageInboundPortURI != null;
+		assert chauffageToCapteurInboundPortURI != null;
 
 		this.uri = uri;
 		this.chauffageInboundPortURI = chauffageInboundPortURI;
 		this.chauffageOutboundPortURI = chauffageOutboundPortURI;
+		this.chauffageToCapteurInboundPortURI = chauffageToCapteurInboundPortURI;
 
 		//-------------------PUBLISH-------------------
+		chauffageToCapteurInboundPort = new ChauffageCapteurInboundPort(chauffageToCapteurInboundPortURI, this) ;
+		chauffageToCapteurInboundPort.publishPort() ;
 		chauffageInboundPort = new ChauffageInboundPort(chauffageInboundPortURI, this) ;
 		chauffageInboundPort.publishPort() ;
 		this.chauffageOutboundPort = new ChauffageOutboundPort(chauffageOutboundPortURI, this) ;
@@ -66,8 +75,14 @@ public class Chauffage extends AbstractComponent {
 		isOn =false;
 	}
 
-	public double sendConsommation() throws Exception {
+	public double sendConso() throws Exception {
 		this.logMessage("Sending consommation....") ;
+		return Math.random()*10;
+	}
+	
+	
+	public double sendHeating() throws Exception {
+		this.logMessage("Sending Heat....") ;
 		return Math.random()*10;
 	}
 
@@ -98,6 +113,7 @@ public class Chauffage extends AbstractComponent {
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			chauffageInboundPort.unpublishPort();
+			chauffageToCapteurInboundPort.unpublishPort();
 			chauffageOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();

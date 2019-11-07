@@ -7,4 +7,5 @@ public interface ChargeurI extends DataOfferedI,DataRequiredI{
 
 	public void startChargeur() throws Exception;
 	public void stopChargeur() throws Exception;
+	public double sendConso() throws Exception;
 }

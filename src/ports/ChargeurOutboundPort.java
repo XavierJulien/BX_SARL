@@ -32,4 +32,10 @@ public class ChargeurOutboundPort extends AbstractOutboundPort implements Charge
 	public void stopChargeur() throws Exception {
 		((ChargeurI)this.connector).stopChargeur() ;		
 	}
+
+	@Override
+	public double sendConso() throws Exception {
+		//shouldn't be used
+		return 0;
+	}
 }

@@ -70,7 +70,7 @@ public class Bouilloire extends AbstractComponent{
 		isOn =false;
 	}
 	
-	public double sendConsommation() throws Exception {
+	public double sendConso() throws Exception {
 		this.logMessage("Sending consommation....") ;
 		return Math.random()*10;
 	}

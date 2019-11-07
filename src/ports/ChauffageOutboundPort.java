@@ -30,4 +30,10 @@ public class ChauffageOutboundPort extends AbstractOutboundPort implements Chauf
 	public void stopChauffage() throws Exception {
 		((ChauffageI)this.connector).stopChauffage() ;
 	}
+	
+	@Override
+	public double sendConso() throws Exception {
+		//shouldn't be used
+		return 0;
+	}
 }

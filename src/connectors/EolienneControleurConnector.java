@@ -18,6 +18,7 @@ public class EolienneControleurConnector extends AbstractConnector implements Eo
 
 	@Override
 	public double sendProduction() throws Exception {
+		//shouldn't be used
 		return 0;
 	}
 }

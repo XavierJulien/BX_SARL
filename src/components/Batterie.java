@@ -20,6 +20,8 @@ public class Batterie extends AbstractComponent {
 	protected BatterieOutboundPort		batterieOutboundPort ;
 	protected BatterieInboundPort		batterieInboundPort ;
 	protected double 					prod;
+	protected double 					maxCharge;
+	protected double					chargePercentage;
 	protected boolean 					isOn=false;
 
 	
@@ -55,6 +57,15 @@ public class Batterie extends AbstractComponent {
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(0, 3) ;
+		
+		//----------------Variables----------------
+		
+		this.maxCharge = 500;
+		this.chargePercentage = 0;
+		this.prod = 10;
+		
+		
+		
 	}
 
 
@@ -74,7 +85,7 @@ public class Batterie extends AbstractComponent {
 
 	public double sendChargePercentage() throws Exception {
 		this.logMessage("Sending charge percentage....") ;
-		return Math.random()*10;
+		return chargePercentage;
 	}
 	
 	public double sendEnergy() throws Exception {

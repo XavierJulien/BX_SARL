@@ -12,13 +12,13 @@ import components.Controleur;
 import components.Eolienne;
 import connectors.BatterieControleurConnector;
 import connectors.BouilloireControleurConnector;
+import connectors.CapteurChauffageConnector;
 import connectors.ChargeurControleurConnector;
 import connectors.ChauffageControleurConnector;
 import connectors.CompteurControleurConnector;
 import connectors.ControleurConnector;
 import connectors.EolienneControleurConnector;
 import fr.sorbonne_u.components.AbstractComponent;
-
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
 public class CVM extends AbstractCVM {
@@ -55,7 +55,8 @@ public class CVM extends AbstractCVM {
 	//--------------------------------------------------------------
 	public static final String	CHAUFFAGE_COMPONENT_URI = "my-URI-chauffage" ;
 	protected static final String	URIChauffageOutboundPortURI = "chauffageOPort" ;
-	protected static final String	URIChauffageInboundPortURI = "chauffageIPort" ;	
+	protected static final String	URIChauffageInboundPortURI = "chauffageIPort" ;
+	protected static final String	URIChauffageToCapteurInboundPortURI = "chauffageToCapteurIPort" ;
 	protected static final String	URIControleurChauffageOutboundPortURI = "controleurChauffageOPort" ;
 	protected static final String	URIControleurChauffageInboundPortURI = "controleurChauffageIPort" ;
 	
@@ -98,6 +99,7 @@ public class CVM extends AbstractCVM {
 	//-------------------------CAPTEUR CHALEUR----------------------
 	//--------------------------------------------------------------
 	public static final String	CAPTEUR_CHALEUR_COMPONENT_URI = "my-URI-capteur-chaleur" ;
+	protected static final String	URICapteurChaleurToChauffageOutboundPortURI = "capteurChaleurToChauffageOPort" ;
 	protected static final String	URICapteurChaleurOutboundPortURI = "capteurChaleurOPort" ;
 	protected static final String	URICapteurChaleurInboundPortURI = "capteurChaleurIPort" ;
 	
@@ -166,7 +168,8 @@ public class CVM extends AbstractCVM {
 						Chauffage.class.getCanonicalName(),
 						new Object[]{CHAUFFAGE_COMPONENT_URI,
 								URIChauffageOutboundPortURI,
-								URIChauffageInboundPortURI}) ;
+								URIChauffageInboundPortURI,
+								URIChauffageToCapteurInboundPortURI}) ;
 
 		assert	this.isDeployedComponent(this.uriChauffageURI) ;
 		this.toggleTracing(this.uriChauffageURI) ;
@@ -205,7 +208,8 @@ public class CVM extends AbstractCVM {
 				AbstractComponent.createComponent(
 						CapteurChaleur.class.getCanonicalName(),
 						new Object[]{CAPTEUR_CHALEUR_COMPONENT_URI,
-								URICapteurChaleurInboundPortURI}) ;
+								URICapteurChaleurInboundPortURI,
+								URICapteurChaleurToChauffageOutboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriCapteurChaleurURI) ;
 		this.toggleTracing(this.uriCapteurChaleurURI) ;
 		this.toggleLogging(this.uriCapteurChaleurURI) ;
@@ -319,7 +323,7 @@ public class CVM extends AbstractCVM {
 				ControleurConnector.class.getCanonicalName()) ;	
 
 		
-		//CAPTEUR <=> CAPTEUR
+		//CAPTEUR <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriControleurURI,
 				URICapteurVentOutboundPortURI,
@@ -356,6 +360,14 @@ public class CVM extends AbstractCVM {
 				URIControleurBatterieOutboundPortURI,
 				URIBatterieInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
+		
+		//CAPTEUR => CHAUFFAGE
+		this.doPortConnection(
+				this.uriCapteurChaleurURI,
+				URICapteurChaleurToChauffageOutboundPortURI,
+				URIChauffageToCapteurInboundPortURI,
+				CapteurChauffageConnector.class.getCanonicalName()) ;
+ 		
 
 //--------------------------------------------------------------
 //-------------------------DEPLOYMENT PHASE---------------------

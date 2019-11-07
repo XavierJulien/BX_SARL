@@ -40,6 +40,11 @@ public class ControleurConnector extends AbstractConnector implements Controleur
 	public void stopBouilloire() throws Exception {
 		((BouilloireI)this.offering).stopBouilloire();
 	}
+	
+	@Override
+	public double getBouilloireConso() throws Exception {
+		return ((BouilloireI)this.offering).sendConso();
+	}
 
 	//---------------------------------------------------
 	//--------------------CHAUFFAGE----------------------
@@ -51,6 +56,11 @@ public class ControleurConnector extends AbstractConnector implements Controleur
 	@Override
 	public void stopChauffage() throws Exception {
 		((ChauffageI)this.offering).stopChauffage();
+	}
+	
+	@Override
+	public double getChauffageConso() throws Exception {
+		return ((ChauffageI)this.offering).sendConso();
 	}
 	
 	//---------------------------------------------------
@@ -75,6 +85,11 @@ public class ControleurConnector extends AbstractConnector implements Controleur
 	@Override
 	public void stopChargeur() throws Exception {
 		((ChargeurI)this.offering).stopChargeur();
+	}
+	
+	@Override
+	public double getChargeurConso() throws Exception {
+		return ((ChargeurI)this.offering).sendConso();
 	}
 	
 	//---------------------------------------------------
@@ -108,4 +123,7 @@ public class ControleurConnector extends AbstractConnector implements Controleur
 	public double getChaleur() throws Exception {
 		return ((CapteurChaleurI)this.offering).sendChaleur();
 	}
+
+
+
 }

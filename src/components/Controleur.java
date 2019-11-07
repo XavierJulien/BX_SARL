@@ -60,6 +60,7 @@ public class Controleur extends AbstractComponent {
 	protected double windSpeed = 0;
 	protected double temperature = 0;
 	public boolean isEolienneOn = false;
+	public double batteryPercentage = 0;
 	protected double prod = 0;
 
 //------------------------------------------------------------------------
@@ -169,6 +170,7 @@ public class Controleur extends AbstractComponent {
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 	
+	
 	//--------------------------------------------------------------
 	//-------------------------EOLIENNE-----------------------------
 	//--------------------------------------------------------------
@@ -181,7 +183,8 @@ public class Controleur extends AbstractComponent {
 		this.controleurEolienneOutboundPort.stopEolienne();
 	}
 	public void getProd() throws Exception {
-		double prod = this.controleurCapteurVentOutboundPort.getProd();
+		double prod = this.controleurEolienneOutboundPort.getProd();
+		this.prod += prod;
 		this.logMessage("The controleur is getting "+prod+" units of energy from the eolienne") ;
 	}
 
@@ -196,6 +199,12 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Controleur "+this.uri+" : tell bouilloire to stop.") ;
 		this.controleurBouilloireOutboundPort.stopBouilloire();
 	}
+	
+	public void getBouilloireConso() throws Exception {
+		double conso = this.controleurBouilloireOutboundPort.getBouilloireConso();
+		this.prod -= conso;
+		this.logMessage("The bouilloire consumes "+conso);
+	}
 
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
@@ -208,6 +217,11 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Controleur "+this.uri+" : tell chargeur to stop.") ;
 		this.controleurChargeurOutboundPort.stopChargeur();
 	}	
+	public void getChargeurConso() throws Exception {
+		double conso = this.controleurChargeurOutboundPort.getChauffageConso();
+		this.prod -= conso;
+		this.logMessage("The chargeur consumes "+conso);
+	}
 	
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
@@ -219,6 +233,11 @@ public class Controleur extends AbstractComponent {
 	public void stopChauffage() throws Exception{
 		this.logMessage("Controleur "+this.uri+" : tell chauffage to stop.") ;
 		this.controleurChauffageOutboundPort.stopChauffage();
+	}
+	public void getChauffageConso() throws Exception {
+		double conso = this.controleurChauffageOutboundPort.getChauffageConso();
+		this.prod -= conso;
+		this.logMessage("The chauffage consumes "+conso);
 	}
 	
 	//--------------------------------------------------------------
@@ -233,6 +252,8 @@ public class Controleur extends AbstractComponent {
 		this.controleurCompteurOutboundPort.stopChauffage();
 	}
 	
+	
+	
 	//--------------------------------------------------------------
 	//-------------------------BATTERIE-----------------------------
 	//--------------------------------------------------------------
@@ -243,6 +264,16 @@ public class Controleur extends AbstractComponent {
 	public void stopBatterie() throws Exception{
 		this.logMessage("Controleur "+this.uri+" : tell batterie to stop.") ;
 		this.controleurBatterieOutboundPort.stopBatterie();
+	}
+	public void getBatteryChargePercentage() throws Exception {
+		double charge = this.controleurBatterieOutboundPort.getBatteryChargePercentage();
+		this.batteryPercentage = charge;
+		this.logMessage("The battery is "+charge+"% loaded");
+	}
+	public void getBatteryProduction() throws Exception {
+		double prod = this.controleurBatterieOutboundPort.getBatteryProduction();
+		this.prod += prod;
+		this.logMessage("The controleur is getting "+prod+" units of energy from the Batterie");
 	}
 
 	//--------------------------------------------------------------
@@ -265,6 +296,8 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("starting Controleur component.") ;	
 	}
 	
+	
+	// TODO A COMPLETER AVEC LES NOUVEAUX TRUCS/COMPORTEMENTS
 	public void execute() throws Exception {
 		super.execute();
 		this.scheduleTask(
