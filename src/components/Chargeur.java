@@ -1,5 +1,7 @@
 package components;
 
+import java.util.concurrent.TimeUnit;
+
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -17,23 +19,24 @@ public class Chargeur extends AbstractComponent{
 	protected final String				uri ;
 	protected final String				chargeurInboundPortURI ;	
 	protected final String				chargeurOutboundPortURI ;
+	protected final String				chargeurCompteurOutboundPortURI ;
+	protected final String				chargeurCompteurInboundPortURI ;
 	protected ChargeurOutboundPort		chargeurOutboundPort ;
 	protected ChargeurInboundPort		chargeurInboundPort ;
+	protected ChargeurOutboundPort		chargeurCompteurOutboundPort ;
+	protected ChargeurInboundPort		chargeurCompteurInboundPort ;
 	protected boolean 					isOn=false;
+	protected final double 				conso = 10;
 	
 	
-	
-	//Variables
-	
-	protected double conso;
-	
-
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
 	protected Chargeur(String uri,
 					   String chargeurOutboundPortURI,
-					   String chargeurInboundPortURI) throws Exception{
+					   String chargeurInboundPortURI,
+					   String chargeurCompteurOutboundPortURI,
+					   String chargeurCompteurInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
@@ -43,12 +46,18 @@ public class Chargeur extends AbstractComponent{
 		this.uri = uri;
 		this.chargeurInboundPortURI = chargeurInboundPortURI;
 		this.chargeurOutboundPortURI = chargeurOutboundPortURI;
+		this.chargeurCompteurOutboundPortURI = chargeurCompteurOutboundPortURI;
+		this.chargeurCompteurInboundPortURI = chargeurCompteurInboundPortURI;
 
 		//-------------------PUBLISH-------------------
 		chargeurInboundPort = new ChargeurInboundPort(chargeurInboundPortURI, this);
 		chargeurInboundPort.publishPort();
 		this.chargeurOutboundPort =	new ChargeurOutboundPort(chargeurOutboundPortURI, this);
 		this.chargeurOutboundPort.localPublishPort();
+		chargeurCompteurInboundPort = new ChargeurInboundPort(chargeurCompteurInboundPortURI, this);
+		chargeurCompteurInboundPort.publishPort();
+		this.chargeurCompteurOutboundPort =	new ChargeurOutboundPort(chargeurCompteurOutboundPortURI, this);
+		this.chargeurCompteurOutboundPort.localPublishPort();
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -62,10 +71,6 @@ public class Chargeur extends AbstractComponent{
 		
 		
 		
-		
-		//---------------Variables----------------
-		
-		this.conso = 10;
 	}
 
 	
@@ -81,20 +86,32 @@ public class Chargeur extends AbstractComponent{
 		this.logMessage("The chargeur is stopping his job....") ;
 		isOn =false;
 	}
-
+	
+	public double sendConso() throws Exception {
+		this.logMessage("Sending consommation....") ;
+		return conso;
+	}
+	
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Chargeur component.") ;
 	}
-	
-	public double sendConso() throws Exception{
-		this.logMessage("Sending consommation");
-		return conso;
-	}
-	
 	@Override
 	public void execute() throws Exception{
 		super.execute();
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							while(true) {
+								((Chargeur)this.getTaskOwner()).sendConso() ;
+								Thread.sleep(1000);
+							}
+						} catch (Exception e) {throw new RuntimeException(e) ;}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS);
 	}
 
 //------------------------------------------------------------------------
@@ -103,6 +120,7 @@ public class Chargeur extends AbstractComponent{
 	@Override
 	public void finalise() throws Exception {
 		chargeurOutboundPort.doDisconnection();
+		chargeurCompteurOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -114,6 +132,8 @@ public class Chargeur extends AbstractComponent{
 		try {
 			chargeurInboundPort.unpublishPort();
 			chargeurOutboundPort.unpublishPort();
+			chargeurCompteurInboundPort.unpublishPort();
+			chargeurCompteurOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

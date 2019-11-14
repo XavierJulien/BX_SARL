@@ -46,4 +46,29 @@ public class CompteurInboundPort extends AbstractInboundPort implements Compteur
 					}
 				}) ;
 	}
+
+	@Override
+	public double sendAllConso() throws Exception {
+		return this.getOwner().handleRequestSync(
+				owner -> ((Compteur)owner).sendAllConso()) ;	
+	}
+
+	@Override
+	public double getChauffageConso() throws Exception {
+		System.out.println("ERREUR");
+		return 0;
+	}
+
+	@Override
+	public double getBouilloireConso() throws Exception {
+		System.out.println("ERREUR");
+		return 0;
+	}
+
+	@Override
+	public double getChargeurConso() throws Exception {
+		System.out.println("ERREUR");
+		return 0;
+	}
+
 }

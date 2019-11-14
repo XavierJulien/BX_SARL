@@ -11,10 +11,14 @@ import components.Compteur;
 import components.Controleur;
 import components.Eolienne;
 import connectors.BatterieControleurConnector;
+import connectors.BouilloireCompteurConnector;
 import connectors.BouilloireControleurConnector;
 import connectors.CapteurChauffageConnector;
+import connectors.ChargeurCompteurConnector;
 import connectors.ChargeurControleurConnector;
+import connectors.ChauffageCompteurConnector;
 import connectors.ChauffageControleurConnector;
+import connectors.CompteurConnector;
 import connectors.CompteurControleurConnector;
 import connectors.ControleurConnector;
 import connectors.EolienneControleurConnector;
@@ -49,6 +53,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIBouilloireInboundPortURI = "bouilloireIPort" ;
 	protected static final String	URIControleurBouilloireOutboundPortURI = "controleurBouilloireOPort" ;
 	protected static final String	URIControleurBouilloireInboundPortURI = "controleurBouilloireIPort" ;
+	protected static final String	URIBouilloireCompteurOutboundPortURI = "bouilloireCompteurOPort" ;
+	protected static final String	URIBouilloireCompteurInboundPortURI = "bouilloireCompteurOPort" ;
 	
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
@@ -59,6 +65,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIChauffageToCapteurInboundPortURI = "chauffageToCapteurIPort" ;
 	protected static final String	URIControleurChauffageOutboundPortURI = "controleurChauffageOPort" ;
 	protected static final String	URIControleurChauffageInboundPortURI = "controleurChauffageIPort" ;
+	protected static final String	URIChauffageCompteurOutboundPortURI = "chauffageCompteurOPort" ;
+	protected static final String	URIChauffageCompteurInboundPortURI = "chauffageCompteurOPort" ;
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
@@ -68,8 +76,13 @@ public class CVM extends AbstractCVM {
 	protected static final String	URICompteurOutboundPortURI = "compteurOPort" ;
 	protected static final String	URICompteurInboundPortURI = "compteurIPort" ;	
 	protected static final String	URIControleurCompteurOutboundPortURI = "controleurCompteurOPort" ;
-	protected static final String	URIControleurCompteurInboundPortURI = "controleurCompteurIPort" ;	
-	
+	protected static final String	URIControleurCompteurInboundPortURI = "controleurCompteurIPort" ;
+	protected static final String	URICompteurChauffageOutboundPortURI = "compteurChauffageOPort" ;
+	protected static final String	URICompteurChauffageInboundPortURI = "compteurChauffageIPort" ;
+	protected static final String	URICompteurBouilloireOutboundPortURI = "compteurBouilloireOPort" ;
+	protected static final String	URICompteurBouilloireInboundPortURI = "compteurBouilloireIPort" ;
+	protected static final String	URICompteurChargeurOutboundPortURI = "compteurChargeurOPort" ;
+	protected static final String	URICompteurChargeurInboundPortURI = "compteurChargeurIPort" ;
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
 	//--------------------------------------------------------------
@@ -78,6 +91,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIChargeurInboundPortURI = "chargeurIPort" ;
 	protected static final String	URIControleurChargeurOutboundPortURI = "controleurChargeurOPort" ;
 	protected static final String	URIControleurChargeurInboundPortURI = "controleurChargeurIPort" ;
+	protected static final String	URIChargeurCompteurOutboundPortURI = "chargeurCompteurOPort" ;
+	protected static final String	URIChargeurCompteurInboundPortURI = "chargeurCompteurIPort" ;
 	
 	//--------------------------------------------------------------
 	//-------------------------BATTERIE-----------------------------
@@ -154,7 +169,9 @@ public class CVM extends AbstractCVM {
 						Bouilloire.class.getCanonicalName(),
 						new Object[]{BOUILLOIRE_COMPONENT_URI,
 								URIBouilloireOutboundPortURI,
-								URIBouilloireInboundPortURI}) ;
+								URIBouilloireInboundPortURI,
+								URICompteurBouilloireOutboundPortURI,
+								URICompteurBouilloireInboundPortURI}) ;
 
 		assert	this.isDeployedComponent(this.uriBouilloireURI) ;
 		this.toggleTracing(this.uriBouilloireURI) ;
@@ -169,7 +186,9 @@ public class CVM extends AbstractCVM {
 						new Object[]{CHAUFFAGE_COMPONENT_URI,
 								URIChauffageOutboundPortURI,
 								URIChauffageInboundPortURI,
-								URIChauffageToCapteurInboundPortURI}) ;
+								URIChauffageToCapteurInboundPortURI,
+								URICompteurChauffageOutboundPortURI,
+								URICompteurChauffageInboundPortURI}) ;
 
 		assert	this.isDeployedComponent(this.uriChauffageURI) ;
 		this.toggleTracing(this.uriChauffageURI) ;
@@ -183,7 +202,13 @@ public class CVM extends AbstractCVM {
 						Compteur.class.getCanonicalName(),
 						new Object[]{COMPTEUR_COMPONENT_URI,
 								URICompteurOutboundPortURI,
-								URICompteurInboundPortURI}) ;
+								URICompteurInboundPortURI,
+								URIChauffageCompteurOutboundPortURI,
+								URIChauffageCompteurInboundPortURI,
+								URIBouilloireCompteurOutboundPortURI,
+								URIBouilloireCompteurInboundPortURI,
+								URIChargeurCompteurOutboundPortURI,
+								URIChargeurCompteurInboundPortURI}) ;
 
 		assert	this.isDeployedComponent(this.uriCompteurURI) ;
 		this.toggleTracing(this.uriCompteurURI) ;
@@ -222,7 +247,9 @@ public class CVM extends AbstractCVM {
 						Chargeur.class.getCanonicalName(),
 						new Object[]{CHARGEUR_COMPONENT_URI,
 								URIChargeurOutboundPortURI,
-								URIChargeurInboundPortURI}) ;
+								URIChargeurInboundPortURI,
+								URICompteurChargeurOutboundPortURI,
+								URICompteurChargeurInboundPortURI});
 		assert	this.isDeployedComponent(this.uriChargeurURI) ;
 		this.toggleTracing(this.uriChargeurURI) ;
 		this.toggleLogging(this.uriChargeurURI) ;
@@ -296,6 +323,42 @@ public class CVM extends AbstractCVM {
 				URIChauffageInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;	
 		
+		//CHAUFFAGE <=> COMPTEUR
+		this.doPortConnection(
+				this.uriChauffageURI,
+				URICompteurChauffageOutboundPortURI,
+				URIChauffageCompteurInboundPortURI,
+				ChauffageCompteurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriCompteurURI,
+				URIChauffageCompteurOutboundPortURI,
+				URICompteurChauffageInboundPortURI,
+				CompteurConnector.class.getCanonicalName()) ;	
+		
+		//BOUILLOIRE <=> COMPTEUR
+		this.doPortConnection(
+				this.uriBouilloireURI,
+				URICompteurBouilloireOutboundPortURI,
+				URIBouilloireCompteurInboundPortURI,
+				BouilloireCompteurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriCompteurURI,
+				URIBouilloireCompteurOutboundPortURI,
+				URICompteurBouilloireInboundPortURI,
+				CompteurConnector.class.getCanonicalName()) ;	
+				
+		//CHHARGEUR <=> COMPTEUR
+		this.doPortConnection(
+				this.uriChargeurURI,
+				URICompteurChargeurOutboundPortURI,
+				URIChargeurCompteurInboundPortURI,
+				ChargeurCompteurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriCompteurURI,
+				URIChargeurCompteurOutboundPortURI,
+				URICompteurChargeurInboundPortURI,
+				CompteurConnector.class.getCanonicalName()) ;	
+
 		
 		//COMPTEUR <=> CONTROLEUR
 		this.doPortConnection(

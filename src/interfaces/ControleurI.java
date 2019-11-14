@@ -13,21 +13,19 @@ public interface ControleurI extends OfferedI,RequiredI{
 	//------------BOUILLOIRE------------
 	public void startBouilloire() throws Exception;
 	public void stopBouilloire() throws Exception;
-	public double getBouilloireConso() throws Exception;
 	
 	//------------CHAUFFAGE------------
 	public void startChauffage() throws Exception;
 	public void stopChauffage() throws Exception;
-	public double getChauffageConso() throws Exception;
 	
 	//------------COMPTEUR------------
 	public void startCompteur() throws Exception;
 	public void stopCompteur() throws Exception;
+	public double getAllConso() throws Exception;
 	
 	//------------CHARGEUR------------
 	public void startChargeur() throws Exception;
 	public void stopChargeur() throws Exception;
-	public double getChargeurConso() throws Exception;
 	
 	//------------BATTERIE------------
 	public void startBatterie() throws Exception;

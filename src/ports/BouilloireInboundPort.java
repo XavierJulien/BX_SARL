@@ -4,9 +4,10 @@ import components.Bouilloire;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import interfaces.BouilloireCompteurI;
 import interfaces.BouilloireI;
 
-public class BouilloireInboundPort extends AbstractInboundPort implements BouilloireI{
+public class BouilloireInboundPort extends AbstractInboundPort implements BouilloireI,BouilloireCompteurI{
 	
 	private static final long serialVersionUID = 1L;
 

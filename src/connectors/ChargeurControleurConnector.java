@@ -7,12 +7,12 @@ public class ChargeurControleurConnector extends AbstractConnector implements Ch
 
 	@Override
 	public void startChargeur() throws Exception {
-		((ControleurI)this.offering).startBouilloire();
+		((ControleurI)this.offering).startChargeur();
 	}
 
 	@Override
 	public void stopChargeur() throws Exception {
-		((ControleurI)this.offering).stopBouilloire();
+		((ControleurI)this.offering).stopChargeur();
 	}
 
 	@Override

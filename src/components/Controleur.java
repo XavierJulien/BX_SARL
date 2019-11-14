@@ -199,12 +199,6 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Controleur "+this.uri+" : tell bouilloire to stop.") ;
 		this.controleurBouilloireOutboundPort.stopBouilloire();
 	}
-	
-	public void getBouilloireConso() throws Exception {
-		double conso = this.controleurBouilloireOutboundPort.getBouilloireConso();
-		this.prod -= conso;
-		this.logMessage("The bouilloire consumes "+conso);
-	}
 
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
@@ -217,11 +211,6 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Controleur "+this.uri+" : tell chargeur to stop.") ;
 		this.controleurChargeurOutboundPort.stopChargeur();
 	}	
-	public void getChargeurConso() throws Exception {
-		double conso = this.controleurChargeurOutboundPort.getChauffageConso();
-		this.prod -= conso;
-		this.logMessage("The chargeur consumes "+conso);
-	}
 	
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
@@ -234,25 +223,24 @@ public class Controleur extends AbstractComponent {
 		this.logMessage("Controleur "+this.uri+" : tell chauffage to stop.") ;
 		this.controleurChauffageOutboundPort.stopChauffage();
 	}
-	public void getChauffageConso() throws Exception {
-		double conso = this.controleurChauffageOutboundPort.getChauffageConso();
-		this.prod -= conso;
-		this.logMessage("The chauffage consumes "+conso);
-	}
+	
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
 	//--------------------------------------------------------------
 	public void startCompteur() throws Exception{	
 		this.logMessage("Controleur "+this.uri+" : tell compteur to start.") ;
-		this.controleurCompteurOutboundPort.startChauffage();
+		this.controleurCompteurOutboundPort.startCompteur();
 	}
 	public void stopCompteur() throws Exception{
 		this.logMessage("Controleur "+this.uri+" : tell compteur to stop.") ;
-		this.controleurCompteurOutboundPort.stopChauffage();
+		this.controleurCompteurOutboundPort.stopCompteur();
 	}
-	
-	
+	public void getAllConso() throws Exception {
+		double conso = this.controleurCompteurOutboundPort.getAllConso();
+		this.prod -= conso;
+		this.logMessage("All the consumers consumes "+conso);
+	}
 	
 	//--------------------------------------------------------------
 	//-------------------------BATTERIE-----------------------------
@@ -305,7 +293,9 @@ public class Controleur extends AbstractComponent {
 					@Override
 					public void run() {
 						try {
+							((Controleur)this.getTaskOwner()).startCompteur() ;
 							while(true) {
+								((Controleur)this.getTaskOwner()).getAllConso() ;
 								((Controleur)this.getTaskOwner()).getVent() ;
 								if(isEolienneOn) {
 									if(windSpeed < 0.5) {

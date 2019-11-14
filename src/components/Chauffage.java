@@ -1,5 +1,7 @@
 package components;
 
+import java.util.concurrent.TimeUnit;
+
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -15,20 +17,27 @@ import ports.ChauffageOutboundPort;
 @OfferedInterfaces(offered = {ChauffageI.class})
 public class Chauffage extends AbstractComponent {
 	
-	protected final String				uri ;
-	protected final String				chauffageInboundPortURI ;
-	protected final String				chauffageToCapteurInboundPortURI ;
-	protected final String				chauffageOutboundPortURI ;
+	protected final String						uri ;
+	protected final String						chauffageInboundPortURI ;
+	protected final String						chauffageOutboundPortURI ;
+	protected final String						chauffageCompteurOutboundPortURI ;
+	protected final String						chauffageCompteurInboundPortURI ;
+	protected final String						chauffageToCapteurInboundPortURI ;
 	
-	protected ChauffageOutboundPort		chauffageOutboundPort ;
-	protected ChauffageInboundPort		chauffageInboundPort ;
+	
+	protected ChauffageOutboundPort				chauffageOutboundPort ;
+	protected ChauffageInboundPort				chauffageInboundPort ;
+	protected ChauffageOutboundPort				chauffageCompteurOutboundPort ;
+	protected ChauffageInboundPort				chauffageCompteurInboundPort ;
 	protected ChauffageCapteurInboundPort		chauffageToCapteurInboundPort ;
-	protected boolean 					isOn=false;
+	protected boolean 							isOn=false;
 
 	protected Chauffage(String uri,
 						String chauffageOutboundPortURI,
 						String chauffageInboundPortURI,
-						String chauffageToCapteurInboundPortURI) throws Exception{
+						String chauffageToCapteurInboundPortURI,
+						String chauffageCompteurOutboundPortURI,
+						String chauffageCompteurInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
@@ -39,6 +48,8 @@ public class Chauffage extends AbstractComponent {
 		this.uri = uri;
 		this.chauffageInboundPortURI = chauffageInboundPortURI;
 		this.chauffageOutboundPortURI = chauffageOutboundPortURI;
+		this.chauffageCompteurOutboundPortURI = chauffageCompteurOutboundPortURI;
+		this.chauffageCompteurInboundPortURI = chauffageCompteurInboundPortURI;
 		this.chauffageToCapteurInboundPortURI = chauffageToCapteurInboundPortURI;
 
 		//-------------------PUBLISH-------------------
@@ -48,6 +59,11 @@ public class Chauffage extends AbstractComponent {
 		chauffageInboundPort.publishPort() ;
 		this.chauffageOutboundPort = new ChauffageOutboundPort(chauffageOutboundPortURI, this) ;
 		this.chauffageOutboundPort.localPublishPort() ;
+		
+		chauffageCompteurInboundPort = new ChauffageInboundPort(chauffageCompteurInboundPortURI, this) ;
+		chauffageCompteurInboundPort.publishPort() ;
+		this.chauffageCompteurOutboundPort = new ChauffageOutboundPort(chauffageCompteurOutboundPortURI, this) ;
+		this.chauffageCompteurOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -94,6 +110,19 @@ public class Chauffage extends AbstractComponent {
 	@Override
 	public void execute() throws Exception{
 		super.execute();
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							while(true) {
+								((Chauffage)this.getTaskOwner()).sendConso() ;
+								Thread.sleep(1000);
+							}
+						} catch (Exception e) {throw new RuntimeException(e) ;}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS);
 	}
 
 
@@ -103,6 +132,7 @@ public class Chauffage extends AbstractComponent {
 	@Override
 	public void finalise() throws Exception {
 		chauffageOutboundPort.doDisconnection();
+		chauffageCompteurOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -113,8 +143,10 @@ public class Chauffage extends AbstractComponent {
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			chauffageInboundPort.unpublishPort();
-			chauffageToCapteurInboundPort.unpublishPort();
 			chauffageOutboundPort.unpublishPort();
+			chauffageCompteurInboundPort.unpublishPort();
+			chauffageCompteurOutboundPort.unpublishPort();
+			chauffageToCapteurInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

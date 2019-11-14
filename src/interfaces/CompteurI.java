@@ -7,4 +7,9 @@ public interface CompteurI extends DataOfferedI,DataRequiredI{
 
 	public void startCompteur() throws Exception;
 	public void stopCompteur() throws Exception;
+	public double sendAllConso() throws Exception;
+	public double getChauffageConso() throws Exception;
+	public double getBouilloireConso() throws Exception;
+	public double getChargeurConso() throws Exception;
+
 }

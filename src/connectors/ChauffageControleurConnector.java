@@ -16,9 +16,4 @@ public class ChauffageControleurConnector extends AbstractConnector implements C
 		((ControleurI)this.offering).stopChauffage();
 	}
 
-	@Override
-	public double sendConso() throws Exception {
-		//Shouldn't be used
-		return 0;
-	}
 }

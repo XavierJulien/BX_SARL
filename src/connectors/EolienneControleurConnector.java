@@ -16,9 +16,9 @@ public class EolienneControleurConnector extends AbstractConnector implements Eo
 		((ControleurI)this.offering).stopEolienne();
 	}
 
+	//not used
 	@Override
 	public double sendProduction() throws Exception {
-		//shouldn't be used
-		return 0;
+		return ((EolienneI)this.offering).sendProduction();
 	}
 }

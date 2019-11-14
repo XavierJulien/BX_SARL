@@ -1,0 +1,13 @@
+#!/bin/bash
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DCVM controleur config.xml
+
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DCVM eolienne config.xml
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM batterie config.xml
+
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM compteur config.xml
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM bouilloire config.xml
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM chauffage config.xml
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM chargeur config.xml
+
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM capteurChaleur config.xml
+java -ea -cp 'jars/*' -Djava.security.manager -Djava.security.policy=dcvm.policy src.launcher.DistributedCVM capteurVent config.xml

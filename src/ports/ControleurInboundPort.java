@@ -82,11 +82,7 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 				}) ;		
 	}
 	
-	@Override
-	public double getBouilloireConso() throws Exception {
-		//shouldn't be used
-		return 0;
-	}
+
 	
 	//---------------------------------------------------
 	//--------------------CHAUFFAGE----------------------
@@ -115,11 +111,6 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 				}) ;		
 	}
 	
-	@Override
-	public double getChauffageConso() throws Exception {
-		//shouldn't be used
-		return 0;
-	}
 
 
 	//---------------------------------------------------
@@ -148,7 +139,13 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 					}
 				}) ;		
 	}
-
+	
+	@Override
+	public double getAllConso() throws Exception {
+		System.out.println("ERREUR");
+		return 0;	
+	}
+	
 	//---------------------------------------------------
 	//---------------------CHARGEUR----------------------
 	//---------------------------------------------------
@@ -173,12 +170,6 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 						return null;
 					}
 				}) ;		
-	}
-	
-	@Override
-	public double getChargeurConso() throws Exception {
-		//shouldn't be used
-		return 0;
 	}
 
 	//---------------------------------------------------

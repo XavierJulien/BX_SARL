@@ -1,13 +1,13 @@
 package ports;
 
-import components.Bouilloire;
 import components.Chauffage;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import interfaces.ChauffageCompteurI;
 import interfaces.ChauffageI;
 
-public class ChauffageInboundPort extends AbstractInboundPort implements ChauffageI{
+public class ChauffageInboundPort extends AbstractInboundPort implements ChauffageI,ChauffageCompteurI{
 
 	private static final long serialVersionUID = 1L;
 
@@ -53,4 +53,5 @@ public class ChauffageInboundPort extends AbstractInboundPort implements Chauffa
 		return this.getOwner().handleRequestSync(
 				owner -> ((Chauffage)owner).sendConso()) ;	
 	}
+
 }

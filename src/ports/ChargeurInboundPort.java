@@ -1,13 +1,13 @@
 package ports;
 
-import components.Bouilloire;
 import components.Chargeur;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
+import interfaces.ChargeurCompteurI;
 import interfaces.ChargeurI;
 
-public class ChargeurInboundPort extends AbstractInboundPort implements ChargeurI{
+public class ChargeurInboundPort extends AbstractInboundPort implements ChargeurI,ChargeurCompteurI{
 
 	private static final long serialVersionUID = 1L;
 

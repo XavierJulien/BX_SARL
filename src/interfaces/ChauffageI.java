@@ -7,5 +7,4 @@ public interface ChauffageI extends DataOfferedI,DataRequiredI{
 
 	public void startChauffage() throws Exception;
 	public void stopChauffage() throws Exception;
-	public double sendConso() throws Exception;
 }
