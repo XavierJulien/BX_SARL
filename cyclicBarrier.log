@@ -1,0 +1,45 @@
+1573826812273|DCVM Cyclic Barrier up and running!
+1573826813213|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826813214|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826814229|All connected!
+1573826814230|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826814231|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826814231|DCVM Cyclic Barrier releases 2 sites.
+1573826814233|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826814234|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826814293|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826814293|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826814293|DCVM Cyclic Barrier releases 2 sites.
+1573826815685|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826815686|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826816497|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826816498|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826816498|DCVM Cyclic Barrier releases 2 sites.
+1573826817221|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826817221|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826817338|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826817339|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826817339|DCVM Cyclic Barrier releases 2 sites.
+1573826817344|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826817344|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826817385|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826817386|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826817386|DCVM Cyclic Barrier releases 2 sites.
+1573826832434|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826832435|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826832473|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826832473|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826832473|DCVM Cyclic Barrier releases 2 sites.
+1573826832737|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826832738|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826833137|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826833138|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826833138|DCVM Cyclic Barrier releases 2 sites.
+1573826834062|DCVM Cyclic Barrier accepts: controleur localhost 44858
+1573826834062|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573826834237|DCVM Cyclic Barrier accepts: appareils localhost 44860
+1573826834237|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573826834237|DCVM Cyclic Barrier releases 2 sites.
+1573826834238|DCVMCyclicBarrier.run() finished.
+1573826834239|DCVMCyclicBarrier.run() finished.
+1573826834239|DCVM Cyclic Barrier shuts down!

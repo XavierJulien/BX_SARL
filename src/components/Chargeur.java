@@ -8,12 +8,14 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import interfaces.ChargeurCompteurI;
 import interfaces.ChargeurI;
+import interfaces.ChargeurToBatterieI;
 import ports.ChargeurInboundPort;
 import ports.ChargeurOutboundPort;
 
-@RequiredInterfaces(required = {ChargeurI.class})
-@OfferedInterfaces(offered = {ChargeurI.class})
+@RequiredInterfaces(required = {ChargeurI.class, ChargeurCompteurI.class, ChargeurToBatterieI.class})
+@OfferedInterfaces(offered = {ChargeurI.class, ChargeurCompteurI.class, ChargeurToBatterieI.class})
 public class Chargeur extends AbstractComponent{
 	
 	protected final String				uri ;

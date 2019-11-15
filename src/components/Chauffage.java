@@ -9,12 +9,13 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.ChauffageI;
+import interfaces.ChauffageToCapteurChaleurI;
 import ports.ChauffageCapteurInboundPort;
 import ports.ChauffageInboundPort;
 import ports.ChauffageOutboundPort;
 
-@RequiredInterfaces(required = {ChauffageI.class})
-@OfferedInterfaces(offered = {ChauffageI.class})
+@RequiredInterfaces(required = {ChauffageI.class, ChauffageToCapteurChaleurI.class})
+@OfferedInterfaces(offered = {ChauffageI.class, ChauffageToCapteurChaleurI.class})
 public class Chauffage extends AbstractComponent {
 	
 	protected final String						uri ;

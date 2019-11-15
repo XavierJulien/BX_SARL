@@ -7,11 +7,12 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.BatterieI;
+import interfaces.BatterieToChargeurI;
 import ports.BatterieInboundPort;
 import ports.BatterieOutboundPort;
 
-@RequiredInterfaces(required = {BatterieI.class})
-@OfferedInterfaces(offered = {BatterieI.class})
+@RequiredInterfaces(required = {BatterieI.class, BatterieToChargeurI.class})
+@OfferedInterfaces(offered = {BatterieI.class, BatterieToChargeurI.class})
 public class Batterie extends AbstractComponent {
 
 	protected final String				uri ;

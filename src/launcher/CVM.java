@@ -54,7 +54,7 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControleurBouilloireOutboundPortURI = "controleurBouilloireOPort" ;
 	protected static final String	URIControleurBouilloireInboundPortURI = "controleurBouilloireIPort" ;
 	protected static final String	URIBouilloireCompteurOutboundPortURI = "bouilloireCompteurOPort" ;
-	protected static final String	URIBouilloireCompteurInboundPortURI = "bouilloireCompteurOPort" ;
+	protected static final String	URIBouilloireCompteurInboundPortURI = "bouilloireCompteurIPort" ;
 	
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
@@ -66,7 +66,7 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControleurChauffageOutboundPortURI = "controleurChauffageOPort" ;
 	protected static final String	URIControleurChauffageInboundPortURI = "controleurChauffageIPort" ;
 	protected static final String	URIChauffageCompteurOutboundPortURI = "chauffageCompteurOPort" ;
-	protected static final String	URIChauffageCompteurInboundPortURI = "chauffageCompteurOPort" ;
+	protected static final String	URIChauffageCompteurInboundPortURI = "chauffageCompteurIPort" ;
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
@@ -107,7 +107,7 @@ public class CVM extends AbstractCVM {
 	//-------------------------CAPTEUR VENT------------------------
 	//--------------------------------------------------------------
 	public static final String	CAPTEUR_VENT_COMPONENT_URI = "my-URI-capteur-vent" ;
-	protected static final String	URICapteurVentOutboundPortURI = "capteurVentOPort" ;
+	protected static final String	URIControleurCapteurVentOutboundPortURI = "capteurVentOPort" ;
 	protected static final String	URICapteurVentInboundPortURI = "capteurVentIPort" ;
 	
 	//--------------------------------------------------------------
@@ -115,7 +115,7 @@ public class CVM extends AbstractCVM {
 	//--------------------------------------------------------------
 	public static final String	CAPTEUR_CHALEUR_COMPONENT_URI = "my-URI-capteur-chaleur" ;
 	protected static final String	URICapteurChaleurToChauffageOutboundPortURI = "capteurChaleurToChauffageOPort" ;
-	protected static final String	URICapteurChaleurOutboundPortURI = "capteurChaleurOPort" ;
+	protected static final String	URIControleurCapteurChaleurOutboundPortURI = "capteurChaleurOPort" ;
 	protected static final String	URICapteurChaleurInboundPortURI = "capteurChaleurIPort" ;
 	
 	
@@ -287,8 +287,8 @@ public class CVM extends AbstractCVM {
 								URIControleurChargeurInboundPortURI,
 								URIControleurBatterieOutboundPortURI,
 								URIControleurBatterieInboundPortURI,
-								URICapteurVentOutboundPortURI,
-								URICapteurChaleurOutboundPortURI}) ;
+								URIControleurCapteurVentOutboundPortURI,
+								URIControleurCapteurChaleurOutboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriControleurURI) ;
 		this.toggleTracing(this.uriControleurURI) ;
 		this.toggleLogging(this.uriControleurURI) ;
@@ -346,8 +346,20 @@ public class CVM extends AbstractCVM {
 				URIBouilloireCompteurOutboundPortURI,
 				URICompteurBouilloireInboundPortURI,
 				CompteurConnector.class.getCanonicalName()) ;	
+			
+		//CHARGEUR <=> CONTROLEUR
+		this.doPortConnection(
+				this.uriChargeurURI,
+				URIChargeurOutboundPortURI,
+				URIControleurChargeurInboundPortURI,
+				ChargeurControleurConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriControleurURI,
+				URIControleurChargeurOutboundPortURI,
+				URIChargeurInboundPortURI,
+				ControleurConnector.class.getCanonicalName()) ;	
 				
-		//CHHARGEUR <=> COMPTEUR
+		//CHARGEUR <=> COMPTEUR
 		this.doPortConnection(
 				this.uriChargeurURI,
 				URICompteurChargeurOutboundPortURI,
@@ -389,27 +401,17 @@ public class CVM extends AbstractCVM {
 		//CAPTEUR <=> CONTROLEUR
 		this.doPortConnection(
 				this.uriControleurURI,
-				URICapteurVentOutboundPortURI,
+				URIControleurCapteurVentOutboundPortURI,
 				URICapteurVentInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;
 		this.doPortConnection(
 				this.uriControleurURI,
-				URICapteurChaleurOutboundPortURI,
+				URIControleurCapteurChaleurOutboundPortURI,
 				URICapteurChaleurInboundPortURI,
 				ControleurConnector.class.getCanonicalName()) ;
 		
 		
-		//CHARGEUR <=> CONTROLEUR
-		this.doPortConnection(
-				this.uriChargeurURI,
-				URIChargeurOutboundPortURI,
-				URIControleurChargeurInboundPortURI,
-				ChargeurControleurConnector.class.getCanonicalName()) ;
-		this.doPortConnection(
-				this.uriControleurURI,
-				URIControleurChargeurOutboundPortURI,
-				URIChargeurInboundPortURI,
-				ControleurConnector.class.getCanonicalName()) ;	
+		
 				
 		
 		//BATTERIE <=> CONTROLEUR
@@ -462,7 +464,7 @@ public class CVM extends AbstractCVM {
 	public static void main(String[] args) {
 		try {
 			CVM a = new CVM();
-			a.startStandardLifeCycle(20000L);
+			a.startStandardLifeCycle(5000L);
 			Thread.sleep(5000L);
 			System.exit(0);
 		} catch (Exception e) {throw new RuntimeException(e);}

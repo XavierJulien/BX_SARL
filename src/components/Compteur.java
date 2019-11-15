@@ -8,12 +8,13 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import interfaces.CompteurControleurI;
 import interfaces.CompteurI;
 import ports.CompteurInboundPort;
 import ports.CompteurOutboundPort;
 
-@RequiredInterfaces(required = {CompteurI.class})
-@OfferedInterfaces(offered = {CompteurI.class})
+@RequiredInterfaces(required = {CompteurI.class, CompteurControleurI.class})
+@OfferedInterfaces(offered = {CompteurI.class, CompteurControleurI.class})
 public class Compteur extends AbstractComponent {
 	
 	protected final String				uri ;

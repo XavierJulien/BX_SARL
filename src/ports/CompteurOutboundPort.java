@@ -12,11 +12,11 @@ public class CompteurOutboundPort extends AbstractOutboundPort implements Compte
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
 	public CompteurOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, CompteurControleurI.class, owner);
+		super(uri, CompteurI.class, owner);
 	}
 	
 	public CompteurOutboundPort(ComponentI owner) throws Exception {
-		super(CompteurControleurI.class, owner);
+		super(CompteurI.class, owner);
 	}
 
 //--------------------------------------------------------------
