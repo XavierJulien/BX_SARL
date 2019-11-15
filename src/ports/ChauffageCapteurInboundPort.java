@@ -3,9 +3,9 @@ package ports;
 import components.Chauffage;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.ChauffageToCapteurChaleurI;
+import interfaces.ChauffageCapteurChaleurI;
 
-public class ChauffageCapteurInboundPort extends AbstractInboundPort implements ChauffageToCapteurChaleurI {
+public class ChauffageCapteurInboundPort extends AbstractInboundPort implements ChauffageCapteurChaleurI {
 
 	private static final long serialVersionUID = 1L;
 
@@ -13,11 +13,11 @@ public class ChauffageCapteurInboundPort extends AbstractInboundPort implements 
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
 		public ChauffageCapteurInboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, ChauffageToCapteurChaleurI.class, owner);
+			super(uri, ChauffageCapteurChaleurI.class, owner);
 		}
 		
 		public ChauffageCapteurInboundPort(ComponentI owner) throws Exception {
-			super(ChauffageToCapteurChaleurI.class, owner);
+			super(ChauffageCapteurChaleurI.class, owner);
 		}
 
 		@Override

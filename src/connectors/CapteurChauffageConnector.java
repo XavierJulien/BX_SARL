@@ -1,14 +1,14 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.CapteurChaleurToChauffageI;
-import interfaces.ChauffageToCapteurChaleurI;
+import interfaces.CapteurChaleurChauffageI;
+import interfaces.ChauffageCapteurChaleurI;
 
-public class CapteurChauffageConnector extends AbstractConnector implements CapteurChaleurToChauffageI {
+public class CapteurChauffageConnector extends AbstractConnector implements CapteurChaleurChauffageI {
 
 	@Override
 	public double getHeating() throws Exception {
-		return ((ChauffageToCapteurChaleurI)this.offering).sendHeating() ;
+		return ((ChauffageCapteurChaleurI)this.offering).sendHeating() ;
 	}
 
 }

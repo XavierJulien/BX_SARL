@@ -3,10 +3,10 @@ package ports;
 import components.Batterie;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.BatterieToChargeurI;
-import interfaces.CapteurChaleurToChauffageI;
+import interfaces.BatterieChargeurI;
+import interfaces.CapteurChaleurChauffageI;
 
-public class BatterieChargeurInboundPort extends AbstractInboundPort implements BatterieToChargeurI{
+public class BatterieChargeurInboundPort extends AbstractInboundPort implements BatterieChargeurI{
 
 	private static final long serialVersionUID = 1L;
 
@@ -14,11 +14,11 @@ public class BatterieChargeurInboundPort extends AbstractInboundPort implements 
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
 		public BatterieChargeurInboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, CapteurChaleurToChauffageI.class, owner);
+			super(uri, CapteurChaleurChauffageI.class, owner);
 		}
 		
 		public BatterieChargeurInboundPort(ComponentI owner) throws Exception {
-			super(BatterieToChargeurI.class, owner);
+			super(BatterieChargeurI.class, owner);
 		}
 
 	//--------------------------------------------------------------

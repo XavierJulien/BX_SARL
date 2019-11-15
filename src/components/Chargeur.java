@@ -10,12 +10,12 @@ import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.ChargeurCompteurI;
 import interfaces.ChargeurI;
-import interfaces.ChargeurToBatterieI;
+import interfaces.ChargeurBatterieI;
 import ports.ChargeurInboundPort;
 import ports.ChargeurOutboundPort;
 
-@RequiredInterfaces(required = {ChargeurI.class, ChargeurCompteurI.class, ChargeurToBatterieI.class})
-@OfferedInterfaces(offered = {ChargeurI.class, ChargeurCompteurI.class, ChargeurToBatterieI.class})
+@RequiredInterfaces(required = {ChargeurI.class, ChargeurCompteurI.class, ChargeurBatterieI.class})
+@OfferedInterfaces(offered = {ChargeurI.class, ChargeurCompteurI.class, ChargeurBatterieI.class})
 public class Chargeur extends AbstractComponent{
 	
 	protected final String				uri ;
