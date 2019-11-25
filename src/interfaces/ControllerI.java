@@ -3,39 +3,39 @@ package interfaces;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface ControleurI extends OfferedI,RequiredI{
+public interface ControllerI extends OfferedI,RequiredI{
 
 	//------------EOLIENNE------------
-	public void startEolienne() throws Exception;
-	public void stopEolienne() throws Exception;
-	public double getProd() throws Exception;
+	public void startWindTurbine() throws Exception;
+	public void stopWindTurbine() throws Exception;
+	public double getProduction() throws Exception;
 	
 	//------------BOUILLOIRE------------
-	public void startBouilloire() throws Exception;
-	public void stopBouilloire() throws Exception;
+	public void startKettle() throws Exception;
+	public void stopKettle() throws Exception;
 	
 	//------------CHAUFFAGE------------
-	public void startChauffage() throws Exception;
-	public void stopChauffage() throws Exception;
+	public void startHeating() throws Exception;
+	public void stopHeating() throws Exception;
 	
 	//------------COMPTEUR------------
-	public void startCompteur() throws Exception;
-	public void stopCompteur() throws Exception;
-	public double getAllConso() throws Exception;
+	public void startElectricMeter() throws Exception;
+	public void stopElectricMeter() throws Exception;
+	public double getAllConsumption() throws Exception;
 	
 	//------------CHARGEUR------------
-	public void startChargeur() throws Exception;
-	public void stopChargeur() throws Exception;
+	public void startCharger() throws Exception;
+	public void stopCharger() throws Exception;
 	
 	//------------BATTERIE------------
-	public void startBatterie() throws Exception;
-	public void stopBatterie() throws Exception;
+	public void startBattery() throws Exception;
+	public void stopBattery() throws Exception;
 	public double getBatteryChargePercentage() throws Exception;
 	public double getBatteryProduction() throws Exception;
 	
 	//------------CAPTEURS------------
-	public double getVent() throws Exception;
-	public double getChaleur() throws Exception;
+	public double getWind() throws Exception;
+	public double getTemperature() throws Exception;
 	
 	
 }

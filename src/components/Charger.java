@@ -8,25 +8,25 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ChargeurCompteurI;
-import interfaces.ChargeurI;
-import interfaces.ChargeurBatterieI;
-import ports.ChargeurInboundPort;
-import ports.ChargeurOutboundPort;
+import interfaces.ChargerElectricMeterI;
+import interfaces.ChargerI;
+import interfaces.ChargerBatteryI;
+import ports.ChargerInboundPort;
+import ports.ChargerOutboundPort;
 
-@RequiredInterfaces(required = {ChargeurI.class, ChargeurCompteurI.class, ChargeurBatterieI.class})
-@OfferedInterfaces(offered = {ChargeurI.class, ChargeurCompteurI.class, ChargeurBatterieI.class})
-public class Chargeur extends AbstractComponent{
+@RequiredInterfaces(required = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
+@OfferedInterfaces(offered = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
+public class Charger extends AbstractComponent{
 	
 	protected final String				uri ;
-	protected final String				chargeurInboundPortURI ;	
-	protected final String				chargeurOutboundPortURI ;
-	protected final String				chargeurCompteurOutboundPortURI ;
-	protected final String				chargeurCompteurInboundPortURI ;
-	protected ChargeurOutboundPort		chargeurOutboundPort ;
-	protected ChargeurInboundPort		chargeurInboundPort ;
-	protected ChargeurOutboundPort		chargeurCompteurOutboundPort ;
-	protected ChargeurInboundPort		chargeurCompteurInboundPort ;
+	protected final String				chargerInboundPortURI ;	
+	protected final String				chargerOutboundPortURI ;
+	protected final String				chargerElectricMeterOutboundPortURI ;
+	protected final String				chargerElectricMeterInboundPortURI ;
+	protected ChargerOutboundPort		chargerOutboundPort ;
+	protected ChargerInboundPort		chargerInboundPort ;
+	protected ChargerOutboundPort		chargerElectricMeterOutboundPort ;
+	protected ChargerInboundPort		chargerElectricMeterInboundPort ;
 	protected boolean 					isOn=false;
 	protected final double 				conso = 10;
 	
@@ -34,32 +34,32 @@ public class Chargeur extends AbstractComponent{
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
-	protected Chargeur(String uri,
-					   String chargeurOutboundPortURI,
-					   String chargeurInboundPortURI,
-					   String chargeurCompteurOutboundPortURI,
-					   String chargeurCompteurInboundPortURI) throws Exception{
+	protected Charger(String uri,
+					   String chargerOutboundPortURI,
+					   String chargerInboundPortURI,
+					   String chargerElectricMeterOutboundPortURI,
+					   String chargerElectricMeterInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert chargeurOutboundPortURI != null;
-		assert chargeurInboundPortURI != null;
+		assert chargerOutboundPortURI != null;
+		assert chargerInboundPortURI != null;
 
 		this.uri = uri;
-		this.chargeurInboundPortURI = chargeurInboundPortURI;
-		this.chargeurOutboundPortURI = chargeurOutboundPortURI;
-		this.chargeurCompteurOutboundPortURI = chargeurCompteurOutboundPortURI;
-		this.chargeurCompteurInboundPortURI = chargeurCompteurInboundPortURI;
+		this.chargerInboundPortURI = chargerInboundPortURI;
+		this.chargerOutboundPortURI = chargerOutboundPortURI;
+		this.chargerElectricMeterOutboundPortURI = chargerElectricMeterOutboundPortURI;
+		this.chargerElectricMeterInboundPortURI = chargerElectricMeterInboundPortURI;
 
 		//-------------------PUBLISH-------------------
-		chargeurInboundPort = new ChargeurInboundPort(chargeurInboundPortURI, this);
-		chargeurInboundPort.publishPort();
-		this.chargeurOutboundPort =	new ChargeurOutboundPort(chargeurOutboundPortURI, this);
-		this.chargeurOutboundPort.localPublishPort();
-		chargeurCompteurInboundPort = new ChargeurInboundPort(chargeurCompteurInboundPortURI, this);
-		chargeurCompteurInboundPort.publishPort();
-		this.chargeurCompteurOutboundPort =	new ChargeurOutboundPort(chargeurCompteurOutboundPortURI, this);
-		this.chargeurCompteurOutboundPort.localPublishPort();
+		chargerInboundPort = new ChargerInboundPort(chargerInboundPortURI, this);
+		chargerInboundPort.publishPort();
+		this.chargerOutboundPort =	new ChargerOutboundPort(chargerOutboundPortURI, this);
+		this.chargerOutboundPort.localPublishPort();
+		chargerElectricMeterInboundPort = new ChargerInboundPort(chargerElectricMeterInboundPortURI, this);
+		chargerElectricMeterInboundPort.publishPort();
+		this.chargerElectricMeterOutboundPort =	new ChargerOutboundPort(chargerElectricMeterOutboundPortURI, this);
+		this.chargerElectricMeterOutboundPort.localPublishPort();
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -79,24 +79,24 @@ public class Chargeur extends AbstractComponent{
 //------------------------------------------------------------------------
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
-	public void startChargeur() throws Exception{
-		this.logMessage("The chargeur is starting his job....") ;
+	public void startCharger() throws Exception{
+		this.logMessage("The charger is starting his job....") ;
 		isOn = true;
 	}
 
-	public void stopChargeur() throws Exception{
-		this.logMessage("The chargeur is stopping his job....") ;
+	public void stopCharger() throws Exception{
+		this.logMessage("The charger is stopping his job....") ;
 		isOn =false;
 	}
 	
-	public double sendConso() throws Exception {
-		this.logMessage("Sending consommation....") ;
+	public double sendConsumption() throws Exception {
+		this.logMessage("Sending consumption....") ;
 		return conso;
 	}
 	
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Chargeur component.") ;
+		this.logMessage("starting Charger component.") ;
 	}
 	@Override
 	public void execute() throws Exception{
@@ -107,7 +107,7 @@ public class Chargeur extends AbstractComponent{
 					public void run() {
 						try {
 							while(true) {
-								((Chargeur)this.getTaskOwner()).sendConso() ;
+								((Charger)this.getTaskOwner()).sendConsumption() ;
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}
@@ -121,8 +121,8 @@ public class Chargeur extends AbstractComponent{
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		chargeurOutboundPort.doDisconnection();
-		chargeurCompteurOutboundPort.doDisconnection();
+		chargerOutboundPort.doDisconnection();
+		chargerElectricMeterOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -132,10 +132,10 @@ public class Chargeur extends AbstractComponent{
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			chargeurInboundPort.unpublishPort();
-			chargeurOutboundPort.unpublishPort();
-			chargeurCompteurInboundPort.unpublishPort();
-			chargeurCompteurOutboundPort.unpublishPort();
+			chargerInboundPort.unpublishPort();
+			chargerOutboundPort.unpublishPort();
+			chargerElectricMeterInboundPort.unpublishPort();
+			chargerElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

@@ -1,14 +1,14 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ChargeurCompteurI;
-import interfaces.CompteurI;
+import interfaces.ChargerElectricMeterI;
+import interfaces.ElectricMeterI;
 
-public class ChargeurCompteurConnector extends AbstractConnector implements ChargeurCompteurI{
+public class ChargerElectricMeterConnector extends AbstractConnector implements ChargerElectricMeterI{
 
 	@Override
-	public double sendConso() throws Exception {
-		return ((CompteurI)this.offering).getChargeurConso();
+	public double sendConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getChargerConsumption();
 	}
 
 }

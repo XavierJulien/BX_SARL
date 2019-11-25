@@ -6,20 +6,20 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.BatterieI;
-import interfaces.BatterieChargeurI;
-import ports.BatterieInboundPort;
-import ports.BatterieOutboundPort;
+import interfaces.BatteryI;
+import interfaces.BatteryChargerI;
+import ports.BatteryInboundPort;
+import ports.BatteryOutboundPort;
 
-@RequiredInterfaces(required = {BatterieI.class, BatterieChargeurI.class})
-@OfferedInterfaces(offered = {BatterieI.class, BatterieChargeurI.class})
-public class Batterie extends AbstractComponent {
+@RequiredInterfaces(required = {BatteryI.class, BatteryChargerI.class})
+@OfferedInterfaces(offered = {BatteryI.class, BatteryChargerI.class})
+public class Battery extends AbstractComponent {
 
 	protected final String				uri ;
-	protected final String				batterieInboundPortURI ;	
-	protected final String				batterieOutboundPortURI ;
-	protected BatterieOutboundPort		batterieOutboundPort ;
-	protected BatterieInboundPort		batterieInboundPort ;
+	protected final String				batteryInboundPortURI ;	
+	protected final String				batteryOutboundPortURI ;
+	protected BatteryOutboundPort		batteryOutboundPort ;
+	protected BatteryInboundPort		batteryInboundPort ;
 	protected double 					prod;
 	protected double 					maxCharge;
 	protected double					chargePercentage;
@@ -29,25 +29,25 @@ public class Batterie extends AbstractComponent {
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
-	protected Batterie(String uri,
-					   String batterieOutboundPortURI,
-					   String batterieInboundPortURI) throws Exception{
+	protected Battery(String uri,
+					   String batteryOutboundPortURI,
+					   String batteryInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert batterieOutboundPortURI != null;
-		assert batterieInboundPortURI != null;
+		assert batteryOutboundPortURI != null;
+		assert batteryInboundPortURI != null;
 
 		this.uri = uri;
-		this.batterieInboundPortURI = batterieInboundPortURI;
-		this.batterieOutboundPortURI = batterieOutboundPortURI;
+		this.batteryInboundPortURI = batteryInboundPortURI;
+		this.batteryOutboundPortURI = batteryOutboundPortURI;
 		this.prod = 0;
 
 		//-------------------PUBLISH-------------------
-		batterieInboundPort = new BatterieInboundPort(batterieInboundPortURI, this) ;
-		batterieInboundPort.publishPort() ;
-		batterieOutboundPort = new BatterieOutboundPort(batterieOutboundPortURI, this) ;
-		batterieOutboundPort.localPublishPort() ;
+		batteryInboundPort = new BatteryInboundPort(batteryInboundPortURI, this) ;
+		batteryInboundPort.publishPort() ;
+		batteryOutboundPort = new BatteryOutboundPort(batteryOutboundPortURI, this) ;
+		batteryOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -74,13 +74,13 @@ public class Batterie extends AbstractComponent {
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
-	public void startBatterie() throws Exception{
-		this.logMessage("The batterie is starting his job....") ;
+	public void startBattery() throws Exception{
+		this.logMessage("The battery is starting his job....") ;
 		isOn = true;
 	}
 
-	public void stopBatterie() throws Exception{
-		this.logMessage("The batterie is stopping his job....") ;
+	public void stopBattery() throws Exception{
+		this.logMessage("The battery is stopping his job....") ;
 		isOn =false;
 	}
 
@@ -96,7 +96,7 @@ public class Batterie extends AbstractComponent {
 
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Batterie component.") ;
+		this.logMessage("starting Battery component.") ;
 	}
 	
 	@Override
@@ -110,7 +110,7 @@ public class Batterie extends AbstractComponent {
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		batterieOutboundPort.doDisconnection();
+		batteryOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -120,8 +120,8 @@ public class Batterie extends AbstractComponent {
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			batterieInboundPort.unpublishPort();
-			batterieOutboundPort.unpublishPort();
+			batteryInboundPort.unpublishPort();
+			batteryOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

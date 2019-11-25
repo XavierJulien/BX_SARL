@@ -1,72 +1,72 @@
 package ports;
 
-import components.Compteur;
+import components.ElectricMeter;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.CompteurI;
+import interfaces.ElectricMeterI;
 
-public class CompteurInboundPort extends AbstractInboundPort implements CompteurI{
+public class ElectricMeterInboundPort extends AbstractInboundPort implements ElectricMeterI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public CompteurInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, CompteurI.class, owner);
+	public ElectricMeterInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, ElectricMeterI.class, owner);
 	}
 
-	public CompteurInboundPort(ComponentI owner) throws Exception {
-		super(CompteurI.class, owner);
+	public ElectricMeterInboundPort(ComponentI owner) throws Exception {
+		super(ElectricMeterI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
-	public void startCompteur() throws Exception {
+	public void startElectricMeter() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Compteur)this.getServiceOwner()).startCompteur();
+						((ElectricMeter)this.getServiceOwner()).startElectricMeter();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public void stopCompteur() throws Exception {
+	public void stopElectricMeter() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Compteur)this.getServiceOwner()).stopCompteur();
+						((ElectricMeter)this.getServiceOwner()).stopElectricMeter();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public double sendAllConso() throws Exception {
+	public double sendAllConsumption() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Compteur)owner).sendAllConso()) ;	
+				owner -> ((ElectricMeter)owner).sendAllConsumption()) ;	
 	}
 
 	@Override
-	public double getChauffageConso() throws Exception {
+	public double getHeatingConsumption() throws Exception {
 		System.out.println("ERREUR");
 		return 0;
 	}
 
 	@Override
-	public double getBouilloireConso() throws Exception {
+	public double getKettleConsumption() throws Exception {
 		System.out.println("ERREUR");
 		return 0;
 	}
 
 	@Override
-	public double getChargeurConso() throws Exception {
+	public double getChargerConsumption() throws Exception {
 		System.out.println("ERREUR");
 		return 0;
 	}

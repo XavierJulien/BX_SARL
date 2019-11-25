@@ -1,49 +1,49 @@
 package ports;
 
-import components.Chargeur;
+import components.Charger;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.ChargeurCompteurI;
-import interfaces.ChargeurI;
+import interfaces.ChargerElectricMeterI;
+import interfaces.ChargerI;
 
-public class ChargeurInboundPort extends AbstractInboundPort implements ChargeurI,ChargeurCompteurI{
+public class ChargerInboundPort extends AbstractInboundPort implements ChargerI,ChargerElectricMeterI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public ChargeurInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, ChargeurI.class, owner);
+	public ChargerInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, ChargerI.class, owner);
 	}
 	
-	public ChargeurInboundPort(ComponentI owner) throws Exception {
-		super(ChargeurI.class, owner);
+	public ChargerInboundPort(ComponentI owner) throws Exception {
+		super(ChargerI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public void startChargeur() throws Exception {
+	public void startCharger() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Chargeur)this.getServiceOwner()).startChargeur();
+						((Charger)this.getServiceOwner()).startCharger();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public void stopChargeur() throws Exception {
+	public void stopCharger() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Chargeur)this.getServiceOwner()).stopChargeur();
+						((Charger)this.getServiceOwner()).stopCharger();
 						return null;
 					}
 				}) ;
@@ -51,8 +51,8 @@ public class ChargeurInboundPort extends AbstractInboundPort implements Chargeur
 	}
 
 	@Override
-	public double sendConso() throws Exception {
+	public double sendConsumption() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Chargeur)owner).sendConso()) ;	
+				owner -> ((Charger)owner).sendConsumption()) ;	
 	}
 }

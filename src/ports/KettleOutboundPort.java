@@ -2,38 +2,38 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.BouilloireI;
+import interfaces.KettleI;
 
-public class BouilloireOutboundPort extends AbstractOutboundPort implements BouilloireI{
+public class KettleOutboundPort extends AbstractOutboundPort implements KettleI{
 	
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public BouilloireOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, BouilloireI.class, owner);
+	public KettleOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, KettleI.class, owner);
 	}
 	
-	public BouilloireOutboundPort(ComponentI owner) throws Exception {
-		super(BouilloireI.class, owner);
+	public KettleOutboundPort(ComponentI owner) throws Exception {
+		super(KettleI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public void startBouilloire() throws Exception {
-		((BouilloireI)this.connector).startBouilloire() ;
+	public void startKettle() throws Exception {
+		((KettleI)this.connector).startKettle() ;
 	}
 
 	@Override
-	public void stopBouilloire() throws Exception {
-		((BouilloireI)this.connector).stopBouilloire() ;
+	public void stopKettle() throws Exception {
+		((KettleI)this.connector).stopKettle() ;
 	}
 
 	@Override
-	public double sendConso() throws Exception {
+	public double sendConsumption() throws Exception {
 		//shouldn't be used
 		return 0;
 	}

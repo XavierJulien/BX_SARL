@@ -2,34 +2,34 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.BatterieI;
+import interfaces.BatteryI;
 
-public class BatterieOutboundPort extends AbstractOutboundPort implements BatterieI {
+public class BatteryOutboundPort extends AbstractOutboundPort implements BatteryI {
 	
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public BatterieOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, BatterieI.class, owner);
+	public BatteryOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, BatteryI.class, owner);
 	}
 	
-	public BatterieOutboundPort(ComponentI owner) throws Exception {
-		super(BatterieI.class, owner);
+	public BatteryOutboundPort(ComponentI owner) throws Exception {
+		super(BatteryI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-------------------------
 //--------------------------------------------------------------
 	@Override
-	public void startBatterie() throws Exception {
-		((BatterieI)this.connector).startBatterie() ;
+	public void startBattery() throws Exception {
+		((BatteryI)this.connector).startBattery() ;
 	}
 	
 	@Override
-	public void stopBatterie() throws Exception {
-		((BatterieI)this.connector).stopBatterie() ;
+	public void stopBattery() throws Exception {
+		((BatteryI)this.connector).stopBattery() ;
 	}
 	
 	@Override

@@ -3,9 +3,9 @@ package interfaces;
 import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
-public interface EolienneI extends OfferedI,RequiredI{
+public interface WindTurbineI extends OfferedI,RequiredI{
 	
-	public void startEolienne() throws Exception;
-	public void stopEolienne() throws Exception;
+	public void startWindTurbine() throws Exception;
+	public void stopWindTurbine() throws Exception;
 	public double sendProduction() throws Exception;
 }

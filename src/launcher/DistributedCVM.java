@@ -1,26 +1,26 @@
 package launcher;
 
-import components.Batterie;
-import components.Bouilloire;
-import components.CapteurChaleur;
-import components.CapteurVent;
-import components.Chargeur;
-import components.Chauffage;
-import components.Compteur;
-import components.Controleur;
-import components.Eolienne;
-import connectors.BatterieControleurConnector;
-import connectors.BouilloireCompteurConnector;
-import connectors.BouilloireControleurConnector;
-import connectors.CapteurChauffageConnector;
-import connectors.ChargeurCompteurConnector;
-import connectors.ChargeurControleurConnector;
-import connectors.ChauffageCompteurConnector;
-import connectors.ChauffageControleurConnector;
-import connectors.CompteurConnector;
-import connectors.CompteurControleurConnector;
-import connectors.ControleurConnector;
-import connectors.EolienneControleurConnector;
+import components.Battery;
+import components.Kettle;
+import components.HeatSensor;
+import components.WindSensor;
+import components.Charger;
+import components.Heating;
+import components.ElectricMeter;
+import components.Controller;
+import components.WindTurbine;
+import connectors.BatteryControllerConnector;
+import connectors.KettleElectricMetterConnector;
+import connectors.KettleControllerConnector;
+import connectors.HeatSensorHeatingConnector;
+import connectors.ChargerElectricMeterConnector;
+import connectors.ChargerControllerConnector;
+import connectors.HeatingElectricMeterConnector;
+import connectors.HeatingControllerConnector;
+import connectors.ElectricMeterConnector;
+import connectors.ElectricMeterControllerConnector;
+import connectors.ControllerConnector;
+import connectors.WIndTurbineControllerConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 
 //Copyright Jacques Malenfant, Sorbonne Universite.
@@ -95,91 +95,91 @@ extends		AbstractDistributedCVM
 	//--------------------------------------------------------------
 		
 		//--------------------------------------------------------------
-		//-------------------------CONTROLEUR---------------------------
+		//-------------------------CONTROLLER---------------------------
 		//--------------------------------------------------------------
-		public static final String	CONTROLEUR_COMPONENT_URI = "my-URI-controleur" ;
+		public static final String	CONTROLLER_COMPONENT_URI = "my-URI-controller" ;
 		
 		//--------------------------------------------------------------
-		//-------------------------EOLIENNE-----------------------------
+		//----------------------- WIND TURBINE -------------------------
 		//--------------------------------------------------------------
-		public static final String	EOLIENNE_COMPONENT_URI = "my-URI-eolienne" ;
-		protected static final String	URIEolienneOutboundPortURI = "eolienneOPort" ;
-		protected static final String	URIEolienneInboundPortURI = "eolienneIPort" ;	
-		protected static final String	URIControleurEolienneOutboundPortURI = "controleurEolienneOPort" ;
-		protected static final String	URIControleurEolienneInboundPortURI = "controleurEolienneIPort" ;
+		public static final String	WINDTURBINE_COMPONENT_URI = "my-URI-windTurbine" ;
+		protected static final String	URIWindTurbineOutboundPortURI = "windTurbineOPort" ;
+		protected static final String	URIWindTurbineInboundPortURI = "windTurbineIPort" ;	
+		protected static final String	URIControllerWindTurbineOutboundPortURI = "controllerWindTurbineOPort" ;
+		protected static final String	URIControllerWindTurbineInboundPortURI = "controllerWindTurbineIPort" ;
 		
 		//--------------------------------------------------------------
-		//-------------------------BOUILLOIRE---------------------------
+		//-------------------------- KETTLE ----------------------------
 		//--------------------------------------------------------------	
-		public static final String	BOUILLOIRE_COMPONENT_URI = "my-URI-bouilloire" ;
-		protected static final String	URIBouilloireOutboundPortURI = "bouilloireOPort" ;
-		protected static final String	URIBouilloireInboundPortURI = "bouilloireIPort" ;
-		protected static final String	URIControleurBouilloireOutboundPortURI = "controleurBouilloireOPort" ;
-		protected static final String	URIControleurBouilloireInboundPortURI = "controleurBouilloireIPort" ;
-		protected static final String	URIBouilloireCompteurOutboundPortURI = "bouilloireCompteurOPort" ;
-		protected static final String	URIBouilloireCompteurInboundPortURI = "bouilloireCompteurIPort" ;
+		public static final String	KETTLE_COMPONENT_URI = "my-URI-kettle" ;
+		protected static final String	URIKettleOutboundPortURI = "kettleOPort" ;
+		protected static final String	URIKettleInboundPortURI = "kettleIPort" ;
+		protected static final String	URIControllerKettleOutboundPortURI = "controllerKettleOPort" ;
+		protected static final String	URIControllerKettleInboundPortURI = "controllerKettleIPort" ;
+		protected static final String	URIKettleElectricMeterOutboundPortURI = "kettleElectricMeterOPort" ;
+		protected static final String	URIKettleElectricMeterInboundPortURI = "kettleElectricMeterIPort" ;
 		
 		//--------------------------------------------------------------
-		//-------------------------CHAUFFAGE----------------------------
+		//------------------------- HEATING ----------------------------
 		//--------------------------------------------------------------
-		public static final String	CHAUFFAGE_COMPONENT_URI = "my-URI-chauffage" ;
-		protected static final String	URIChauffageOutboundPortURI = "chauffageOPort" ;
-		protected static final String	URIChauffageInboundPortURI = "chauffageIPort" ;
-		protected static final String	URIChauffageToCapteurInboundPortURI = "chauffageToCapteurIPort" ;
-		protected static final String	URIControleurChauffageOutboundPortURI = "controleurChauffageOPort" ;
-		protected static final String	URIControleurChauffageInboundPortURI = "controleurChauffageIPort" ;
-		protected static final String	URIChauffageCompteurOutboundPortURI = "chauffageCompteurOPort" ;
-		protected static final String	URIChauffageCompteurInboundPortURI = "chauffageCompteurIPort" ;
+		public static final String	HEATING_COMPONENT_URI = "my-URI-heating" ;
+		protected static final String	URIHeatingOutboundPortURI = "heatingOPort" ;
+		protected static final String	URIHeatingInboundPortURI = "heatingIPort" ;
+		protected static final String	URIHeatingToCapteurInboundPortURI = "heatingToCapteurIPort" ;
+		protected static final String	URIControllerHeatingOutboundPortURI = "controllerHeatingOPort" ;
+		protected static final String	URIControllerHeatingInboundPortURI = "controllerHeatingIPort" ;
+		protected static final String	URIHeatingElectricMeterOutboundPortURI = "heatingElectricMeterOPort" ;
+		protected static final String	URIHeatingElectricMeterInboundPortURI = "heatingElectricMeterIPort" ;
 		
 		//--------------------------------------------------------------
-		//-------------------------COMPTEUR-----------------------------
+		//--------------------- ELECTRIC METER -------------------------
 		//--------------------------------------------------------------
-		/** URI of the compteur component (convenience).						*/
-		public static final String	COMPTEUR_COMPONENT_URI = "my-URI-compteur" ;
-		protected static final String	URICompteurOutboundPortURI = "compteurOPort" ;
-		protected static final String	URICompteurInboundPortURI = "compteurIPort" ;	
-		protected static final String	URIControleurCompteurOutboundPortURI = "controleurCompteurOPort" ;
-		protected static final String	URIControleurCompteurInboundPortURI = "controleurCompteurIPort" ;
-		protected static final String	URICompteurChauffageOutboundPortURI = "compteurChauffageOPort" ;
-		protected static final String	URICompteurChauffageInboundPortURI = "compteurChauffageIPort" ;
-		protected static final String	URICompteurBouilloireOutboundPortURI = "compteurBouilloireOPort" ;
-		protected static final String	URICompteurBouilloireInboundPortURI = "compteurBouilloireIPort" ;
-		protected static final String	URICompteurChargeurOutboundPortURI = "compteurChargeurOPort" ;
-		protected static final String	URICompteurChargeurInboundPortURI = "compteurChargeurIPort" ;
+		/** URI of the electricMeter component (convenience).						*/
+		public static final String	ELECTRICMETER_COMPONENT_URI = "my-URI-electricMeter" ;
+		protected static final String	URIElectricMeterOutboundPortURI = "electricMeterOPort" ;
+		protected static final String	URIElectricMeterInboundPortURI = "electricMeterIPort" ;	
+		protected static final String	URIControllerElectricMeterOutboundPortURI = "controllerElectricMeterOPort" ;
+		protected static final String	URIControllerElectricMeterInboundPortURI = "controllerElectricMeterIPort" ;
+		protected static final String	URIElectricMeterHeatingOutboundPortURI = "electricMeterHeatingOPort" ;
+		protected static final String	URIElectricMeterHeatingInboundPortURI = "electricMeterHeatingIPort" ;
+		protected static final String	URIElectricMeterKettleOutboundPortURI = "electricMeterKettleOPort" ;
+		protected static final String	URIElectricMeterKettleInboundPortURI = "electricMeterKettleIPort" ;
+		protected static final String	URIElectricMeterChargerOutboundPortURI = "electricMeterChargerOPort" ;
+		protected static final String	URIElectricMeterChargerInboundPortURI = "electricMeterChargerIPort" ;
 		//--------------------------------------------------------------
-		//-------------------------CHARGEUR-----------------------------
+		//-------------------------CHARGER-----------------------------
 		//--------------------------------------------------------------
-		public static final String	CHARGEUR_COMPONENT_URI = "my-URI-chargeur" ;
-		protected static final String	URIChargeurOutboundPortURI = "chargeurOPort" ;
-		protected static final String	URIChargeurInboundPortURI = "chargeurIPort" ;
-		protected static final String	URIControleurChargeurOutboundPortURI = "controleurChargeurOPort" ;
-		protected static final String	URIControleurChargeurInboundPortURI = "controleurChargeurIPort" ;
-		protected static final String	URIChargeurCompteurOutboundPortURI = "chargeurCompteurOPort" ;
-		protected static final String	URIChargeurCompteurInboundPortURI = "chargeurCompteurIPort" ;
+		public static final String	CHARGER_COMPONENT_URI = "my-URI-charger" ;
+		protected static final String	URIChargerOutboundPortURI = "chargerOPort" ;
+		protected static final String	URIChargerInboundPortURI = "chargerIPort" ;
+		protected static final String	URIControllerChargerOutboundPortURI = "controllerChargerOPort" ;
+		protected static final String	URIControllerChargerInboundPortURI = "controllerChargerIPort" ;
+		protected static final String	URIChargerElectricMeterOutboundPortURI = "chargerElectricMeterOPort" ;
+		protected static final String	URIChargerElectricMeterInboundPortURI = "chargerElectricMeterIPort" ;
 		
 		//--------------------------------------------------------------
-		//-------------------------BATTERIE-----------------------------
+		//-------------------------BATTERY-----------------------------
 		//--------------------------------------------------------------
-		public static final String	BATTERIE_COMPONENT_URI = "my-URI-batterie" ;
-		protected static final String	URIBatterieOutboundPortURI = "batterieOPort" ;
-		protected static final String	URIBatterieInboundPortURI = "batterieIPort" ;	
-		protected static final String	URIControleurBatterieOutboundPortURI = "controleurBatterieOPort" ;
-		protected static final String	URIControleurBatterieInboundPortURI = "controleurBatterieIPort" ;
+		public static final String	BATTERY_COMPONENT_URI = "my-URI-battery" ;
+		protected static final String	URIBatteryOutboundPortURI = "batteryOPort" ;
+		protected static final String	URIBatteryInboundPortURI = "batteryIPort" ;	
+		protected static final String	URIControllerBatteryOutboundPortURI = "controllerBatteryOPort" ;
+		protected static final String	URIControllerBatteryInboundPortURI = "controllerBatteryIPort" ;
 		
 		//--------------------------------------------------------------
 		//-------------------------CAPTEUR VENT------------------------
 		//--------------------------------------------------------------
-		public static final String	CAPTEUR_VENT_COMPONENT_URI = "my-URI-capteur-vent" ;
-		protected static final String	URIControleurCapteurVentOutboundPortURI = "capteurVentOPort" ;
-		protected static final String	URICapteurVentInboundPortURI = "capteurVentIPort" ;
+		public static final String	WIND_SENSOR_COMPONENT_URI = "my-URI-wind-sensor" ;
+		protected static final String	URIControllerWindSensorOutboundPortURI = "windSensorOPort" ;
+		protected static final String	URIWindSensorInboundPortURI = "windSensorIPort" ;
 		
 		//--------------------------------------------------------------
 		//-------------------------CAPTEUR CHALEUR----------------------
 		//--------------------------------------------------------------
-		public static final String	CAPTEUR_CHALEUR_COMPONENT_URI = "my-URI-capteur-chaleur" ;
-		protected static final String	URICapteurChaleurToChauffageOutboundPortURI = "capteurChaleurToChauffageOPort" ;
-		protected static final String	URIControleurCapteurChaleurOutboundPortURI = "capteurChaleurOPort" ;
-		protected static final String	URICapteurChaleurInboundPortURI = "capteurChaleurIPort" ;
+		public static final String	HEAT_SENSOR_COMPONENT_URI = "my-URI-heat-sensor" ;
+		protected static final String	URIHeatSensorToHeatingOutboundPortURI = "heatSensorToHeatingOPort" ;
+		protected static final String	URIControllerHeatSensorOutboundPortURI = "heatSensorOPort" ;
+		protected static final String	URIHeatSensorInboundPortURI = "heatSensorIPort" ;
 		
 		
 		
@@ -187,31 +187,20 @@ extends		AbstractDistributedCVM
 		//--------------------------------------------------------------
 		//-------------------------URI COMPONENTS-----------------------
 		//--------------------------------------------------------------
-		protected String uriEolienneURI ;
-		protected String uriBouilloireURI ;
-		protected String uriChauffageURI ;
-		protected String uriCompteurURI ;
-		protected String uriControleurURI ;
-		protected String uriCapteurVentURI ;
-		protected String uriCapteurChaleurURI ;
-		protected String uriChargeurURI ;
-		protected String uriBatterieURI ;
+		protected String uriWindTurbineURI ;
+		protected String uriKettleURI ;
+		protected String uriHeatingURI ;
+		protected String uriElectricMeterURI ;
+		protected String uriControllerURI ;
+		protected String uriWindSensorURI ;
+		protected String uriHeatSensorURI ;
+		protected String uriChargerURI ;
+		protected String uriBatteryURI ;
 
 
 	// URI of the CVM instances as defined in the config.xml file
-	protected static String			Controleur_JVM_URI = "controleur" ;
-	protected static String			Appareils_JVM_URI = "appareils" ;
-
-	protected static String			URIGetterOutboundPortURI = "oport" ;
-	protected static String			URIProviderInboundPortURI = "iport" ;
-
-	
-	/** Reference to the provider component to share between deploy
-	 *  and shutdown.													*/
-	protected String	uriProviderURI ;
-	/** Reference to the consumer component to share between deploy
-	 *  and shutdown.													*/
-	protected String	uriConsumerURI ;
+	protected static String			Controller_JVM_URI = "controller" ;
+	protected static String			Apparels_JVM_URI = "apparels" ;
 
 	public				DistributedCVM(String[] args, int xLayout, int yLayout)
 	throws Exception
@@ -260,152 +249,152 @@ extends		AbstractDistributedCVM
 	@Override
 	public void			instantiateAndPublish() throws Exception
 	{
-		if (thisJVMURI.equals(Controleur_JVM_URI)) {
+		if (thisJVMURI.equals(Controller_JVM_URI)) {
 
-			this.uriControleurURI =
+			this.uriControllerURI =
 					AbstractComponent.createComponent(
-							Controleur.class.getCanonicalName(),
-							new Object[]{CONTROLEUR_COMPONENT_URI,
-									URIControleurEolienneOutboundPortURI,
-									URIControleurEolienneInboundPortURI,
-									URIControleurBouilloireOutboundPortURI,
-									URIControleurBouilloireInboundPortURI,
-									URIControleurChauffageOutboundPortURI,
-									URIControleurChauffageInboundPortURI,
-									URIControleurCompteurOutboundPortURI,
-									URIControleurCompteurInboundPortURI,
-									URIControleurChargeurOutboundPortURI,
-									URIControleurChargeurInboundPortURI,
-									URIControleurBatterieOutboundPortURI,
-									URIControleurBatterieInboundPortURI,
-									URIControleurCapteurVentOutboundPortURI,
-									URIControleurCapteurChaleurOutboundPortURI}) ;
-			assert	this.isDeployedComponent(this.uriControleurURI) ;
-			this.toggleTracing(this.uriControleurURI) ;
-			this.toggleLogging(this.uriControleurURI) ;
+							Controller.class.getCanonicalName(),
+							new Object[]{CONTROLLER_COMPONENT_URI,
+									URIControllerWindTurbineOutboundPortURI,
+									URIControllerWindTurbineInboundPortURI,
+									URIControllerKettleOutboundPortURI,
+									URIControllerKettleInboundPortURI,
+									URIControllerHeatingOutboundPortURI,
+									URIControllerHeatingInboundPortURI,
+									URIControllerElectricMeterOutboundPortURI,
+									URIControllerElectricMeterInboundPortURI,
+									URIControllerChargerOutboundPortURI,
+									URIControllerChargerInboundPortURI,
+									URIControllerBatteryOutboundPortURI,
+									URIControllerBatteryInboundPortURI,
+									URIControllerWindSensorOutboundPortURI,
+									URIControllerHeatSensorOutboundPortURI}) ;
+			assert	this.isDeployedComponent(this.uriControllerURI) ;
+			this.toggleTracing(this.uriControllerURI) ;
+			this.toggleLogging(this.uriControllerURI) ;
 			
 			
-			this.uriCompteurURI =
+			this.uriElectricMeterURI =
 					AbstractComponent.createComponent(
-							Compteur.class.getCanonicalName(),
-							new Object[]{COMPTEUR_COMPONENT_URI,
-									URICompteurOutboundPortURI,
-									URICompteurInboundPortURI,
-									URIChauffageCompteurOutboundPortURI,
-									URIChauffageCompteurInboundPortURI,
-									URIBouilloireCompteurOutboundPortURI,
-									URIBouilloireCompteurInboundPortURI,
-									URIChargeurCompteurOutboundPortURI,
-									URIChargeurCompteurInboundPortURI}) ;
+							ElectricMeter.class.getCanonicalName(),
+							new Object[]{ELECTRICMETER_COMPONENT_URI,
+									URIElectricMeterOutboundPortURI,
+									URIElectricMeterInboundPortURI,
+									URIHeatingElectricMeterOutboundPortURI,
+									URIHeatingElectricMeterInboundPortURI,
+									URIKettleElectricMeterOutboundPortURI,
+									URIKettleElectricMeterInboundPortURI,
+									URIChargerElectricMeterOutboundPortURI,
+									URIChargerElectricMeterInboundPortURI}) ;
 
-			assert	this.isDeployedComponent(this.uriCompteurURI) ;
-			this.toggleTracing(this.uriCompteurURI) ;
-			this.toggleLogging(this.uriCompteurURI) ;
+			assert	this.isDeployedComponent(this.uriElectricMeterURI) ;
+			this.toggleTracing(this.uriElectricMeterURI) ;
+			this.toggleLogging(this.uriElectricMeterURI) ;
 
 
-		} else if (thisJVMURI.equals(Appareils_JVM_URI)) {
+		} else if (thisJVMURI.equals(Apparels_JVM_URI)) {
 			//--------------------------------------------------------------
-			//-------------------------EOLIENNE-----------------------------
+			//------------------------ WIND TURBINE ------------------------
 			//--------------------------------------------------------------
-			this.uriEolienneURI =
+			this.uriWindTurbineURI =
 					AbstractComponent.createComponent(
-							Eolienne.class.getCanonicalName(),
-							new Object[]{EOLIENNE_COMPONENT_URI,
-									URIEolienneOutboundPortURI,
-									URIEolienneInboundPortURI}) ;
-			assert	this.isDeployedComponent(this.uriEolienneURI) ;
-			this.toggleTracing(this.uriEolienneURI) ;
-			this.toggleLogging(this.uriEolienneURI) ;
+							WindTurbine.class.getCanonicalName(),
+							new Object[]{WINDTURBINE_COMPONENT_URI,
+									URIWindTurbineOutboundPortURI,
+									URIWindTurbineInboundPortURI}) ;
+			assert	this.isDeployedComponent(this.uriWindTurbineURI) ;
+			this.toggleTracing(this.uriWindTurbineURI) ;
+			this.toggleLogging(this.uriWindTurbineURI) ;
 
 			
 			//--------------------------------------------------------------
-			//-------------------------CHAUFFAGE----------------------------
+			//------------------------- HEATING ----------------------------
 			//--------------------------------------------------------------
-			this.uriChauffageURI =
+			this.uriHeatingURI =
 					AbstractComponent.createComponent(
-							Chauffage.class.getCanonicalName(),
-							new Object[]{CHAUFFAGE_COMPONENT_URI,
-									URIChauffageOutboundPortURI,
-									URIChauffageInboundPortURI,
-									URIChauffageToCapteurInboundPortURI,
-									URICompteurChauffageOutboundPortURI,
-									URICompteurChauffageInboundPortURI}) ;
+							Heating.class.getCanonicalName(),
+							new Object[]{HEATING_COMPONENT_URI,
+									URIHeatingOutboundPortURI,
+									URIHeatingInboundPortURI,
+									URIHeatingToCapteurInboundPortURI,
+									URIElectricMeterHeatingOutboundPortURI,
+									URIElectricMeterHeatingInboundPortURI}) ;
 
-			assert	this.isDeployedComponent(this.uriChauffageURI) ;
-			this.toggleTracing(this.uriChauffageURI) ;
-			this.toggleLogging(this.uriChauffageURI) ;
+			assert	this.isDeployedComponent(this.uriHeatingURI) ;
+			this.toggleTracing(this.uriHeatingURI) ;
+			this.toggleLogging(this.uriHeatingURI) ;
 			
 			
 			//--------------------------------------------------------------
-			//-------------------------BOUILLOIRE---------------------------
+			//-------------------------- KETTLE ----------------------------
 			//--------------------------------------------------------------
-			this.uriBouilloireURI =
+			this.uriKettleURI =
 					AbstractComponent.createComponent(
-							Bouilloire.class.getCanonicalName(),
-							new Object[]{BOUILLOIRE_COMPONENT_URI,
-									URIBouilloireOutboundPortURI,
-									URIBouilloireInboundPortURI,
-									URICompteurBouilloireOutboundPortURI,
-									URICompteurBouilloireInboundPortURI}) ;
+							Kettle.class.getCanonicalName(),
+							new Object[]{KETTLE_COMPONENT_URI,
+									URIKettleOutboundPortURI,
+									URIKettleInboundPortURI,
+									URIElectricMeterKettleOutboundPortURI,
+									URIElectricMeterKettleInboundPortURI}) ;
 
-			assert	this.isDeployedComponent(this.uriBouilloireURI) ;
-			this.toggleTracing(this.uriBouilloireURI) ;
-			this.toggleLogging(this.uriBouilloireURI) ;
+			assert	this.isDeployedComponent(this.uriKettleURI) ;
+			this.toggleTracing(this.uriKettleURI) ;
+			this.toggleLogging(this.uriKettleURI) ;
 
 
 			//--------------------------------------------------------------
-			//-------------------------CAPTEUR VENT-------------------------
+			//------------------------- WIND SENSOR ------------------------
 			//--------------------------------------------------------------
-			this.uriCapteurVentURI =
+			this.uriWindSensorURI =
 					AbstractComponent.createComponent(
-							CapteurVent.class.getCanonicalName(),
-							new Object[]{CAPTEUR_VENT_COMPONENT_URI,
-									URICapteurVentInboundPortURI}) ;
-			assert	this.isDeployedComponent(this.uriCapteurVentURI) ;
-			this.toggleTracing(this.uriCapteurVentURI) ;
-			this.toggleLogging(this.uriCapteurVentURI) ;
+							WindSensor.class.getCanonicalName(),
+							new Object[]{WIND_SENSOR_COMPONENT_URI,
+									URIWindSensorInboundPortURI}) ;
+			assert	this.isDeployedComponent(this.uriWindSensorURI) ;
+			this.toggleTracing(this.uriWindSensorURI) ;
+			this.toggleLogging(this.uriWindSensorURI) ;
 			
 			//--------------------------------------------------------------
-			//-------------------------CAPTEUR CHALEUR----------------------
+			//-------------------------- HEAT SENSOR -----------------------
 			//--------------------------------------------------------------
-			this.uriCapteurChaleurURI =
+			this.uriHeatSensorURI =
 					AbstractComponent.createComponent(
-							CapteurChaleur.class.getCanonicalName(),
-							new Object[]{CAPTEUR_CHALEUR_COMPONENT_URI,
-									URICapteurChaleurInboundPortURI,
-									URICapteurChaleurToChauffageOutboundPortURI}) ;
-			assert	this.isDeployedComponent(this.uriCapteurChaleurURI) ;
-			this.toggleTracing(this.uriCapteurChaleurURI) ;
-			this.toggleLogging(this.uriCapteurChaleurURI) ;
+							HeatSensor.class.getCanonicalName(),
+							new Object[]{HEAT_SENSOR_COMPONENT_URI,
+									URIHeatSensorInboundPortURI,
+									URIHeatSensorToHeatingOutboundPortURI}) ;
+			assert	this.isDeployedComponent(this.uriHeatSensorURI) ;
+			this.toggleTracing(this.uriHeatSensorURI) ;
+			this.toggleLogging(this.uriHeatSensorURI) ;
 			
 			//--------------------------------------------------------------
-			//-------------------------CHARGEUR-----------------------------
+			//-------------------------CHARGER-----------------------------
 			//--------------------------------------------------------------
-			this.uriChargeurURI =
+			this.uriChargerURI =
 					AbstractComponent.createComponent(
-							Chargeur.class.getCanonicalName(),
-							new Object[]{CHARGEUR_COMPONENT_URI,
-									URIChargeurOutboundPortURI,
-									URIChargeurInboundPortURI,
-									URICompteurChargeurOutboundPortURI,
-									URICompteurChargeurInboundPortURI});
-			assert	this.isDeployedComponent(this.uriChargeurURI) ;
-			this.toggleTracing(this.uriChargeurURI) ;
-			this.toggleLogging(this.uriChargeurURI) ;
+							Charger.class.getCanonicalName(),
+							new Object[]{CHARGER_COMPONENT_URI,
+									URIChargerOutboundPortURI,
+									URIChargerInboundPortURI,
+									URIElectricMeterChargerOutboundPortURI,
+									URIElectricMeterChargerInboundPortURI});
+			assert	this.isDeployedComponent(this.uriChargerURI) ;
+			this.toggleTracing(this.uriChargerURI) ;
+			this.toggleLogging(this.uriChargerURI) ;
 					
 					
 			//--------------------------------------------------------------
-			//-------------------------BATTERIE-----------------------------
+			//-------------------------BATTERY-----------------------------
 			//--------------------------------------------------------------
-			this.uriBatterieURI =
+			this.uriBatteryURI =
 					AbstractComponent.createComponent(
-							Batterie.class.getCanonicalName(),
-							new Object[]{BATTERIE_COMPONENT_URI,
-									URIBatterieOutboundPortURI,
-									URIBatterieInboundPortURI}) ;
-			assert	this.isDeployedComponent(this.uriBatterieURI) ;
-			this.toggleTracing(this.uriBatterieURI) ;
-			this.toggleLogging(this.uriBatterieURI) ;
+							Battery.class.getCanonicalName(),
+							new Object[]{BATTERY_COMPONENT_URI,
+									URIBatteryOutboundPortURI,
+									URIBatteryInboundPortURI}) ;
+			assert	this.isDeployedComponent(this.uriBatteryURI) ;
+			this.toggleTracing(this.uriBatteryURI) ;
+			this.toggleLogging(this.uriBatteryURI) ;
 
 			
 			
@@ -437,160 +426,160 @@ extends		AbstractDistributedCVM
 	{
 		assert	this.isIntantiatedAndPublished() ;
 
-		if (thisJVMURI.equals(Controleur_JVM_URI)) {
+		if (thisJVMURI.equals(Controller_JVM_URI)) {
 
-			assert	this.uriControleurURI != null
-					&& this.uriCompteurURI != null;
+			assert	this.uriControllerURI != null
+					&& this.uriElectricMeterURI != null;
 			
-			//BOUILLOIRE <=> CONTROLEUR
+			//KETTLE <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurBouilloireOutboundPortURI,
-					URIBouilloireInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerKettleOutboundPortURI,
+					URIKettleInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 
-			//BOUILLOIRE <=> COMPTEUR
+			//KETTLE <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriCompteurURI,
-					URIBouilloireCompteurOutboundPortURI,
-					URICompteurBouilloireInboundPortURI,
-					CompteurConnector.class.getCanonicalName()) ;
+					this.uriElectricMeterURI,
+					URIKettleElectricMeterOutboundPortURI,
+					URIElectricMeterKettleInboundPortURI,
+					ElectricMeterConnector.class.getCanonicalName()) ;
 			
-			//CHAUFFAGE <=> CONTROLEUR
+			//HEATING <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurChauffageOutboundPortURI,
-					URIChauffageInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerHeatingOutboundPortURI,
+					URIHeatingInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 			
-			//CHAUFFAGE <=> COMPTEUR
+			//HEATING <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriCompteurURI,
-					URIChauffageCompteurOutboundPortURI,
-					URICompteurChauffageInboundPortURI,
-					CompteurConnector.class.getCanonicalName()) ;
+					this.uriElectricMeterURI,
+					URIHeatingElectricMeterOutboundPortURI,
+					URIElectricMeterHeatingInboundPortURI,
+					ElectricMeterConnector.class.getCanonicalName()) ;
 	
-			//CHARGEUR <=> COMPTEUR
+			//CHARGER <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriCompteurURI,
-					URIChargeurCompteurOutboundPortURI,
-					URICompteurChargeurInboundPortURI,
-					CompteurConnector.class.getCanonicalName()) ;	
+					this.uriElectricMeterURI,
+					URIChargerElectricMeterOutboundPortURI,
+					URIElectricMeterChargerInboundPortURI,
+					ElectricMeterConnector.class.getCanonicalName()) ;	
 
-			//COMPTEUR <=> CONTROLEUR
+			//ELECTRICMETER <=> CONTROLLER
 			this.doPortConnection(
-					this.uriCompteurURI,
-					URICompteurOutboundPortURI,
-					URIControleurCompteurInboundPortURI,
-					CompteurControleurConnector.class.getCanonicalName()) ;
+					this.uriElectricMeterURI,
+					URIElectricMeterOutboundPortURI,
+					URIControllerElectricMeterInboundPortURI,
+					ElectricMeterControllerConnector.class.getCanonicalName()) ;
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurCompteurOutboundPortURI,
-					URICompteurInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerElectricMeterOutboundPortURI,
+					URIElectricMeterInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 			
-			//EOLIENNE <=> CONTROLEUR
+			//WINDTURBINE <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurEolienneOutboundPortURI,
-					URIEolienneInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerWindTurbineOutboundPortURI,
+					URIWindTurbineInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 			
-			//CAPTEUR <=> CONTROLEUR
+			//CAPTEUR <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurCapteurVentOutboundPortURI,
-					URICapteurVentInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;
+					this.uriControllerURI,
+					URIControllerWindSensorOutboundPortURI,
+					URIWindSensorInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurCapteurChaleurOutboundPortURI,
-					URICapteurChaleurInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;
+					this.uriControllerURI,
+					URIControllerHeatSensorOutboundPortURI,
+					URIHeatSensorInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;
 			
-			//CHARGEUR <=> CONTROLEUR
+			//CHARGER <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurChargeurOutboundPortURI,
-					URIChargeurInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerChargerOutboundPortURI,
+					URIChargerInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 			
-			//BATTERIE <=> CONTROLEUR
+			//BATTERY <=> CONTROLLER
 			this.doPortConnection(
-					this.uriControleurURI,
-					URIControleurBatterieOutboundPortURI,
-					URIBatterieInboundPortURI,
-					ControleurConnector.class.getCanonicalName()) ;	
+					this.uriControllerURI,
+					URIControllerBatteryOutboundPortURI,
+					URIBatteryInboundPortURI,
+					ControllerConnector.class.getCanonicalName()) ;	
 			
-		} else if (thisJVMURI.equals(Appareils_JVM_URI)) {
+		} else if (thisJVMURI.equals(Apparels_JVM_URI)) {
 
-			assert	this.uriEolienneURI != null 
-					 && this.uriCapteurChaleurURI != null && this.uriChauffageURI != null
-					 &&	this.uriCapteurVentURI != null && this.uriBouilloireURI != null
-					 &&	this.uriBatterieURI != null && this.uriChargeurURI != null;
+			assert	this.uriWindTurbineURI != null 
+					 && this.uriHeatSensorURI != null && this.uriHeatingURI != null
+					 &&	this.uriWindSensorURI != null && this.uriKettleURI != null
+					 &&	this.uriBatteryURI != null && this.uriChargerURI != null;
 			
-			//BOUILLOIRE <=> CONTROLEUR
+			//KETTLE <=> CONTROLLER
 			this.doPortConnection(
-					this.uriBouilloireURI,
-					URIBouilloireOutboundPortURI,
-					URIControleurBouilloireInboundPortURI,
-					BouilloireControleurConnector.class.getCanonicalName()) ;
+					this.uriKettleURI,
+					URIKettleOutboundPortURI,
+					URIControllerKettleInboundPortURI,
+					KettleControllerConnector.class.getCanonicalName()) ;
 
-			//CHAUFFAGE <=> CONTROLEUR
+			//HEATING <=> CONTROLLER
 			this.doPortConnection(
-					this.uriChauffageURI,
-					URIChauffageOutboundPortURI,
-					URIControleurChauffageInboundPortURI,
-					ChauffageControleurConnector.class.getCanonicalName()) ;
+					this.uriHeatingURI,
+					URIHeatingOutboundPortURI,
+					URIControllerHeatingInboundPortURI,
+					HeatingControllerConnector.class.getCanonicalName()) ;
 
-			//CHAUFFAGE <=> COMPTEUR
+			//HEATING <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriChauffageURI,
-					URICompteurChauffageOutboundPortURI,
-					URIChauffageCompteurInboundPortURI,
-					ChauffageCompteurConnector.class.getCanonicalName()) ;
+					this.uriHeatingURI,
+					URIElectricMeterHeatingOutboundPortURI,
+					URIHeatingElectricMeterInboundPortURI,
+					HeatingElectricMeterConnector.class.getCanonicalName()) ;
 
-			//BOUILLOIRE <=> COMPTEUR
+			//KETTLE <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriBouilloireURI,
-					URICompteurBouilloireOutboundPortURI,
-					URIBouilloireCompteurInboundPortURI,
-					BouilloireCompteurConnector.class.getCanonicalName()) ;
+					this.uriKettleURI,
+					URIElectricMeterKettleOutboundPortURI,
+					URIKettleElectricMeterInboundPortURI,
+					KettleElectricMetterConnector.class.getCanonicalName()) ;
 			
-			//CHARGEUR <=> COMPTEUR
+			//CHARGER <=> ELECTRICMETER
 			this.doPortConnection(
-					this.uriChargeurURI,
-					URICompteurChargeurOutboundPortURI,
-					URIChargeurCompteurInboundPortURI,
-					ChargeurCompteurConnector.class.getCanonicalName()) ;
+					this.uriChargerURI,
+					URIElectricMeterChargerOutboundPortURI,
+					URIChargerElectricMeterInboundPortURI,
+					ChargerElectricMeterConnector.class.getCanonicalName()) ;
 			
-			//EOLIENNE <=> CONTROLEUR
+			//WINDTURBINE <=> CONTROLLER
 			this.doPortConnection(
-					this.uriEolienneURI,
-					URIEolienneOutboundPortURI,
-					URIControleurEolienneInboundPortURI,
-					EolienneControleurConnector.class.getCanonicalName()) ;
+					this.uriWindTurbineURI,
+					URIWindTurbineOutboundPortURI,
+					URIControllerWindTurbineInboundPortURI,
+					WIndTurbineControllerConnector.class.getCanonicalName()) ;
 			
-			//CHARGEUR <=> CONTROLEUR
+			//CHARGER <=> CONTROLLER
 			this.doPortConnection(
-					this.uriChargeurURI,
-					URIChargeurOutboundPortURI,
-					URIControleurChargeurInboundPortURI,
-					ChargeurControleurConnector.class.getCanonicalName()) ;
+					this.uriChargerURI,
+					URIChargerOutboundPortURI,
+					URIControllerChargerInboundPortURI,
+					ChargerControllerConnector.class.getCanonicalName()) ;
 
-			//BATTERIE <=> CONTROLEUR
+			//BATTERY <=> CONTROLLER
 			this.doPortConnection(
-					this.uriBatterieURI,
-					URIBatterieOutboundPortURI,
-					URIControleurBatterieInboundPortURI,
-					BatterieControleurConnector.class.getCanonicalName()) ;
+					this.uriBatteryURI,
+					URIBatteryOutboundPortURI,
+					URIControllerBatteryInboundPortURI,
+					BatteryControllerConnector.class.getCanonicalName()) ;
 
-			//CAPTEUR => CHAUFFAGE
+			//CAPTEUR => HEATING
 			this.doPortConnection(
-					this.uriCapteurChaleurURI,
-					URICapteurChaleurToChauffageOutboundPortURI,
-					URIChauffageToCapteurInboundPortURI,
-					CapteurChauffageConnector.class.getCanonicalName()) ;
+					this.uriHeatSensorURI,
+					URIHeatSensorToHeatingOutboundPortURI,
+					URIHeatingToCapteurInboundPortURI,
+					HeatSensorHeatingConnector.class.getCanonicalName()) ;
 			
 		} else {
 
@@ -607,17 +596,17 @@ extends		AbstractDistributedCVM
 	@Override
 	public void			finalise() throws Exception
 	{
-		if (thisJVMURI.equals(Controleur_JVM_URI)) {
+		if (thisJVMURI.equals(Controller_JVM_URI)) {
 
-			assert	this.uriControleurURI != null
-					&& this.uriCompteurURI != null;
+			assert	this.uriControllerURI != null
+					&& this.uriElectricMeterURI != null;
 
-		} else if (thisJVMURI.equals(Appareils_JVM_URI)) {
+		} else if (thisJVMURI.equals(Apparels_JVM_URI)) {
 
-			assert	this.uriEolienneURI != null 
-					&& this.uriCapteurChaleurURI != null && this.uriChauffageURI != null
-					&& this.uriCapteurVentURI != null && this.uriBouilloireURI != null
-					&& this.uriBatterieURI != null && this.uriChargeurURI != null;
+			assert	this.uriWindTurbineURI != null 
+					&& this.uriHeatSensorURI != null && this.uriHeatingURI != null
+					&& this.uriWindSensorURI != null && this.uriKettleURI != null
+					&& this.uriBatteryURI != null && this.uriChargerURI != null;
 			
 		} else {
 
@@ -634,15 +623,15 @@ extends		AbstractDistributedCVM
 	@Override
 	public void			shutdown() throws Exception
 	{
-		if (thisJVMURI.equals(Controleur_JVM_URI)) {
-			assert	this.uriControleurURI != null
-					&& this.uriCompteurURI != null;
-		} else if (thisJVMURI.equals(Appareils_JVM_URI)) {
+		if (thisJVMURI.equals(Controller_JVM_URI)) {
+			assert	this.uriControllerURI != null
+					&& this.uriElectricMeterURI != null;
+		} else if (thisJVMURI.equals(Apparels_JVM_URI)) {
 
-			assert	this.uriEolienneURI != null 
-					&& this.uriCapteurChaleurURI != null && this.uriChauffageURI != null
-					&& this.uriCapteurVentURI != null && this.uriBouilloireURI != null
-					&& this.uriBatterieURI != null && this.uriChargeurURI != null;
+			assert	this.uriWindTurbineURI != null 
+					&& this.uriHeatSensorURI != null && this.uriHeatingURI != null
+					&& this.uriWindSensorURI != null && this.uriKettleURI != null
+					&& this.uriBatteryURI != null && this.uriChargerURI != null;
 
 		} else {
 

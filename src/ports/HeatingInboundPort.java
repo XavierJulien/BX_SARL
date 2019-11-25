@@ -1,57 +1,57 @@
 package ports;
 
-import components.Chauffage;
+import components.Heating;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.ChauffageCompteurI;
-import interfaces.ChauffageI;
+import interfaces.HeatingElectricMeterI;
+import interfaces.HeatingI;
 
-public class ChauffageInboundPort extends AbstractInboundPort implements ChauffageI,ChauffageCompteurI{
+public class HeatingInboundPort extends AbstractInboundPort implements HeatingI,HeatingElectricMeterI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public ChauffageInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, ChauffageI.class, owner);
+	public HeatingInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, HeatingI.class, owner);
 	}
 
-	public ChauffageInboundPort(ComponentI owner) throws Exception {
-		super(ChauffageI.class, owner);
+	public HeatingInboundPort(ComponentI owner) throws Exception {
+		super(HeatingI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
-	public void startChauffage() throws Exception {
+	public void startHeating() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Chauffage)this.getServiceOwner()).startChauffage();
+						((Heating)this.getServiceOwner()).startHeating();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public void stopChauffage() throws Exception {
+	public void stopHeating() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Chauffage)this.getServiceOwner()).stopChauffage();
+						((Heating)this.getServiceOwner()).stopHeating();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public double sendConso() throws Exception {
+	public double sendConsumption() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Chauffage)owner).sendConso()) ;	
+				owner -> ((Heating)owner).sendConsumption()) ;	
 	}
 
 }

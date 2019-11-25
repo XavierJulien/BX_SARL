@@ -1,23 +1,23 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.BouilloireI;
-import interfaces.ControleurI;
+import interfaces.KettleI;
+import interfaces.ControllerI;
 
-public class BouilloireControleurConnector extends	AbstractConnector implements BouilloireI{
+public class KettleControllerConnector extends	AbstractConnector implements KettleI{
 
 	@Override
-	public void startBouilloire() throws Exception {
-		((ControleurI)this.offering).startBouilloire();
+	public void startKettle() throws Exception {
+		((ControllerI)this.offering).startKettle();
 	}
 
 	@Override
-	public void stopBouilloire() throws Exception {
-		((ControleurI)this.offering).stopBouilloire();
+	public void stopKettle() throws Exception {
+		((ControllerI)this.offering).stopKettle();
 	}
 
 	@Override
-	public double sendConso() throws Exception {
+	public double sendConsumption() throws Exception {
 		return 0;
 	}
 }

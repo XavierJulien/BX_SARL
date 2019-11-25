@@ -6,19 +6,19 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.EolienneI;
-import ports.EolienneInboundPort;
-import ports.EolienneOutboundPort;
+import interfaces.WindTurbineI;
+import ports.WindTurbineInboundPort;
+import ports.WindTurbineOutboundPort;
 
-@RequiredInterfaces(required = {EolienneI.class})
-@OfferedInterfaces(offered = {EolienneI.class})
-public class Eolienne extends AbstractComponent {
+@RequiredInterfaces(required = {WindTurbineI.class})
+@OfferedInterfaces(offered = {WindTurbineI.class})
+public class WindTurbine extends AbstractComponent {
 
 	protected final String				uri;
-	protected final String				eolienneInboundPortURI;	
-	protected final String				eolienneOutboundPortURI;
-	protected EolienneOutboundPort		eolienneOutboundPort;
-	protected EolienneInboundPort		eolienneInboundPort;
+	protected final String				windTurbineInboundPortURI;	
+	protected final String				windTurbineOutboundPortURI;
+	protected WindTurbineOutboundPort	windTurbineOutboundPort;
+	protected WindTurbineInboundPort	windTurbineInboundPort;
 	protected double 					prod;
 	protected boolean 					isOn=false;
 
@@ -26,25 +26,25 @@ public class Eolienne extends AbstractComponent {
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
-	protected Eolienne(String uri,
-					   String eolienneOutboundPortURI,
-					   String eolienneInboundPortURI) throws Exception{
+	protected WindTurbine(String uri,
+					   String windTurbineOutboundPortURI,
+					   String windTurbineInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert eolienneOutboundPortURI != null;
-		assert eolienneInboundPortURI != null;
+		assert windTurbineOutboundPortURI != null;
+		assert windTurbineInboundPortURI != null;
 
 		this.uri = uri;
-		this.eolienneInboundPortURI = eolienneInboundPortURI;
-		this.eolienneOutboundPortURI = eolienneOutboundPortURI;
+		this.windTurbineInboundPortURI = windTurbineInboundPortURI;
+		this.windTurbineOutboundPortURI = windTurbineOutboundPortURI;
 		this.prod = 0;
 
 		//-------------------PUBLISH-------------------
-		eolienneInboundPort = new EolienneInboundPort(eolienneInboundPortURI, this);
-		eolienneInboundPort.publishPort() ;
-		eolienneOutboundPort = new EolienneOutboundPort(eolienneOutboundPortURI, this);
-		eolienneOutboundPort.localPublishPort() ;
+		windTurbineInboundPort = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
+		windTurbineInboundPort.publishPort() ;
+		windTurbineOutboundPort = new WindTurbineOutboundPort(windTurbineOutboundPortURI, this);
+		windTurbineOutboundPort.localPublishPort() ;
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir"));
@@ -62,13 +62,13 @@ public class Eolienne extends AbstractComponent {
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
-	public void startEolienne() throws Exception{
-		this.logMessage("The eolienne is starting his job....") ;
+	public void startWindTurbine() throws Exception{
+		this.logMessage("The wind Turbine is starting his job....") ;
 		isOn = true;
 	}
 
-	public void stopEolienne() throws Exception{
-		this.logMessage("The eolienne is stopping his job....") ;
+	public void stopWindTurbine() throws Exception{
+		this.logMessage("The wind Turbine is stopping his job....") ;
 		isOn =false;
 	}
 	
@@ -79,7 +79,7 @@ public class Eolienne extends AbstractComponent {
 
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Eolienne component.") ;
+		this.logMessage("starting Wind Turbine component.") ;
 	}
 	
 	@Override
@@ -93,7 +93,7 @@ public class Eolienne extends AbstractComponent {
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		eolienneOutboundPort.doDisconnection();
+		windTurbineOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -103,8 +103,8 @@ public class Eolienne extends AbstractComponent {
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			eolienneInboundPort.unpublishPort();
-			eolienneOutboundPort.unpublishPort();
+			windTurbineInboundPort.unpublishPort();
+			windTurbineOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

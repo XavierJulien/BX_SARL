@@ -2,21 +2,21 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.CapteurChaleurChauffageI;
+import interfaces.HeatSensorHeatingI;
 
-public class CapteurChauffageOutboundPort  extends AbstractOutboundPort implements CapteurChaleurChauffageI{
+public class HeatSensorHeatingOutboundPort  extends AbstractOutboundPort implements HeatSensorHeatingI{
 
 	private static final long serialVersionUID = 1L;
 
 	//--------------------------------------------------------------
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
-		public CapteurChauffageOutboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, CapteurChaleurChauffageI.class, owner);
+		public HeatSensorHeatingOutboundPort(String uri, ComponentI owner) throws Exception {
+			super(uri, HeatSensorHeatingI.class, owner);
 		}
 		
-		public CapteurChauffageOutboundPort(ComponentI owner) throws Exception {
-			super(CapteurChaleurChauffageI.class, owner);
+		public HeatSensorHeatingOutboundPort(ComponentI owner) throws Exception {
+			super(HeatSensorHeatingI.class, owner);
 		}
 
 		
@@ -28,7 +28,7 @@ public class CapteurChauffageOutboundPort  extends AbstractOutboundPort implemen
 		
 		@Override
 		public double getHeating() throws Exception {
-			return ((CapteurChaleurChauffageI)this.connector).getHeating();
+			return ((HeatSensorHeatingI)this.connector).getHeating();
 		}
 	
 }

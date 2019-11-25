@@ -1,47 +1,47 @@
 package ports;
 
-import components.Eolienne;
+import components.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.EolienneI;
+import interfaces.WindTurbineI;
 
-public class EolienneInboundPort extends AbstractInboundPort implements EolienneI{
+public class WindTurbineInboundPort extends AbstractInboundPort implements WindTurbineI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public EolienneInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, EolienneI.class, owner);
+	public WindTurbineInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, WindTurbineI.class, owner);
 	}
 	
-	public EolienneInboundPort(ComponentI owner) throws Exception {
-		super(EolienneI.class, owner);
+	public WindTurbineInboundPort(ComponentI owner) throws Exception {
+		super(WindTurbineI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
-	public void startEolienne() throws Exception {
+	public void startWindTurbine() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Eolienne)this.getServiceOwner()).startEolienne();
+						((WindTurbine)this.getServiceOwner()).startWindTurbine();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public void stopEolienne() throws Exception {
+	public void stopWindTurbine() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Eolienne)this.getServiceOwner()).stopEolienne();
+						((WindTurbine)this.getServiceOwner()).stopWindTurbine();
 						return null;
 					}
 				}) ;
@@ -50,6 +50,6 @@ public class EolienneInboundPort extends AbstractInboundPort implements Eolienne
 	@Override
 	public double sendProduction() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Eolienne)owner).sendProduction()) ;	
+				owner -> ((WindTurbine)owner).sendProduction()) ;	
 	}
 }

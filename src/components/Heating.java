@@ -8,63 +8,63 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ChauffageI;
-import interfaces.ChauffageCapteurChaleurI;
-import ports.ChauffageCapteurInboundPort;
-import ports.ChauffageInboundPort;
-import ports.ChauffageOutboundPort;
+import interfaces.HeatingI;
+import interfaces.HeatingHeatSensorI;
+import ports.HeatingHeatSensorInboundPort;
+import ports.HeatingInboundPort;
+import ports.HeatingOutboundPort;
 
-@RequiredInterfaces(required = {ChauffageI.class, ChauffageCapteurChaleurI.class})
-@OfferedInterfaces(offered = {ChauffageI.class, ChauffageCapteurChaleurI.class})
-public class Chauffage extends AbstractComponent {
+@RequiredInterfaces(required = {HeatingI.class, HeatingHeatSensorI.class})
+@OfferedInterfaces(offered = {HeatingI.class, HeatingHeatSensorI.class})
+public class Heating extends AbstractComponent {
 	
 	protected final String						uri ;
-	protected final String						chauffageInboundPortURI ;
-	protected final String						chauffageOutboundPortURI ;
-	protected final String						chauffageCompteurOutboundPortURI ;
-	protected final String						chauffageCompteurInboundPortURI ;
-	protected final String						chauffageToCapteurInboundPortURI ;
+	protected final String						heatingInboundPortURI ;
+	protected final String						heatingOutboundPortURI ;
+	protected final String						heatingElectricMeterOutboundPortURI ;
+	protected final String						heatingElectricMeterInboundPortURI ;
+	protected final String						heatingToHeatSensorInboundPortURI ;
 	
 	
-	protected ChauffageOutboundPort				chauffageOutboundPort ;
-	protected ChauffageInboundPort				chauffageInboundPort ;
-	protected ChauffageOutboundPort				chauffageCompteurOutboundPort ;
-	protected ChauffageInboundPort				chauffageCompteurInboundPort ;
-	protected ChauffageCapteurInboundPort		chauffageToCapteurInboundPort ;
+	protected HeatingOutboundPort				heatingOutboundPort ;
+	protected HeatingInboundPort				heatingInboundPort ;
+	protected HeatingOutboundPort				heatingElectricMeterOutboundPort ;
+	protected HeatingInboundPort				heatingElectricMeterInboundPort ;
+	protected HeatingHeatSensorInboundPort		heatingToHeatSensorInboundPort ;
 	protected boolean 							isOn=false;
 
-	protected Chauffage(String uri,
-						String chauffageOutboundPortURI,
-						String chauffageInboundPortURI,
-						String chauffageToCapteurInboundPortURI,
-						String chauffageCompteurOutboundPortURI,
-						String chauffageCompteurInboundPortURI) throws Exception{
+	protected Heating(String uri,
+						String heatingOutboundPortURI,
+						String heatingInboundPortURI,
+						String heatingToHeatSensorInboundPortURI,
+						String heatingElectricMeterOutboundPortURI,
+						String heatingElectricMeterInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert chauffageOutboundPortURI != null;
-		assert chauffageInboundPortURI != null;
-		assert chauffageToCapteurInboundPortURI != null;
+		assert heatingOutboundPortURI != null;
+		assert heatingInboundPortURI != null;
+		assert heatingToHeatSensorInboundPortURI != null;
 
 		this.uri = uri;
-		this.chauffageInboundPortURI = chauffageInboundPortURI;
-		this.chauffageOutboundPortURI = chauffageOutboundPortURI;
-		this.chauffageCompteurOutboundPortURI = chauffageCompteurOutboundPortURI;
-		this.chauffageCompteurInboundPortURI = chauffageCompteurInboundPortURI;
-		this.chauffageToCapteurInboundPortURI = chauffageToCapteurInboundPortURI;
+		this.heatingInboundPortURI = heatingInboundPortURI;
+		this.heatingOutboundPortURI = heatingOutboundPortURI;
+		this.heatingElectricMeterOutboundPortURI = heatingElectricMeterOutboundPortURI;
+		this.heatingElectricMeterInboundPortURI = heatingElectricMeterInboundPortURI;
+		this.heatingToHeatSensorInboundPortURI = heatingToHeatSensorInboundPortURI;
 
 		//-------------------PUBLISH-------------------
-		chauffageToCapteurInboundPort = new ChauffageCapteurInboundPort(chauffageToCapteurInboundPortURI, this) ;
-		chauffageToCapteurInboundPort.publishPort() ;
-		chauffageInboundPort = new ChauffageInboundPort(chauffageInboundPortURI, this) ;
-		chauffageInboundPort.publishPort() ;
-		this.chauffageOutboundPort = new ChauffageOutboundPort(chauffageOutboundPortURI, this) ;
-		this.chauffageOutboundPort.localPublishPort() ;
+		heatingToHeatSensorInboundPort = new HeatingHeatSensorInboundPort(heatingToHeatSensorInboundPortURI, this) ;
+		heatingToHeatSensorInboundPort.publishPort() ;
+		heatingInboundPort = new HeatingInboundPort(heatingInboundPortURI, this) ;
+		heatingInboundPort.publishPort() ;
+		this.heatingOutboundPort = new HeatingOutboundPort(heatingOutboundPortURI, this) ;
+		this.heatingOutboundPort.localPublishPort() ;
 		
-		chauffageCompteurInboundPort = new ChauffageInboundPort(chauffageCompteurInboundPortURI, this) ;
-		chauffageCompteurInboundPort.publishPort() ;
-		this.chauffageCompteurOutboundPort = new ChauffageOutboundPort(chauffageCompteurOutboundPortURI, this) ;
-		this.chauffageCompteurOutboundPort.localPublishPort() ;
+		heatingElectricMeterInboundPort = new HeatingInboundPort(heatingElectricMeterInboundPortURI, this) ;
+		heatingElectricMeterInboundPort.publishPort() ;
+		this.heatingElectricMeterOutboundPort = new HeatingOutboundPort(heatingElectricMeterOutboundPortURI, this) ;
+		this.heatingElectricMeterOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -82,18 +82,18 @@ public class Chauffage extends AbstractComponent {
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 	
-	public void startChauffage() throws Exception{
-		this.logMessage("The chauffage is starting his job....") ;
+	public void startHeating() throws Exception{
+		this.logMessage("The heating is starting his job....") ;
 		isOn = true;
 	}
 
-	public void stopChauffage() throws Exception{
-		this.logMessage("The chauffage is stopping his job....") ;
+	public void stopHeating() throws Exception{
+		this.logMessage("The heating is stopping his job....") ;
 		isOn =false;
 	}
 
-	public double sendConso() throws Exception {
-		this.logMessage("Sending consommation....") ;
+	public double sendConsumption() throws Exception {
+		this.logMessage("Sending comsumption....") ;
 		return Math.random()*10;
 	}
 	
@@ -105,7 +105,7 @@ public class Chauffage extends AbstractComponent {
 
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Chauffage component.") ;
+		this.logMessage("starting Heating component.") ;
 	}
 	
 	@Override
@@ -117,7 +117,7 @@ public class Chauffage extends AbstractComponent {
 					public void run() {
 						try {
 							while(true) {
-								((Chauffage)this.getTaskOwner()).sendConso() ;
+								((Heating)this.getTaskOwner()).sendConsumption() ;
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}
@@ -132,8 +132,8 @@ public class Chauffage extends AbstractComponent {
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		chauffageOutboundPort.doDisconnection();
-		chauffageCompteurOutboundPort.doDisconnection();
+		heatingOutboundPort.doDisconnection();
+		heatingElectricMeterOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -143,11 +143,11 @@ public class Chauffage extends AbstractComponent {
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			chauffageInboundPort.unpublishPort();
-			chauffageOutboundPort.unpublishPort();
-			chauffageCompteurInboundPort.unpublishPort();
-			chauffageCompteurOutboundPort.unpublishPort();
-			chauffageToCapteurInboundPort.unpublishPort();
+			heatingInboundPort.unpublishPort();
+			heatingOutboundPort.unpublishPort();
+			heatingElectricMeterInboundPort.unpublishPort();
+			heatingElectricMeterOutboundPort.unpublishPort();
+			heatingToHeatSensorInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

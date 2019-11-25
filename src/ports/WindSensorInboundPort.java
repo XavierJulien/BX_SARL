@@ -1,23 +1,23 @@
 package ports;
 
-import components.CapteurVent;
+import components.WindSensor;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.CapteurVentI;
+import interfaces.WindSensorI;
 
-public class CapteurVentInboundPort extends AbstractInboundPort implements CapteurVentI {
+public class WindSensorInboundPort extends AbstractInboundPort implements WindSensorI {
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public CapteurVentInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, CapteurVentI.class, owner);
+	public WindSensorInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, WindSensorI.class, owner);
 	}
 	
-	public CapteurVentInboundPort(ComponentI owner) throws Exception {
-		super(CapteurVentI.class, owner);
+	public WindSensorInboundPort(ComponentI owner) throws Exception {
+		super(WindSensorI.class, owner);
 	}
 
 //--------------------------------------------------------------
@@ -26,6 +26,6 @@ public class CapteurVentInboundPort extends AbstractInboundPort implements Capte
 	@Override
 	public double sendWind() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((CapteurVent)owner).sendWind()) ;	
+				owner -> ((WindSensor)owner).sendWind()) ;	
 	}	
 }

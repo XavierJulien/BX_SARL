@@ -1,19 +1,19 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.BatterieI;
-import interfaces.ControleurI;
+import interfaces.BatteryI;
+import interfaces.ControllerI;
 
-public class BatterieControleurConnector extends AbstractConnector implements BatterieI {
+public class BatteryControllerConnector extends AbstractConnector implements BatteryI {
 
 	@Override
-	public void startBatterie() throws Exception {
-		((ControleurI)this.offering).startBatterie();
+	public void startBattery() throws Exception {
+		((ControllerI)this.offering).startBattery();
 	}
  
 	@Override
-	public void stopBatterie() throws Exception {
-		((ControleurI)this.offering).stopBatterie();
+	public void stopBattery() throws Exception {
+		((ControllerI)this.offering).stopBattery();
 	}
 
 	@Override

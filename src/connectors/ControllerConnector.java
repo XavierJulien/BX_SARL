@@ -1,116 +1,116 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.BatterieI;
-import interfaces.BouilloireI;
-import interfaces.CapteurChaleurI;
-import interfaces.CapteurVentI;
-import interfaces.ChargeurI;
-import interfaces.ChauffageI;
-import interfaces.CompteurI;
-import interfaces.ControleurI;
-import interfaces.EolienneI;
+import interfaces.BatteryI;
+import interfaces.KettleI;
+import interfaces.HeatSensorI;
+import interfaces.WindSensorI;
+import interfaces.ChargerI;
+import interfaces.HeatingI;
+import interfaces.ElectricMeterI;
+import interfaces.ControllerI;
+import interfaces.WindTurbineI;
 
-public class ControleurConnector extends AbstractConnector implements ControleurI{
+public class ControllerConnector extends AbstractConnector implements ControllerI{
 
 	//---------------------------------------------------
 	//--------------------EOLIENNE-----------------------
 	//---------------------------------------------------
 	@Override
-	public void startEolienne() throws Exception {
-		((EolienneI)this.offering).startEolienne();
+	public void startWindTurbine() throws Exception {
+		((WindTurbineI)this.offering).startWindTurbine();
 	}
 	@Override
-	public void stopEolienne() throws Exception {
-		((EolienneI)this.offering).stopEolienne();
+	public void stopWindTurbine() throws Exception {
+		((WindTurbineI)this.offering).stopWindTurbine();
 	}
 	@Override
-	public double getProd() throws Exception {
-		return ((EolienneI)this.offering).sendProduction() ;	
+	public double getProduction() throws Exception {
+		return ((WindTurbineI)this.offering).sendProduction() ;	
 	}
 
 	//---------------------------------------------------
 	//--------------------BOUILLOIRE---------------------
 	//---------------------------------------------------
 	@Override
-	public void startBouilloire() throws Exception {
-		((BouilloireI)this.offering).startBouilloire();
+	public void startKettle() throws Exception {
+		((KettleI)this.offering).startKettle();
 	}
 	@Override
-	public void stopBouilloire() throws Exception {
-		((BouilloireI)this.offering).stopBouilloire();
+	public void stopKettle() throws Exception {
+		((KettleI)this.offering).stopKettle();
 	}
 
 	//---------------------------------------------------
 	//--------------------CHAUFFAGE----------------------
 	//---------------------------------------------------
 	@Override
-	public void startChauffage() throws Exception {
-		((ChauffageI)this.offering).startChauffage();
+	public void startHeating() throws Exception {
+		((HeatingI)this.offering).startHeating();
 	}
 	@Override
-	public void stopChauffage() throws Exception {
-		((ChauffageI)this.offering).stopChauffage();
+	public void stopHeating() throws Exception {
+		((HeatingI)this.offering).stopHeating();
 	}
 		
 	//---------------------------------------------------
 	//--------------------COMPTEUR-----------------------
 	//---------------------------------------------------
 	@Override
-	public void startCompteur() throws Exception {
-		((CompteurI)this.offering).startCompteur();
+	public void startElectricMeter() throws Exception {
+		((ElectricMeterI)this.offering).startElectricMeter();
 	}
 	@Override
-	public void stopCompteur() throws Exception {
-		((CompteurI)this.offering).stopCompteur();
+	public void stopElectricMeter() throws Exception {
+		((ElectricMeterI)this.offering).stopElectricMeter();
 	}
 	@Override
-	public double getAllConso() throws Exception {
-		return ((CompteurI)this.offering).sendAllConso();
+	public double getAllConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).sendAllConsumption();
 	}
 	
 	//---------------------------------------------------
 	//---------------------CHARGEUR----------------------
 	//---------------------------------------------------
 	@Override
-	public void startChargeur() throws Exception {
-		((ChargeurI)this.offering).startChargeur();	
+	public void startCharger() throws Exception {
+		((ChargerI)this.offering).startCharger();	
 	}
 	@Override
-	public void stopChargeur() throws Exception {
-		((ChargeurI)this.offering).stopChargeur();
+	public void stopCharger() throws Exception {
+		((ChargerI)this.offering).stopCharger();
 	}
 	
 	//---------------------------------------------------
 	//---------------------BATTERIE----------------------
 	//---------------------------------------------------
 	@Override
-	public void startBatterie() throws Exception {
-		((BatterieI)this.offering).startBatterie();
+	public void startBattery() throws Exception {
+		((BatteryI)this.offering).startBattery();
 	}
 	@Override
-	public void stopBatterie() throws Exception {
-		((BatterieI)this.offering).stopBatterie();
+	public void stopBattery() throws Exception {
+		((BatteryI)this.offering).stopBattery();
 	}
 	@Override
 	public double getBatteryChargePercentage() throws Exception {
-		return ((BatterieI)this.offering).sendChargePercentage();
+		return ((BatteryI)this.offering).sendChargePercentage();
 	}
 	@Override
 	public double getBatteryProduction() throws Exception {
-		return ((BatterieI)this.offering).sendEnergy();
+		return ((BatteryI)this.offering).sendEnergy();
 	}
 	
 	//---------------------------------------------------
 	//--------------------CAPTEUR------------------------
 	//---------------------------------------------------
 	@Override
-	public double getVent() throws Exception {
-		return ((CapteurVentI)this.offering).sendWind();
+	public double getWind() throws Exception {
+		return ((WindSensorI)this.offering).sendWind();
 	}
 	@Override
-	public double getChaleur() throws Exception {
-		return ((CapteurChaleurI)this.offering).sendChaleur();
+	public double getTemperature() throws Exception {
+		return ((HeatSensorI)this.offering).sendTemperature();
 	}
 
 

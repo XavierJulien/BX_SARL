@@ -1,24 +1,24 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ControleurI;
-import interfaces.EolienneI;
+import interfaces.ControllerI;
+import interfaces.WindTurbineI;
 
-public class EolienneControleurConnector extends AbstractConnector implements EolienneI{
+public class WIndTurbineControllerConnector extends AbstractConnector implements WindTurbineI{
  
 	@Override
-	public void startEolienne() throws Exception {
-		((ControleurI)this.offering).startEolienne();
+	public void startWindTurbine() throws Exception {
+		((ControllerI)this.offering).startWindTurbine();
 	}
 
 	@Override
-	public void stopEolienne() throws Exception {
-		((ControleurI)this.offering).stopEolienne();
+	public void stopWindTurbine() throws Exception {
+		((ControllerI)this.offering).stopWindTurbine();
 	}
 
 	//not used
 	@Override
 	public double sendProduction() throws Exception {
-		return ((EolienneI)this.offering).sendProduction();
+		return ((WindTurbineI)this.offering).sendProduction();
 	}
 }

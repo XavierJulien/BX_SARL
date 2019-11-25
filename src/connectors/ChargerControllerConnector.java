@@ -1,22 +1,22 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ChargeurI;
-import interfaces.ControleurI;
-public class ChargeurControleurConnector extends AbstractConnector implements ChargeurI{
+import interfaces.ChargerI;
+import interfaces.ControllerI;
+public class ChargerControllerConnector extends AbstractConnector implements ChargerI{
 
 	@Override
-	public void startChargeur() throws Exception {
-		((ControleurI)this.offering).startChargeur();
+	public void startCharger() throws Exception {
+		((ControllerI)this.offering).startCharger();
 	}
 
 	@Override
-	public void stopChargeur() throws Exception {
-		((ControleurI)this.offering).stopChargeur();
+	public void stopCharger() throws Exception {
+		((ControllerI)this.offering).stopCharger();
 	}
 
 	@Override
-	public double sendConso() throws Exception {
+	public double sendConsumption() throws Exception {
 		//shouldn't be used
 		return 0;
 	}	

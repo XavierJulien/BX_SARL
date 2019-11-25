@@ -8,151 +8,151 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ControleurI;
-import ports.ControleurInboundPort;
-import ports.ControleurOutboundPort;
+import interfaces.ControllerI;
+import ports.ControllerInboundPort;
+import ports.ControllerOutboundPort;
 
-@RequiredInterfaces(required = {ControleurI.class})
-@OfferedInterfaces(offered = {ControleurI.class})
-public class Controleur extends AbstractComponent {
+@RequiredInterfaces(required = {ControllerI.class})
+@OfferedInterfaces(offered = {ControllerI.class})
+public class Controller extends AbstractComponent {
 
 	//--------------------------------------------------------------
 	//-------------------------URI COMPONENTS-----------------------
 	//--------------------------------------------------------------
 	protected final String				uri ;
-	protected final String				controleurEolienneInboundPortURI ;	
-	protected final String				controleurEolienneOutboundPortURI ;
-	protected final String				controleurBouilloireOutboundPortURI ;
-	protected final String				controleurBouilloireInboundPortURI ;
-	protected final String				controleurChauffageOutboundPortURI ;
-	protected final String				controleurChauffageInboundPortURI ;
-	protected final String				controleurCompteurOutboundPortURI ;
-	protected final String				controleurCompteurInboundPortURI ;
-	protected final String				controleurChargeurOutboundPortURI ;
-	protected final String				controleurChargeurInboundPortURI ;
-	protected final String				controleurBatterieOutboundPortURI ;
-	protected final String				controleurBatterieInboundPortURI ;
-	protected final String				controleurCapteurVentOutboundPortURI ;
-	protected final String				controleurCapteurChaleurOutboundPortURI ;
+	protected final String				controllerWindTurbineInboundPortURI ;	
+	protected final String				controllerWindTurbineOutboundPortURI ;
+	protected final String				controllerKettleOutboundPortURI ;
+	protected final String				controllerKettleInboundPortURI ;
+	protected final String				controllerHeatingOutboundPortURI ;
+	protected final String				controllerHeatingInboundPortURI ;
+	protected final String				controllerElectricMeterOutboundPortURI ;
+	protected final String				controllerElectricMeterInboundPortURI ;
+	protected final String				controllerChargerOutboundPortURI ;
+	protected final String				controllerChargerInboundPortURI ;
+	protected final String				controllerBatteryOutboundPortURI ;
+	protected final String				controllerBatteryInboundPortURI ;
+	protected final String				controllerWindSensorOutboundPortURI ;
+	protected final String				controllerHeatSensorOutboundPortURI ;
 
 	//--------------------------------------------------------------
 	//-------------------------INBOUND PORT-------------------------
 	//--------------------------------------------------------------
-	protected ControleurInboundPort		controleurEolienneInboundPort ;
-	protected ControleurInboundPort		controleurBouilloireInboundPort ;
-	protected ControleurInboundPort		controleurChauffageInboundPort ;
-	protected ControleurInboundPort		controleurCompteurInboundPort ;
-	protected ControleurInboundPort		controleurChargeurInboundPort ;
-	protected ControleurInboundPort		controleurBatterieInboundPort ;
+	protected ControllerInboundPort		controllerWindTurbineInboundPort ;
+	protected ControllerInboundPort		controllerKettleInboundPort ;
+	protected ControllerInboundPort		controllerHeatingInboundPort ;
+	protected ControllerInboundPort		controllerElectricMeterInboundPort ;
+	protected ControllerInboundPort		controllerChargerInboundPort ;
+	protected ControllerInboundPort		controllerBatteryInboundPort ;
 	//--------------------------------------------------------------
 	//-------------------------OUTBOUND PORT------------------------
 	//--------------------------------------------------------------
-	protected ControleurOutboundPort	controleurEolienneOutboundPort ;
-	protected ControleurOutboundPort 	controleurBouilloireOutboundPort;
-	protected ControleurOutboundPort 	controleurChauffageOutboundPort;
-	protected ControleurOutboundPort 	controleurCompteurOutboundPort;
-	protected ControleurOutboundPort 	controleurChargeurOutboundPort;
-	protected ControleurOutboundPort 	controleurBatterieOutboundPort;
-	protected ControleurOutboundPort 	controleurCapteurVentOutboundPort;
-	protected ControleurOutboundPort 	controleurCapteurChaleurOutboundPort;
+	protected ControllerOutboundPort	controllerWindTurbineOutboundPort ;
+	protected ControllerOutboundPort 	controllerKettleOutboundPort;
+	protected ControllerOutboundPort 	controllerHeatingOutboundPort;
+	protected ControllerOutboundPort 	controllerElectricMeterOutboundPort;
+	protected ControllerOutboundPort 	controllerChargerOutboundPort;
+	protected ControllerOutboundPort 	controllerBatteryOutboundPort;
+	protected ControllerOutboundPort 	controllerWindSensorOutboundPort;
+	protected ControllerOutboundPort 	controllerHeatSensorOutboundPort;
 
 	
 	protected double windSpeed = 0;
 	protected double temperature = 0;
-	public boolean isEolienneOn = false;
+	public boolean isWindTurbineOn = false;
 	public double batteryPercentage = 0;
 	protected double prod = 0;
 
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
-	protected Controleur(String uri,
-						 String controleurEolienneOutboundPortURI,
-						 String controleurEolienneInboundPortURI, 
-						 String controleurBouilloireOutboundPortURI, 
-						 String controleurBouilloireInboundPortURI, 
-						 String controleurChauffageOutboundPortURI, 
-						 String controleurChauffageInboundPortURI,
-						 String controleurCompteurOutboundPortURI, 
-						 String controleurCompteurInboundPortURI,
-						 String controleurChargeurOutboundPortURI, 
-						 String controleurChargeurInboundPortURI,
-						 String controleurBatterieOutboundPortURI, 
-						 String controleurBatterieInboundPortURI,
-						 String controleurCapteurVentOutboundPortURI, 
-						 String controleurCapteurChaleurOutboundPortURI) throws Exception{
+	protected Controller(String uri,
+						 String controllerWindTurbineOutboundPortURI,
+						 String controllerWindTurbineInboundPortURI, 
+						 String controllerKettleOutboundPortURI, 
+						 String controllerKettleInboundPortURI, 
+						 String controllerHeatingOutboundPortURI, 
+						 String controllerHeatingInboundPortURI,
+						 String controllerElectricMeterOutboundPortURI, 
+						 String controllerElectricMeterInboundPortURI,
+						 String controllerChargerOutboundPortURI, 
+						 String controllerChargerInboundPortURI,
+						 String controllerBatteryOutboundPortURI, 
+						 String controllerBatteryInboundPortURI,
+						 String controllerWindSensorOutboundPortURI, 
+						 String controllerHeatSensorOutboundPortURI) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
 		//--------------------------------------------------------------
 		//-------------------------INBOUND PORT-------------------------
 		//--------------------------------------------------------------
-		assert controleurEolienneInboundPortURI != null;
-		assert controleurBouilloireInboundPortURI != null;
-		assert controleurChauffageInboundPortURI != null;
-		assert controleurCompteurInboundPortURI != null;
-		assert controleurChargeurInboundPortURI != null;
-		assert controleurBatterieInboundPortURI != null;
+		assert controllerWindTurbineInboundPortURI != null;
+		assert controllerKettleInboundPortURI != null;
+		assert controllerHeatingInboundPortURI != null;
+		assert controllerElectricMeterInboundPortURI != null;
+		assert controllerChargerInboundPortURI != null;
+		assert controllerBatteryInboundPortURI != null;
 
 		//--------------------------------------------------------------
 		//-------------------------OUTBOUND PORT------------------------
 		//--------------------------------------------------------------
-		assert controleurEolienneOutboundPortURI != null;
-		assert controleurChauffageOutboundPortURI != null;
-		assert controleurCompteurOutboundPortURI != null;
-		assert controleurCapteurVentOutboundPortURI != null;
-		assert controleurCapteurChaleurOutboundPortURI != null;
-		assert controleurBouilloireOutboundPortURI != null;
-		assert controleurChargeurOutboundPortURI != null;
-		assert controleurBatterieOutboundPortURI != null;
+		assert controllerWindTurbineOutboundPortURI != null;
+		assert controllerHeatingOutboundPortURI != null;
+		assert controllerElectricMeterOutboundPortURI != null;
+		assert controllerWindSensorOutboundPortURI != null;
+		assert controllerHeatSensorOutboundPortURI != null;
+		assert controllerKettleOutboundPortURI != null;
+		assert controllerChargerOutboundPortURI != null;
+		assert controllerBatteryOutboundPortURI != null;
 
 		this.uri = uri;
-		this.controleurEolienneInboundPortURI = controleurEolienneInboundPortURI;
-		this.controleurEolienneOutboundPortURI = controleurEolienneOutboundPortURI;
-		this.controleurCapteurVentOutboundPortURI = controleurCapteurVentOutboundPortURI;
-		this.controleurCapteurChaleurOutboundPortURI = controleurCapteurChaleurOutboundPortURI;
-		this.controleurBouilloireOutboundPortURI = controleurBouilloireOutboundPortURI;
-		this.controleurBouilloireInboundPortURI = controleurBouilloireInboundPortURI;
-		this.controleurChauffageOutboundPortURI = controleurChauffageOutboundPortURI;
-		this.controleurChauffageInboundPortURI = controleurChauffageInboundPortURI;
-		this.controleurCompteurOutboundPortURI = controleurCompteurOutboundPortURI;
-		this.controleurCompteurInboundPortURI = controleurCompteurInboundPortURI;
-		this.controleurChargeurOutboundPortURI = controleurChargeurOutboundPortURI;
-		this.controleurChargeurInboundPortURI = controleurChargeurInboundPortURI;
-		this.controleurBatterieOutboundPortURI = controleurChargeurOutboundPortURI;
-		this.controleurBatterieInboundPortURI = controleurChargeurInboundPortURI;
+		this.controllerWindTurbineInboundPortURI = controllerWindTurbineInboundPortURI;
+		this.controllerWindTurbineOutboundPortURI = controllerWindTurbineOutboundPortURI;
+		this.controllerWindSensorOutboundPortURI = controllerWindSensorOutboundPortURI;
+		this.controllerHeatSensorOutboundPortURI = controllerHeatSensorOutboundPortURI;
+		this.controllerKettleOutboundPortURI = controllerKettleOutboundPortURI;
+		this.controllerKettleInboundPortURI = controllerKettleInboundPortURI;
+		this.controllerHeatingOutboundPortURI = controllerHeatingOutboundPortURI;
+		this.controllerHeatingInboundPortURI = controllerHeatingInboundPortURI;
+		this.controllerElectricMeterOutboundPortURI = controllerElectricMeterOutboundPortURI;
+		this.controllerElectricMeterInboundPortURI = controllerElectricMeterInboundPortURI;
+		this.controllerChargerOutboundPortURI = controllerChargerOutboundPortURI;
+		this.controllerChargerInboundPortURI = controllerChargerInboundPortURI;
+		this.controllerBatteryOutboundPortURI = controllerChargerOutboundPortURI;
+		this.controllerBatteryInboundPortURI = controllerChargerInboundPortURI;
 
 		//-------------------PUBLISH INBOUND PORT-------------------
-		controleurEolienneInboundPort = new ControleurInboundPort(controleurEolienneInboundPortURI, this) ;
-		controleurEolienneInboundPort.publishPort() ;
-		controleurBouilloireInboundPort = new ControleurInboundPort(controleurBouilloireInboundPortURI, this) ;
-		controleurBouilloireInboundPort.publishPort() ;
-		controleurChauffageInboundPort = new ControleurInboundPort(controleurChauffageInboundPortURI, this) ;
-		controleurChauffageInboundPort.publishPort() ;
-		controleurCompteurInboundPort = new ControleurInboundPort(controleurCompteurInboundPortURI, this) ;
-		controleurCompteurInboundPort.publishPort() ;
-		controleurChargeurInboundPort = new ControleurInboundPort(controleurChargeurInboundPortURI, this) ;
-		controleurChargeurInboundPort.publishPort() ;
-		controleurBatterieInboundPort = new ControleurInboundPort(controleurBatterieInboundPortURI, this) ;
-		controleurBatterieInboundPort.publishPort() ;
+		controllerWindTurbineInboundPort = new ControllerInboundPort(controllerWindTurbineInboundPortURI, this) ;
+		controllerWindTurbineInboundPort.publishPort() ;
+		controllerKettleInboundPort = new ControllerInboundPort(controllerKettleInboundPortURI, this) ;
+		controllerKettleInboundPort.publishPort() ;
+		controllerHeatingInboundPort = new ControllerInboundPort(controllerHeatingInboundPortURI, this) ;
+		controllerHeatingInboundPort.publishPort() ;
+		controllerElectricMeterInboundPort = new ControllerInboundPort(controllerElectricMeterInboundPortURI, this) ;
+		controllerElectricMeterInboundPort.publishPort() ;
+		controllerChargerInboundPort = new ControllerInboundPort(controllerChargerInboundPortURI, this) ;
+		controllerChargerInboundPort.publishPort() ;
+		controllerBatteryInboundPort = new ControllerInboundPort(controllerBatteryInboundPortURI, this) ;
+		controllerBatteryInboundPort.publishPort() ;
 		
 		//-------------------PUBLISH INBOUND PORT-------------------
-		this.controleurEolienneOutboundPort = new ControleurOutboundPort(controleurEolienneOutboundPortURI, this) ;
-		this.controleurEolienneOutboundPort.localPublishPort() ;
-		this.controleurCapteurVentOutboundPort = new ControleurOutboundPort(controleurCapteurVentOutboundPortURI, this) ;
-		this.controleurCapteurVentOutboundPort.localPublishPort() ;
-		this.controleurCapteurChaleurOutboundPort = new ControleurOutboundPort(controleurCapteurChaleurOutboundPortURI, this) ;
-		this.controleurCapteurChaleurOutboundPort.localPublishPort() ;
-		this.controleurBouilloireOutboundPort = new ControleurOutboundPort(controleurBouilloireOutboundPortURI, this) ;
-		this.controleurBouilloireOutboundPort.localPublishPort() ;
-		this.controleurChauffageOutboundPort = new ControleurOutboundPort(controleurChauffageOutboundPortURI, this) ;
-		this.controleurChauffageOutboundPort.localPublishPort() ;
-		this.controleurCompteurOutboundPort = new ControleurOutboundPort(controleurCompteurOutboundPortURI, this) ;
-		this.controleurCompteurOutboundPort.localPublishPort() ;
-		this.controleurChargeurOutboundPort = new ControleurOutboundPort(controleurChargeurOutboundPortURI, this) ;
-		this.controleurChargeurOutboundPort.localPublishPort() ;		
-		this.controleurBatterieOutboundPort = new ControleurOutboundPort(controleurBatterieOutboundPortURI, this) ;
-		this.controleurBatterieOutboundPort.localPublishPort() ;
+		this.controllerWindTurbineOutboundPort = new ControllerOutboundPort(controllerWindTurbineOutboundPortURI, this) ;
+		this.controllerWindTurbineOutboundPort.localPublishPort() ;
+		this.controllerWindSensorOutboundPort = new ControllerOutboundPort(controllerWindSensorOutboundPortURI, this) ;
+		this.controllerWindSensorOutboundPort.localPublishPort() ;
+		this.controllerHeatSensorOutboundPort = new ControllerOutboundPort(controllerHeatSensorOutboundPortURI, this) ;
+		this.controllerHeatSensorOutboundPort.localPublishPort() ;
+		this.controllerKettleOutboundPort = new ControllerOutboundPort(controllerKettleOutboundPortURI, this) ;
+		this.controllerKettleOutboundPort.localPublishPort() ;
+		this.controllerHeatingOutboundPort = new ControllerOutboundPort(controllerHeatingOutboundPortURI, this) ;
+		this.controllerHeatingOutboundPort.localPublishPort() ;
+		this.controllerElectricMeterOutboundPort = new ControllerOutboundPort(controllerElectricMeterOutboundPortURI, this) ;
+		this.controllerElectricMeterOutboundPort.localPublishPort() ;
+		this.controllerChargerOutboundPort = new ControllerOutboundPort(controllerChargerOutboundPortURI, this) ;
+		this.controllerChargerOutboundPort.localPublishPort() ;		
+		this.controllerBatteryOutboundPort = new ControllerOutboundPort(controllerBatteryOutboundPortURI, this) ;
+		this.controllerBatteryOutboundPort.localPublishPort() ;
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -161,7 +161,7 @@ public class Controleur extends AbstractComponent {
 		}
 		
 		//-------------------GUI-------------------
-		this.tracer.setTitle("Controleur") ;
+		this.tracer.setTitle("Controller") ;
 		this.tracer.setRelativePosition(0, 0) ;
 	}
 
@@ -174,114 +174,114 @@ public class Controleur extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------EOLIENNE-----------------------------
 	//--------------------------------------------------------------
-	public void startEolienne() throws Exception {
-		this.logMessage("Controleur "+this.uri+" : tell eolienne to start.") ;
-		this.controleurEolienneOutboundPort.startEolienne();
+	public void startWindTurbine() throws Exception {
+		this.logMessage("Controller "+this.uri+" : tells wind turbine to start.") ;
+		this.controllerWindTurbineOutboundPort.startWindTurbine();
 	}
-	public void stopEolienne() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell eolienne to stop.") ;
-		this.controleurEolienneOutboundPort.stopEolienne();
+	public void stopWindTurbine() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells wind turbine to stop.") ;
+		this.controllerWindTurbineOutboundPort.stopWindTurbine();
 	}
-	public void getProd() throws Exception {
-		double prod = this.controleurEolienneOutboundPort.getProd();
+	public void getProduction() throws Exception {
+		double prod = this.controllerWindTurbineOutboundPort.getProduction();
 		this.prod += prod;
-		this.logMessage("The controleur is getting "+prod+" units of energy from the eolienne") ;
+		this.logMessage("The controller is getting "+prod+" units of energy from the wind turbine") ;
 	}
 
 	//--------------------------------------------------------------
 	//-------------------------BOUILLOIRE---------------------------
 	//--------------------------------------------------------------
-	public void startBouilloire() throws Exception{	
-		this.logMessage("Controleur "+this.uri+" : tell bouilloire to start.") ;
-		this.controleurBouilloireOutboundPort.startBouilloire();
+	public void startKettle() throws Exception{	
+		this.logMessage("Controller "+this.uri+" : tells kettle to start.") ;
+		this.controllerKettleOutboundPort.startKettle();
 	}
-	public void stopBouilloire() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell bouilloire to stop.") ;
-		this.controleurBouilloireOutboundPort.stopBouilloire();
+	public void stopKettle() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells kettle to stop.") ;
+		this.controllerKettleOutboundPort.stopKettle();
 	}
 
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
 	//--------------------------------------------------------------
-	public void startChargeur() throws Exception{	
-		this.logMessage("Controleur "+this.uri+" : tell chargeur to start.") ;
-		this.controleurChargeurOutboundPort.startChargeur();
+	public void startCharger() throws Exception{	
+		this.logMessage("Controller "+this.uri+" : tells charger to start.") ;
+		this.controllerChargerOutboundPort.startCharger();
 	}
-	public void stopChargeur() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell chargeur to stop.") ;
-		this.controleurChargeurOutboundPort.stopChargeur();
+	public void stopCharger() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells charger to stop.") ;
+		this.controllerChargerOutboundPort.stopCharger();
 	}	
 	
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
 	//--------------------------------------------------------------
-	public void startChauffage() throws Exception{	
-		this.logMessage("Controleur "+this.uri+" : tell chauffage to start.") ;
-		this.controleurChauffageOutboundPort.startChauffage();
+	public void startHeating() throws Exception{	
+		this.logMessage("Controller "+this.uri+" : tells heating to start.") ;
+		this.controllerHeatingOutboundPort.startHeating();
 	}
-	public void stopChauffage() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell chauffage to stop.") ;
-		this.controleurChauffageOutboundPort.stopChauffage();
+	public void stopHeating() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells heating to stop.") ;
+		this.controllerHeatingOutboundPort.stopHeating();
 	}
 	
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
 	//--------------------------------------------------------------
-	public void startCompteur() throws Exception{	
-		this.logMessage("Controleur "+this.uri+" : tell compteur to start.") ;
-		this.controleurCompteurOutboundPort.startCompteur();
+	public void startElectricMeter() throws Exception{	
+		this.logMessage("Controller "+this.uri+" : tells electric meter to start.") ;
+		this.controllerElectricMeterOutboundPort.startElectricMeter();
 	}
-	public void stopCompteur() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell compteur to stop.") ;
-		this.controleurCompteurOutboundPort.stopCompteur();
+	public void stopElectricMeter() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells electric meter to stop.") ;
+		this.controllerElectricMeterOutboundPort.stopElectricMeter();
 	}
-	public void getAllConso() throws Exception {
-		double conso = this.controleurCompteurOutboundPort.getAllConso();
+	public void getAllConsumption() throws Exception {
+		double conso = this.controllerElectricMeterOutboundPort.getAllConsumption();
 		this.prod -= conso;
-		this.logMessage("All the consumers consumes "+conso);
+		this.logMessage("All the consumers consume "+conso);
 	}
 	
 	//--------------------------------------------------------------
 	//-------------------------BATTERIE-----------------------------
 	//--------------------------------------------------------------
-	public void startBatterie() throws Exception{	
-		this.logMessage("Controleur "+this.uri+" : tell batterie to start.") ;
-		this.controleurBatterieOutboundPort.startBatterie();
+	public void startBattery() throws Exception{	
+		this.logMessage("Controller "+this.uri+" : tells battery to start.") ;
+		this.controllerBatteryOutboundPort.startBattery();
 	}
-	public void stopBatterie() throws Exception{
-		this.logMessage("Controleur "+this.uri+" : tell batterie to stop.") ;
-		this.controleurBatterieOutboundPort.stopBatterie();
+	public void stopBattery() throws Exception{
+		this.logMessage("Controller "+this.uri+" : tells battery to stop.") ;
+		this.controllerBatteryOutboundPort.stopBattery();
 	}
 	public void getBatteryChargePercentage() throws Exception {
-		double charge = this.controleurBatterieOutboundPort.getBatteryChargePercentage();
+		double charge = this.controllerBatteryOutboundPort.getBatteryChargePercentage();
 		this.batteryPercentage = charge;
 		this.logMessage("The battery is "+charge+"% loaded");
 	}
 	public void getBatteryProduction() throws Exception {
-		double prod = this.controleurBatterieOutboundPort.getBatteryProduction();
+		double prod = this.controllerBatteryOutboundPort.getBatteryProduction();
 		this.prod += prod;
-		this.logMessage("The controleur is getting "+prod+" units of energy from the Batterie");
+		this.logMessage("The controller is getting "+prod+" units of energy from the Battery");
 	}
 
 	//--------------------------------------------------------------
 	//-------------------------CAPTEURS-----------------------------
 	//--------------------------------------------------------------
-	public void getVent() throws Exception{
-		double prod = this.controleurCapteurVentOutboundPort.getVent() ;
+	public void getWind() throws Exception{
+		double prod = this.controllerWindSensorOutboundPort.getWind() ;
 		windSpeed = prod;
-		this.logMessage("The controleur is informed that the wind power is"+prod) ;
+		this.logMessage("The controller is informed that the wind power is"+prod) ;
 	}	
 	
-	public void getChaleur() throws Exception{
-		double prod = this.controleurCapteurChaleurOutboundPort.getChaleur() ;
+	public void getTemperature() throws Exception{
+		double prod = this.controllerHeatSensorOutboundPort.getTemperature() ;
 		temperature = prod;
-		this.logMessage("The controleur is informed that the wind power is"+prod) ;
+		this.logMessage("The controller is informed that the current temperature is"+prod) ;
 	}
 	
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Controleur component.") ;	
+		this.logMessage("starting Controller component.") ;	
 	}
 	
 	
@@ -293,21 +293,21 @@ public class Controleur extends AbstractComponent {
 					@Override
 					public void run() {
 						try {
-							((Controleur)this.getTaskOwner()).startCompteur() ;
+							((Controller)this.getTaskOwner()).startElectricMeter() ;
 							while(true) {
-								((Controleur)this.getTaskOwner()).getAllConso() ;
-								((Controleur)this.getTaskOwner()).getVent() ;
-								if(isEolienneOn) {
+								((Controller)this.getTaskOwner()).getAllConsumption() ;
+								((Controller)this.getTaskOwner()).getWind() ;
+								if(isWindTurbineOn) {
 									if(windSpeed < 0.5) {
-										((Controleur)this.getTaskOwner()).getProd() ;
+										((Controller)this.getTaskOwner()).getProduction() ;
 									}else {
-										((Controleur)this.getTaskOwner()).stopEolienne();
-										isEolienneOn = false;
+										((Controller)this.getTaskOwner()).stopWindTurbine();
+										isWindTurbineOn = false;
 									}
 								}else {
 									if(windSpeed < 0.5) {
-										((Controleur)this.getTaskOwner()).startEolienne();
-										isEolienneOn = true;
+										((Controller)this.getTaskOwner()).startWindTurbine();
+										isWindTurbineOn = true;
 									}
 								}
 								Thread.sleep(1000);
@@ -324,14 +324,14 @@ public class Controleur extends AbstractComponent {
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		controleurEolienneOutboundPort.doDisconnection();
-		controleurCapteurVentOutboundPort.doDisconnection();
-		controleurCapteurChaleurOutboundPort.doDisconnection();
-		controleurBouilloireOutboundPort.doDisconnection();
-		controleurChauffageOutboundPort.doDisconnection();
-		controleurCompteurOutboundPort.doDisconnection();
-		controleurChargeurOutboundPort.doDisconnection();
-		controleurBatterieOutboundPort.doDisconnection();
+		controllerWindTurbineOutboundPort.doDisconnection();
+		controllerWindSensorOutboundPort.doDisconnection();
+		controllerHeatSensorOutboundPort.doDisconnection();
+		controllerKettleOutboundPort.doDisconnection();
+		controllerHeatingOutboundPort.doDisconnection();
+		controllerElectricMeterOutboundPort.doDisconnection();
+		controllerChargerOutboundPort.doDisconnection();
+		controllerBatteryOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -341,20 +341,20 @@ public class Controleur extends AbstractComponent {
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			controleurEolienneInboundPort.unpublishPort();
-			controleurEolienneOutboundPort.unpublishPort();
-			controleurCapteurVentOutboundPort.unpublishPort();
-			controleurCapteurChaleurOutboundPort.unpublishPort();
-			controleurBouilloireInboundPort.unpublishPort();
-			controleurBouilloireOutboundPort.unpublishPort();
-			controleurChauffageInboundPort.unpublishPort();
-			controleurChauffageOutboundPort.unpublishPort();
-			controleurCompteurInboundPort.unpublishPort();
-			controleurCompteurOutboundPort.unpublishPort();
-			controleurChargeurInboundPort.unpublishPort();
-			controleurChargeurOutboundPort.unpublishPort();
-			controleurBatterieInboundPort.unpublishPort();
-			controleurBatterieOutboundPort.unpublishPort();
+			controllerWindTurbineInboundPort.unpublishPort();
+			controllerWindTurbineOutboundPort.unpublishPort();
+			controllerWindSensorOutboundPort.unpublishPort();
+			controllerHeatSensorOutboundPort.unpublishPort();
+			controllerKettleInboundPort.unpublishPort();
+			controllerKettleOutboundPort.unpublishPort();
+			controllerHeatingInboundPort.unpublishPort();
+			controllerHeatingOutboundPort.unpublishPort();
+			controllerElectricMeterInboundPort.unpublishPort();
+			controllerElectricMeterOutboundPort.unpublishPort();
+			controllerChargerInboundPort.unpublishPort();
+			controllerChargerOutboundPort.unpublishPort();
+			controllerBatteryInboundPort.unpublishPort();
+			controllerBatteryOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

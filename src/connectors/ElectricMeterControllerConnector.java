@@ -1,39 +1,39 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.CompteurI;
-import interfaces.ControleurI;
+import interfaces.ElectricMeterI;
+import interfaces.ControllerI;
 
-public class CompteurControleurConnector extends AbstractConnector implements CompteurI{
+public class ElectricMeterControllerConnector extends AbstractConnector implements ElectricMeterI{
 
 	@Override
-	public void startCompteur() throws Exception {
-		((ControleurI)this.offering).startCompteur();
+	public void startElectricMeter() throws Exception {
+		((ControllerI)this.offering).startElectricMeter();
 	}
 
 	@Override
-	public void stopCompteur() throws Exception {
-		((ControleurI)this.offering).stopCompteur();
+	public void stopElectricMeter() throws Exception {
+		((ControllerI)this.offering).stopElectricMeter();
 	}
 
 	@Override
-	public double sendAllConso() throws Exception {
-		return ((ControleurI)this.offering).getAllConso();
+	public double sendAllConsumption() throws Exception {
+		return ((ControllerI)this.offering).getAllConsumption();
 	}
 
 	@Override
-	public double getChauffageConso() throws Exception {
-		return ((CompteurI)this.offering).getChauffageConso();
+	public double getHeatingConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getHeatingConsumption();
 	}
 
 	@Override
-	public double getBouilloireConso() throws Exception {
-		return ((CompteurI)this.offering).getBouilloireConso();
+	public double getKettleConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getKettleConsumption();
 	}
 
 	@Override
-	public double getChargeurConso() throws Exception {
-		return ((CompteurI)this.offering).getChargeurConso();
+	public double getChargerConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getChargerConsumption();
 	}
 	
 }

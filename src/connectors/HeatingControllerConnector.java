@@ -1,19 +1,19 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ChauffageI;
-import interfaces.ControleurI;
+import interfaces.HeatingI;
+import interfaces.ControllerI;
 
-public class ChauffageControleurConnector extends AbstractConnector implements ChauffageI{
+public class HeatingControllerConnector extends AbstractConnector implements HeatingI{
 
 	@Override
-	public void startChauffage() throws Exception {
-		((ControleurI)this.offering).startChauffage();
+	public void startHeating() throws Exception {
+		((ControllerI)this.offering).startHeating();
 	}
 
 	@Override
-	public void stopChauffage() throws Exception {
-		((ControleurI)this.offering).stopChauffage();
+	public void stopHeating() throws Exception {
+		((ControllerI)this.offering).stopHeating();
 	}
 
 }

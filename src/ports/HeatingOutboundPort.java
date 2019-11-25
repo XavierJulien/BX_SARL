@@ -2,33 +2,33 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.ChauffageI;
+import interfaces.HeatingI;
 
-public class ChauffageOutboundPort extends AbstractOutboundPort implements ChauffageI{
+public class HeatingOutboundPort extends AbstractOutboundPort implements HeatingI{
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public ChauffageOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, ChauffageI.class, owner);
+	public HeatingOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, HeatingI.class, owner);
 	}
 	
-	public ChauffageOutboundPort(ComponentI owner) throws Exception {
-		super(ChauffageI.class, owner);
+	public HeatingOutboundPort(ComponentI owner) throws Exception {
+		super(HeatingI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public void startChauffage() throws Exception {
-		((ChauffageI)this.connector).startChauffage() ;
+	public void startHeating() throws Exception {
+		((HeatingI)this.connector).startHeating() ;
 	}
 
 	@Override
-	public void stopChauffage() throws Exception {
-		((ChauffageI)this.connector).stopChauffage() ;
+	public void stopHeating() throws Exception {
+		((HeatingI)this.connector).stopHeating() ;
 	}
 	
 }

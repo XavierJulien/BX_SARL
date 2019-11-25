@@ -1,25 +1,25 @@
 package ports;
 
-import components.Controleur;
+import components.Controller;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.ControleurI;
+import interfaces.ControllerI;
 
-public class ControleurInboundPort extends AbstractInboundPort implements ControleurI{
+public class ControllerInboundPort extends AbstractInboundPort implements ControllerI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public ControleurInboundPort(String uri, ComponentI owner) throws Exception {
+	public ControllerInboundPort(String uri, ComponentI owner) throws Exception {
 
-		super(uri, ControleurI.class, owner);
+		super(uri, ControllerI.class, owner);
 	}
 
-	public ControleurInboundPort(ComponentI owner) throws Exception {
-		super(ControleurI.class, owner);
+	public ControllerInboundPort(ComponentI owner) throws Exception {
+		super(ControllerI.class, owner);
 	}
 
 //--------------------------------------------------------------
@@ -29,29 +29,29 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//---------------------------------------------------
 	//--------------------EOLIENNE-----------------------
 	//---------------------------------------------------
-	public void startEolienne() throws Exception {
+	public void startWindTurbine() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startEolienne();
+						((Controller)this.getServiceOwner()).startWindTurbine();
 						return null;
 					}
 				}) ;
 	}
 	@Override
-	public void stopEolienne() throws Exception {
+	public void stopWindTurbine() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopEolienne();
+						((Controller)this.getServiceOwner()).stopWindTurbine();
 						return null;
 					}
 				}) ;
 	}
 	@Override
-	public double getProd() throws Exception {
+	public double getProduction() throws Exception {
 		System.out.println("ERREUR");
 		return 0;
 	}
@@ -60,23 +60,23 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//--------------------BOUILLOIRE---------------------
 	//---------------------------------------------------
 	@Override
-	public void startBouilloire() throws Exception {
+	public void startKettle() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startBouilloire();
+						((Controller)this.getServiceOwner()).startKettle();
 						return null;
 					}
 				}) ;		
 	}
 	@Override
-	public void stopBouilloire() throws Exception {
+	public void stopKettle() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopBouilloire();
+						((Controller)this.getServiceOwner()).stopKettle();
 						return null;
 					}
 				}) ;		
@@ -88,24 +88,24 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//--------------------CHAUFFAGE----------------------
 	//---------------------------------------------------
 	@Override
-	public void startChauffage() throws Exception {
+	public void startHeating() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startChauffage();
+						((Controller)this.getServiceOwner()).startHeating();
 						return null;
 					}
 				}) ;
 
 	}
 	@Override
-	public void stopChauffage() throws Exception {
+	public void stopHeating() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopChauffage();
+						((Controller)this.getServiceOwner()).stopHeating();
 						return null;
 					}
 				}) ;		
@@ -117,31 +117,31 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//--------------------COMPTEUR-----------------------
 	//---------------------------------------------------
 	@Override
-	public void startCompteur() throws Exception {
+	public void startElectricMeter() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startCompteur();
+						((Controller)this.getServiceOwner()).startElectricMeter();
 						return null;
 					}
 				}) ;
 
 	}
 	@Override
-	public void stopCompteur() throws Exception {
+	public void stopElectricMeter() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopCompteur();
+						((Controller)this.getServiceOwner()).stopElectricMeter();
 						return null;
 					}
 				}) ;		
 	}
 	
 	@Override
-	public double getAllConso() throws Exception {
+	public double getAllConsumption() throws Exception {
 		System.out.println("ERREUR");
 		return 0;	
 	}
@@ -150,23 +150,23 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//---------------------CHARGEUR----------------------
 	//---------------------------------------------------
 	@Override
-	public void startChargeur() throws Exception {
+	public void startCharger() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startChargeur();
+						((Controller)this.getServiceOwner()).startCharger();
 						return null;
 					}
 				}) ;
 	}
 	@Override
-	public void stopChargeur() throws Exception {
+	public void stopCharger() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopChargeur();
+						((Controller)this.getServiceOwner()).stopCharger();
 						return null;
 					}
 				}) ;		
@@ -176,23 +176,23 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//---------------------BATTERIE----------------------
 	//---------------------------------------------------
 	@Override
-	public void startBatterie() throws Exception {
+	public void startBattery() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).startBatterie();
+						((Controller)this.getServiceOwner()).startBattery();
 						return null;
 					}
 				}) ;
 	}
 	@Override
-	public void stopBatterie() throws Exception {
+	public void stopBattery() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Controleur)this.getServiceOwner()).stopBatterie();
+						((Controller)this.getServiceOwner()).stopBattery();
 						return null;
 					}
 				}) ;		
@@ -213,11 +213,11 @@ public class ControleurInboundPort extends AbstractInboundPort implements Contro
 	//--------------------CAPTEUR------------------------
 	//---------------------------------------------------
 	@Override
-	public double getVent() throws Exception {
+	public double getWind() throws Exception {
 		return 0;
 	}
 	@Override
-	public double getChaleur() throws Exception {
+	public double getTemperature() throws Exception {
 		return 0;
 	}
 }

@@ -2,109 +2,109 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.ControleurI;
+import interfaces.ControllerI;
 
-public class ControleurOutboundPort extends AbstractOutboundPort implements	ControleurI {
+public class ControllerOutboundPort extends AbstractOutboundPort implements	ControllerI {
 	
 	private static final long serialVersionUID = 1L;
 
-	public ControleurOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, ControleurI.class, owner);
+	public ControllerOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, ControllerI.class, owner);
 	}
 	
-	public ControleurOutboundPort(ComponentI owner) throws Exception {
-		super(ControleurI.class, owner);
+	public ControllerOutboundPort(ComponentI owner) throws Exception {
+		super(ControllerI.class, owner);
 	}
 
 	@Override
-	public void startEolienne() throws Exception {
-		((ControleurI)this.connector).startEolienne() ;
+	public void startWindTurbine() throws Exception {
+		((ControllerI)this.connector).startWindTurbine() ;
 	}
 
 	@Override
-	public void stopEolienne() throws Exception {
-		((ControleurI)this.connector).stopEolienne() ;
+	public void stopWindTurbine() throws Exception {
+		((ControllerI)this.connector).stopWindTurbine() ;
 	}
 
 	@Override
-	public double getProd() throws Exception {
-		return ((ControleurI)this.connector).getProd();
+	public double getProduction() throws Exception {
+		return ((ControllerI)this.connector).getProduction();
 		
 	}
 
 	@Override
-	public double getVent() throws Exception {
-		return ((ControleurI)this.connector).getVent();
+	public double getWind() throws Exception {
+		return ((ControllerI)this.connector).getWind();
 	}
 	
 	@Override
-	public double getChaleur() throws Exception {
-		return ((ControleurI)this.connector).getChaleur();
+	public double getTemperature() throws Exception {
+		return ((ControllerI)this.connector).getTemperature();
 	}
 
 	@Override
-	public void startBouilloire() throws Exception {
-		((ControleurI)this.connector).startBouilloire() ;		
+	public void startKettle() throws Exception {
+		((ControllerI)this.connector).startKettle() ;		
 	}
 
 	@Override
-	public void stopBouilloire() throws Exception {
-		((ControleurI)this.connector).stopBouilloire() ;		
+	public void stopKettle() throws Exception {
+		((ControllerI)this.connector).stopKettle() ;		
 	}
 
 	@Override
-	public void startChauffage() throws Exception {
-		((ControleurI)this.connector).startChauffage() ;		
+	public void startHeating() throws Exception {
+		((ControllerI)this.connector).startHeating() ;		
 	}
 
 	@Override
-	public void stopChauffage() throws Exception {
-		((ControleurI)this.connector).stopChauffage() ;		
+	public void stopHeating() throws Exception {
+		((ControllerI)this.connector).stopHeating() ;		
 	}
 
 	@Override
-	public void startCompteur() throws Exception {
-		((ControleurI)this.connector).startCompteur() ;		
+	public void startElectricMeter() throws Exception {
+		((ControllerI)this.connector).startElectricMeter() ;		
 	}
 
 	@Override
-	public void stopCompteur() throws Exception {
-		((ControleurI)this.connector).stopCompteur() ;		
+	public void stopElectricMeter() throws Exception {
+		((ControllerI)this.connector).stopElectricMeter() ;		
 	}
 	
 	@Override
-	public void startChargeur() throws Exception {
-		((ControleurI)this.connector).startChargeur() ;				
+	public void startCharger() throws Exception {
+		((ControllerI)this.connector).startCharger() ;				
 	}
 
 	@Override
-	public void stopChargeur() throws Exception {
-		((ControleurI)this.connector).stopChargeur() ;						
+	public void stopCharger() throws Exception {
+		((ControllerI)this.connector).stopCharger() ;						
 	}
 
 	@Override
-	public void startBatterie() throws Exception {
-		((ControleurI)this.connector).startBatterie() ;				
+	public void startBattery() throws Exception {
+		((ControllerI)this.connector).startBattery() ;				
 	}
 
 	@Override
-	public void stopBatterie() throws Exception {
-		((ControleurI)this.connector).stopBatterie() ;			
+	public void stopBattery() throws Exception {
+		((ControllerI)this.connector).stopBattery() ;			
 	}
 
 	@Override
 	public double getBatteryChargePercentage() throws Exception {
-		return ((ControleurI)this.connector).getBatteryChargePercentage();
+		return ((ControllerI)this.connector).getBatteryChargePercentage();
 	}
 
 	@Override
 	public double getBatteryProduction() throws Exception {
-		return ((ControleurI)this.connector).getBatteryProduction();
+		return ((ControllerI)this.connector).getBatteryProduction();
 	}
 
 	@Override
-	public double getAllConso() throws Exception {
-		return ((ControleurI)this.connector).getAllConso();			
+	public double getAllConsumption() throws Exception {
+		return ((ControllerI)this.connector).getAllConsumption();			
 	}
 		
 }

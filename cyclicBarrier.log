@@ -1,0 +1,45 @@
+1573831031420|DCVM Cyclic Barrier up and running!
+1573831038831|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831038832|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831066891|All connected!
+1573831066892|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831066894|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831066894|DCVM Cyclic Barrier releases 2 sites.
+1573831066912|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831066913|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831066937|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831066938|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831066938|DCVM Cyclic Barrier releases 2 sites.
+1573831068373|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831068374|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831069173|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831069173|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831069173|DCVM Cyclic Barrier releases 2 sites.
+1573831069897|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831069897|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831070014|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831070015|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831070015|DCVM Cyclic Barrier releases 2 sites.
+1573831070020|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831070020|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831070061|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831070062|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831070062|DCVM Cyclic Barrier releases 2 sites.
+1573831085108|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831085109|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831085149|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831085150|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831085150|DCVM Cyclic Barrier releases 2 sites.
+1573831085413|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831085413|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831085817|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831085818|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831085818|DCVM Cyclic Barrier releases 2 sites.
+1573831086742|DCVM Cyclic Barrier accepts: controleur localhost 46124
+1573831086742|DCVM Cyclic Barrier has received 1 out of 2 expected.
+1573831086917|DCVM Cyclic Barrier accepts: appareils localhost 46122
+1573831086917|DCVM Cyclic Barrier has received 2 out of 2 expected.
+1573831086918|DCVM Cyclic Barrier releases 2 sites.
+1573831086918|DCVMCyclicBarrier.run() finished.
+1573831086918|DCVMCyclicBarrier.run() finished.
+1573831086918|DCVM Cyclic Barrier shuts down!

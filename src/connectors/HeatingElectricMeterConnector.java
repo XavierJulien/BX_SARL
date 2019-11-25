@@ -1,14 +1,14 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.ChauffageCompteurI;
-import interfaces.CompteurI;
+import interfaces.HeatingElectricMeterI;
+import interfaces.ElectricMeterI;
 
-public class ChauffageCompteurConnector extends AbstractConnector implements ChauffageCompteurI{
+public class HeatingElectricMeterConnector extends AbstractConnector implements HeatingElectricMeterI{
 
 	@Override
-	public double sendConso() throws Exception {
-		return ((CompteurI)this.offering).getChauffageConso();
+	public double sendConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getHeatingConsumption();
 	}
 
 }

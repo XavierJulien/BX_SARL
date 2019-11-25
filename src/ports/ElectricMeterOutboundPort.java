@@ -2,21 +2,21 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.CompteurControleurI;
-import interfaces.CompteurI;
+import interfaces.ElectricMeterControllerI;
+import interfaces.ElectricMeterI;
 
-public class CompteurOutboundPort extends AbstractOutboundPort implements CompteurI{
+public class ElectricMeterOutboundPort extends AbstractOutboundPort implements ElectricMeterI{
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public CompteurOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, CompteurI.class, owner);
+	public ElectricMeterOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, ElectricMeterI.class, owner);
 	}
 	
-	public CompteurOutboundPort(ComponentI owner) throws Exception {
-		super(CompteurI.class, owner);
+	public ElectricMeterOutboundPort(ComponentI owner) throws Exception {
+		super(ElectricMeterI.class, owner);
 	}
 
 //--------------------------------------------------------------
@@ -24,35 +24,35 @@ public class CompteurOutboundPort extends AbstractOutboundPort implements Compte
 //--------------------------------------------------------------
 	
 	@Override
-	public void startCompteur() throws Exception {
-		((CompteurI)this.connector).startCompteur();		
+	public void startElectricMeter() throws Exception {
+		((ElectricMeterI)this.connector).startElectricMeter();		
 
 	}
 
 	@Override
-	public void stopCompteur() throws Exception {
-		((CompteurI)this.connector).stopCompteur();		
+	public void stopElectricMeter() throws Exception {
+		((ElectricMeterI)this.connector).stopElectricMeter();		
 
 	}
 
 	@Override
-	public double sendAllConso() throws Exception {
-		return ((CompteurI)this.connector).sendAllConso();		
+	public double sendAllConsumption() throws Exception {
+		return ((ElectricMeterI)this.connector).sendAllConsumption();		
 	}
 
 	@Override
-	public double getChauffageConso() throws Exception {
-		return ((CompteurI)this.connector).getChauffageConso();		
+	public double getHeatingConsumption() throws Exception {
+		return ((ElectricMeterI)this.connector).getHeatingConsumption();		
 	}
 
 	@Override
-	public double getBouilloireConso() throws Exception {
-		return ((CompteurI)this.connector).getBouilloireConso();	
+	public double getKettleConsumption() throws Exception {
+		return ((ElectricMeterI)this.connector).getKettleConsumption();	
 	}
 
 	@Override
-	public double getChargeurConso() throws Exception {
-		return ((CompteurI)this.connector).getChargeurConso();	
+	public double getChargerConsumption() throws Exception {
+		return ((ElectricMeterI)this.connector).getChargerConsumption();	
 	}
 
 }

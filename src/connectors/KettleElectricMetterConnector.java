@@ -1,14 +1,14 @@
 package connectors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.BouilloireCompteurI;
-import interfaces.CompteurI;
+import interfaces.KettleElectricMeterI;
+import interfaces.ElectricMeterI;
 
-public class BouilloireCompteurConnector extends AbstractConnector implements BouilloireCompteurI{
+public class KettleElectricMetterConnector extends AbstractConnector implements KettleElectricMeterI{
 
 	@Override
-	public double sendConso() throws Exception {
-		return ((CompteurI)this.offering).getBouilloireConso();
+	public double sendConsumption() throws Exception {
+		return ((ElectricMeterI)this.offering).getKettleConsumption();
 	}
 
 }

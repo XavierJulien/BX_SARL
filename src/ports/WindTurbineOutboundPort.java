@@ -2,34 +2,34 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.EolienneI;
+import interfaces.WindTurbineI;
 
-public class EolienneOutboundPort extends AbstractOutboundPort implements EolienneI {
+public class WindTurbineOutboundPort extends AbstractOutboundPort implements WindTurbineI {
 	
 	private static final long serialVersionUID = 1L;
 	
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public EolienneOutboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, EolienneI.class, owner);
+	public WindTurbineOutboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, WindTurbineI.class, owner);
 	}
 	
-	public EolienneOutboundPort(ComponentI owner) throws Exception {
-		super(EolienneI.class, owner);
+	public WindTurbineOutboundPort(ComponentI owner) throws Exception {
+		super(WindTurbineI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public void startEolienne() throws Exception {
-		((EolienneI)this.connector).startEolienne() ;
+	public void startWindTurbine() throws Exception {
+		((WindTurbineI)this.connector).startWindTurbine() ;
 	}
 
 	@Override
-	public void stopEolienne() throws Exception {
-		((EolienneI)this.connector).stopEolienne() ;
+	public void stopWindTurbine() throws Exception {
+		((WindTurbineI)this.connector).stopWindTurbine() ;
 	}
 
 	@Override

@@ -1,0 +1,90 @@
+1573831030173|Registry up and running!
+1573831067076|GlobalRegistry processing put my-URI-controleur rmi=localhost
+1573831067137|GlobalRegistry processing put controleurEolienneIPort rmi=localhost
+1573831067177|All connected!
+1573831067177|GlobalRegistry processing put my-URI-eolienne rmi=localhost
+1573831067225|GlobalRegistry processing put controleurBouilloireIPort rmi=localhost
+1573831067237|GlobalRegistry processing put eolienneIPort rmi=localhost
+1573831067313|GlobalRegistry processing put controleurChauffageIPort rmi=localhost
+1573831067401|GlobalRegistry processing put controleurCompteurIPort rmi=localhost
+1573831067441|GlobalRegistry processing put my-URI-chauffage rmi=localhost
+1573831067489|GlobalRegistry processing put controleurChargeurIPort rmi=localhost
+1573831067509|GlobalRegistry processing put chauffageToCapteurIPort rmi=localhost
+1573831067577|GlobalRegistry processing put controleurBatterieIPort rmi=localhost
+1573831067609|GlobalRegistry processing put chauffageIPort rmi=localhost
+1573831067701|GlobalRegistry processing put compteurChauffageIPort rmi=localhost
+1573831067781|GlobalRegistry processing put my-URI-compteur rmi=localhost
+1573831067813|GlobalRegistry processing put my-URI-bouilloire rmi=localhost
+1573831067829|GlobalRegistry processing put compteurIPort rmi=localhost
+1573831067913|GlobalRegistry processing put bouilloireIPort rmi=localhost
+1573831067917|GlobalRegistry processing put chauffageCompteurIPort rmi=localhost
+1573831068005|GlobalRegistry processing put bouilloireCompteurIPort rmi=localhost
+1573831068005|GlobalRegistry processing put compteurBouilloireIPort rmi=localhost
+1573831068093|GlobalRegistry processing put chargeurCompteurIPort rmi=localhost
+1573831068101|GlobalRegistry processing put my-URI-capteur-vent rmi=localhost
+1573831068189|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-105f99a1-c56b-47ec-835e-979697a99e1a rmi=localhost
+1573831068197|GlobalRegistry processing put capteurVentIPort rmi=localhost
+1573831068281|GlobalRegistry processing put controleur-dcc rmi=localhost
+1573831068293|GlobalRegistry processing put my-URI-capteur-chaleur rmi=localhost
+1573831068389|GlobalRegistry processing put capteurChaleurIPort rmi=localhost
+1573831068489|GlobalRegistry processing put my-URI-chargeur rmi=localhost
+1573831068597|GlobalRegistry processing put chargeurIPort rmi=localhost
+1573831068689|GlobalRegistry processing put compteurChargeurIPort rmi=localhost
+1573831068789|GlobalRegistry processing put my-URI-batterie rmi=localhost
+1573831068889|GlobalRegistry processing put batterieIPort rmi=localhost
+1573831068989|GlobalRegistry processing put fr.sorbonne_u.components.reflection.interfaces.ReflectionI-90d37abb-1c3d-4443-927c-168adb8bd1a4 rmi=localhost
+1573831069085|GlobalRegistry processing put appareils-dcc rmi=localhost
+1573831069217|GlobalRegistry processing lookup bouilloireIPort
+1573831069265|GlobalRegistry processing lookup compteurBouilloireIPort
+1573831069273|GlobalRegistry processing lookup controleurChauffageIPort
+1573831069353|GlobalRegistry processing lookup chauffageIPort
+1573831069361|GlobalRegistry processing lookup chauffageCompteurIPort
+1573831069441|GlobalRegistry processing lookup compteurChauffageIPort
+1573831069453|GlobalRegistry processing lookup bouilloireCompteurIPort
+1573831069529|GlobalRegistry processing lookup compteurChargeurIPort
+1573831069541|GlobalRegistry processing lookup chargeurCompteurIPort
+1573831069617|GlobalRegistry processing lookup eolienneIPort
+1573831069629|GlobalRegistry processing lookup controleurEolienneIPort
+1573831069705|GlobalRegistry processing lookup capteurVentIPort
+1573831069717|GlobalRegistry processing lookup controleurChargeurIPort
+1573831069793|GlobalRegistry processing lookup capteurChaleurIPort
+1573831069805|GlobalRegistry processing lookup controleurBatterieIPort
+1573831069881|GlobalRegistry processing lookup chargeurIPort
+1573831069969|GlobalRegistry processing lookup batterieIPort
+1573831085193|GlobalRegistry processing remove my-URI-compteur
+1573831085197|GlobalRegistry processing remove my-URI-bouilloire
+1573831085237|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-105f99a1-c56b-47ec-835e-979697a99e1a
+1573831085241|GlobalRegistry processing remove fr.sorbonne_u.components.reflection.interfaces.ReflectionI-90d37abb-1c3d-4443-927c-168adb8bd1a4
+1573831085325|GlobalRegistry processing remove my-URI-controleur
+1573831085329|GlobalRegistry processing remove my-URI-eolienne
+1573831085421|GlobalRegistry processing remove my-URI-chauffage
+1573831085509|GlobalRegistry processing remove my-URI-capteur-vent
+1573831085597|GlobalRegistry processing remove my-URI-chargeur
+1573831085685|GlobalRegistry processing remove my-URI-batterie
+1573831085773|GlobalRegistry processing remove my-URI-capteur-chaleur
+1573831085861|GlobalRegistry processing remove bouilloireIPort
+1573831085861|GlobalRegistry processing remove compteurIPort
+1573831085905|GlobalRegistry processing remove chauffageCompteurIPort
+1573831085949|GlobalRegistry processing remove compteurBouilloireIPort
+1573831085993|GlobalRegistry processing remove bouilloireCompteurIPort
+1573831086037|GlobalRegistry processing remove appareils-dcc
+1573831086081|GlobalRegistry processing remove chargeurCompteurIPort
+1573831086125|GlobalRegistry processing remove eolienneIPort
+1573831086169|GlobalRegistry processing remove controleur-dcc
+1573831086213|GlobalRegistry processing remove chauffageIPort
+1573831086257|GlobalRegistry processing remove controleurEolienneIPort
+1573831086301|GlobalRegistry processing remove compteurChauffageIPort
+1573831086345|GlobalRegistry processing remove controleurBouilloireIPort
+1573831086389|GlobalRegistry processing remove chauffageToCapteurIPort
+1573831086433|GlobalRegistry processing remove controleurChauffageIPort
+1573831086477|GlobalRegistry processing remove capteurVentIPort
+1573831086521|GlobalRegistry processing remove controleurCompteurIPort
+1573831086565|GlobalRegistry processing remove chargeurIPort
+1573831086609|GlobalRegistry processing remove controleurChargeurIPort
+1573831086653|GlobalRegistry processing remove compteurChargeurIPort
+1573831086697|GlobalRegistry processing remove controleurBatterieIPort
+1573831086741|GlobalRegistry processing remove batterieIPort
+1573831086829|GlobalRegistry processing remove capteurChaleurIPort
+1573831086961|GlobalRegistry processing shutdown
+1573831086961|GlobalRegistry processing shutdown
+1573831086963|Global registry shuts down!

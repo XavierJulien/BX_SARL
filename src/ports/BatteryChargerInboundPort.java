@@ -1,24 +1,24 @@
 package ports;
 
-import components.Batterie;
+import components.Battery;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.BatterieChargeurI;
-import interfaces.CapteurChaleurChauffageI;
+import interfaces.BatteryChargerI;
+import interfaces.HeatSensorHeatingI;
 
-public class BatterieChargeurInboundPort extends AbstractInboundPort implements BatterieChargeurI{
+public class BatteryChargerInboundPort extends AbstractInboundPort implements BatteryChargerI{
 
 	private static final long serialVersionUID = 1L;
 
 	//--------------------------------------------------------------
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
-		public BatterieChargeurInboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, CapteurChaleurChauffageI.class, owner);
+		public BatteryChargerInboundPort(String uri, ComponentI owner) throws Exception {
+			super(uri, HeatSensorHeatingI.class, owner);
 		}
 		
-		public BatterieChargeurInboundPort(ComponentI owner) throws Exception {
-			super(BatterieChargeurI.class, owner);
+		public BatteryChargerInboundPort(ComponentI owner) throws Exception {
+			super(BatteryChargerI.class, owner);
 		}
 
 	//--------------------------------------------------------------
@@ -28,6 +28,6 @@ public class BatterieChargeurInboundPort extends AbstractInboundPort implements 
 		@Override
 		public void receivePower(double power) throws Exception {
 			this.getOwner().handleRequestSync(
-					owner -> ((Batterie)owner).sendEnergy()) ;
+					owner -> ((Battery)owner).sendEnergy()) ;
 		}
 }

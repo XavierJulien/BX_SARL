@@ -1,47 +1,47 @@
 package ports;
 
-import components.Batterie;
+import components.Battery;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.BatterieI;
+import interfaces.BatteryI;
 
-public class BatterieInboundPort extends AbstractInboundPort implements BatterieI{
+public class BatteryInboundPort extends AbstractInboundPort implements BatteryI{
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public BatterieInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, BatterieI.class, owner);
+	public BatteryInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, BatteryI.class, owner);
 	}
 	
-	public BatterieInboundPort(ComponentI owner) throws Exception {
-		super(BatterieI.class, owner);
+	public BatteryInboundPort(ComponentI owner) throws Exception {
+		super(BatteryI.class, owner);
 	}
 
 //--------------------------------------------------------------
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
-	public void startBatterie() throws Exception {
+	public void startBattery() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Batterie)this.getServiceOwner()).startBatterie();
+						((Battery)this.getServiceOwner()).startBattery();
 						return null;
 					}
 				}) ;
 	}
 
 	@Override
-	public void stopBatterie() throws Exception {
+	public void stopBattery() throws Exception {
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
 					public Void call() throws Exception {
-						((Batterie)this.getServiceOwner()).stopBatterie();
+						((Battery)this.getServiceOwner()).stopBattery();
 						return null;
 					}
 				}) ;
@@ -50,12 +50,12 @@ public class BatterieInboundPort extends AbstractInboundPort implements Batterie
 	@Override
 	public double sendChargePercentage() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Batterie)owner).sendChargePercentage()) ;	
+				owner -> ((Battery)owner).sendChargePercentage()) ;	
 	}
 
 	@Override
 	public double sendEnergy() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((Batterie)owner).sendEnergy()) ;
+				owner -> ((Battery)owner).sendEnergy()) ;
 	}
 }

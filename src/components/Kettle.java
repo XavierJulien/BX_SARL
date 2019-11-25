@@ -8,23 +8,23 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.BouilloireI;
-import ports.BouilloireInboundPort;
-import ports.BouilloireOutboundPort;
+import interfaces.KettleI;
+import ports.KettleInboundPort;
+import ports.KettleOutboundPort;
 
-@RequiredInterfaces(required = {BouilloireI.class})
-@OfferedInterfaces(offered = {BouilloireI.class})
-public class Bouilloire extends AbstractComponent{
+@RequiredInterfaces(required = {KettleI.class})
+@OfferedInterfaces(offered = {KettleI.class})
+public class Kettle extends AbstractComponent{
 	
 	protected final String				uri ;
-	protected final String				bouilloireInboundPortURI ;	
-	protected final String				bouilloireOutboundPortURI ;
-	protected final String				bouilloireCompteurOutboundPortURI ;
-	protected final String				bouilloireCompteurInboundPortURI ;
-	protected BouilloireOutboundPort	bouilloireOutboundPort ;
-	protected BouilloireInboundPort		bouilloireInboundPort ;
-	protected BouilloireOutboundPort	bouilloireCompteurOutboundPort ;
-	protected BouilloireInboundPort		bouilloireCompteurInboundPort ;
+	protected final String				kettleInboundPortURI ;	
+	protected final String				kettleOutboundPortURI ;
+	protected final String				kettleElectricMeterOutboundPortURI ;
+	protected final String				kettleElectricMeterInboundPortURI ;
+	protected KettleOutboundPort		kettleOutboundPort ;
+	protected KettleInboundPort			kettleInboundPort ;
+	protected KettleOutboundPort		kettleElectricMeterOutboundPort ;
+	protected KettleInboundPort			kettleElectricMeterInboundPort ;
 	protected boolean 					isOn=false;
 	protected final double 				conso = 10;
 
@@ -32,33 +32,33 @@ public class Bouilloire extends AbstractComponent{
 	//------------------------------------------------------------------------
 	//----------------------------CONSTRUCTOR---------------------------------
 	//------------------------------------------------------------------------
-	protected Bouilloire(String uri,
-						 String bouilloireOutboundPortURI,
-						 String bouilloireInboundPortURI,
-						 String bouilloireCompteurOutboundPortURI,
-						 String bouilloireCompteurInboundPortURI) throws Exception{
+	protected Kettle(String uri,
+						 String kettleOutboundPortURI,
+						 String kettleInboundPortURI,
+						 String kettleElectricMeterOutboundPortURI,
+						 String kettleElectricMeterInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert bouilloireOutboundPortURI != null;
-		assert bouilloireInboundPortURI != null;
+		assert kettleOutboundPortURI != null;
+		assert kettleInboundPortURI != null;
 
 		this.uri = uri;
-		this.bouilloireInboundPortURI = bouilloireInboundPortURI;
-		this.bouilloireOutboundPortURI = bouilloireOutboundPortURI;
-		this.bouilloireCompteurInboundPortURI = bouilloireCompteurInboundPortURI;
-		this.bouilloireCompteurOutboundPortURI = bouilloireCompteurOutboundPortURI;
+		this.kettleInboundPortURI = kettleInboundPortURI;
+		this.kettleOutboundPortURI = kettleOutboundPortURI;
+		this.kettleElectricMeterInboundPortURI = kettleElectricMeterInboundPortURI;
+		this.kettleElectricMeterOutboundPortURI = kettleElectricMeterOutboundPortURI;
 
 		//-------------------PUBLISH-------------------
-		bouilloireInboundPort = new BouilloireInboundPort(bouilloireInboundPortURI, this) ;
-		bouilloireInboundPort.publishPort() ;
-		this.bouilloireOutboundPort = new BouilloireOutboundPort(bouilloireOutboundPortURI, this) ;
-		this.bouilloireOutboundPort.localPublishPort() ;
+		kettleInboundPort = new KettleInboundPort(kettleInboundPortURI, this) ;
+		kettleInboundPort.publishPort() ;
+		this.kettleOutboundPort = new KettleOutboundPort(kettleOutboundPortURI, this) ;
+		this.kettleOutboundPort.localPublishPort() ;
 		
-		bouilloireCompteurInboundPort = new BouilloireInboundPort(bouilloireCompteurInboundPortURI, this) ;
-		bouilloireCompteurInboundPort.publishPort() ;
-		this.bouilloireCompteurOutboundPort = new BouilloireOutboundPort(bouilloireCompteurOutboundPortURI, this) ;
-		this.bouilloireCompteurOutboundPort.localPublishPort() ;
+		kettleElectricMeterInboundPort = new KettleInboundPort(kettleElectricMeterInboundPortURI, this) ;
+		kettleElectricMeterInboundPort.publishPort() ;
+		this.kettleElectricMeterOutboundPort = new KettleOutboundPort(kettleElectricMeterOutboundPortURI, this) ;
+		this.kettleElectricMeterOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -76,24 +76,24 @@ public class Bouilloire extends AbstractComponent{
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 	
-	public void startBouilloire() throws Exception{
-		this.logMessage("The bouilloire is starting his job....") ;
+	public void startKettle() throws Exception{
+		this.logMessage("The kettle is starting his job....") ;
 		isOn = true;
 	}
 
-	public void stopBouilloire() throws Exception{
-		this.logMessage("The bouilloire is stopping his job....") ;
+	public void stopKettle() throws Exception{
+		this.logMessage("The kettle is stopping his job....") ;
 		isOn =false;
 	}
 	
-	public double sendConso() throws Exception {
-		this.logMessage("Sending consommation....") ;
+	public double sendConsumption() throws Exception {
+		this.logMessage("Sending consumption....") ;
 		return conso;
 	}
 
 	public void	start() throws ComponentStartException{
 		super.start() ;
-		this.logMessage("starting Bouilloire component.") ;
+		this.logMessage("starting Kettle component.") ;
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class Bouilloire extends AbstractComponent{
 					public void run() {
 						try {
 							while(true) {
-								((Bouilloire)this.getTaskOwner()).sendConso() ;
+								((Kettle)this.getTaskOwner()).sendConsumption() ;
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}
@@ -120,8 +120,8 @@ public class Bouilloire extends AbstractComponent{
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		bouilloireOutboundPort.doDisconnection();
-		bouilloireCompteurOutboundPort.doDisconnection();
+		kettleOutboundPort.doDisconnection();
+		kettleElectricMeterOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -131,10 +131,10 @@ public class Bouilloire extends AbstractComponent{
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			bouilloireInboundPort.unpublishPort();
-			bouilloireOutboundPort.unpublishPort();
-			bouilloireCompteurInboundPort.unpublishPort();
-			bouilloireCompteurOutboundPort.unpublishPort();
+			kettleInboundPort.unpublishPort();
+			kettleOutboundPort.unpublishPort();
+			kettleElectricMeterInboundPort.unpublishPort();
+			kettleElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}
