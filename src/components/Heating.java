@@ -31,7 +31,11 @@ public class Heating extends AbstractComponent {
 	protected HeatingOutboundPort				heatingElectricMeterOutboundPort ;
 	protected HeatingInboundPort				heatingElectricMeterInboundPort ;
 	protected HeatingTemperatureSensorInboundPort		heatingToHeatSensorInboundPort ;
-	protected boolean 							isOn=false;
+	protected boolean 							isOn = false;
+	protected int 								maxPower = 10;
+	protected int 								powerPercentage;
+	protected int								maxConsumption = 10;
+	protected int 								consumption;
 
 	protected Heating(String uri,
 						String heatingOutboundPortURI,
@@ -84,23 +88,32 @@ public class Heating extends AbstractComponent {
 	
 	public void startHeating() throws Exception{
 		this.logMessage("The heating is starting his job....") ;
+		powerPercentage = 10;
+		consumption = (int) ((1.0/powerPercentage)*maxConsumption);
 		isOn = true;
 	}
 
 	public void stopHeating() throws Exception{
 		this.logMessage("The heating is stopping his job....") ;
+		powerPercentage = 0;
+		consumption = 0;
 		isOn =false;
 	}
 
 	public double sendConsumption() throws Exception {
 		this.logMessage("Sending comsumption....") ;
-		return Math.random()*10;
+		return (1.0/powerPercentage)*maxConsumption;
+	}
+	
+	public void putExtraPowerInHeating(double power) throws Exception {
+		powerPercentage = (int) Math.min(100, powerPercentage+power);
+		this.logMessage("The heating is now running at "+powerPercentage+"% of his maximum power") ;
 	}
 	
 	
 	public double sendHeating() throws Exception {
 		this.logMessage("Sending Heat....") ;
-		return Math.random()*10;
+		return maxPower*(1.0/powerPercentage);
 	}
 
 	public void	start() throws ComponentStartException{

@@ -54,4 +54,16 @@ public class HeatingInboundPort extends AbstractInboundPort implements HeatingI,
 				owner -> ((Heating)owner).sendConsumption()) ;	
 	}
 
+	@Override
+	public void putExtraPowerInHeating(int power) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Heating)this.getServiceOwner()).putExtraPowerInHeating(power);
+						return null;
+					}
+				}) ;
+	}
+
 }

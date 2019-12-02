@@ -50,6 +50,8 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 					}
 				}) ;
 	}
+	
+	
 	@Override
 	public double getProduction() throws Exception {
 		System.out.println("ERREUR");
@@ -111,7 +113,10 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 				}) ;		
 	}
 	
-
+	@Override
+	public void putExtraPowerInHeating(int power) throws Exception {
+		//shouldn't be used
+	}
 
 	//---------------------------------------------------
 	//--------------------COMPTEUR-----------------------
@@ -220,4 +225,6 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	public double getTemperature() throws Exception {
 		return 0;
 	}
+
+	
 }

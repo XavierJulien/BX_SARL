@@ -61,6 +61,11 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	public void stopHeating() throws Exception {
 		((ControllerI)this.connector).stopHeating() ;		
 	}
+	
+	@Override
+	public void putExtraPowerInHeating(int power) throws Exception {
+		((ControllerI)this.connector).putExtraPowerInHeating(power);
+	}
 
 	@Override
 	public void startElectricMeter() throws Exception {
@@ -106,5 +111,7 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	public double getAllConsumption() throws Exception {
 		return ((ControllerI)this.connector).getAllConsumption();			
 	}
+
+
 		
 }

@@ -30,5 +30,11 @@ public class HeatingOutboundPort extends AbstractOutboundPort implements Heating
 	public void stopHeating() throws Exception {
 		((HeatingI)this.connector).stopHeating() ;
 	}
+
+	@Override
+	public void putExtraPowerInHeating(int power) throws Exception {
+		System.out.println("LA");
+		
+	}
 	
 }

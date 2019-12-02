@@ -26,7 +26,7 @@ public class Kettle extends AbstractComponent{
 	protected KettleOutboundPort		kettleElectricMeterOutboundPort ;
 	protected KettleInboundPort			kettleElectricMeterInboundPort ;
 	protected boolean 					isOn=false;
-	protected final double 				conso = 10;
+	protected final double 				consumption = 10;
 
 	
 	//------------------------------------------------------------------------
@@ -88,7 +88,7 @@ public class Kettle extends AbstractComponent{
 	
 	public double sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
-		return conso;
+		return consumption;
 	}
 
 	public void	start() throws ComponentStartException{

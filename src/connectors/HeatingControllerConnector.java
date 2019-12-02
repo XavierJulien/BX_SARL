@@ -16,4 +16,9 @@ public class HeatingControllerConnector extends AbstractConnector implements Hea
 		((ControllerI)this.offering).stopHeating();
 	}
 
+	@Override
+	public void putExtraPowerInHeating(int power) throws Exception {
+		//shouldn't be used
+	}
+
 }

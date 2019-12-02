@@ -224,6 +224,11 @@ public class Controller extends AbstractComponent {
 		this.controllerHeatingOutboundPort.stopHeating();
 	}
 	
+	public void putExtraPowerInHeating(int power) throws Exception{
+		this.logMessage("Controller puts "+ power+"% more power in the Heating");
+		this.controllerHeatingOutboundPort.putExtraPowerInHeating(power);
+	}
+	
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
@@ -294,7 +299,9 @@ public class Controller extends AbstractComponent {
 					public void run() {
 						try {
 							((Controller)this.getTaskOwner()).startElectricMeter() ;
+							((Controller)this.getTaskOwner()).startHeating();
 							while(true) {
+								((Controller)this.getTaskOwner()).putExtraPowerInHeating(1);
 								((Controller)this.getTaskOwner()).getAllConsumption() ;
 								((Controller)this.getTaskOwner()).getWind() ;
 								if(isWindTurbineOn) {

@@ -17,6 +17,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	//------------CHAUFFAGE------------
 	public void startHeating() throws Exception;
 	public void stopHeating() throws Exception;
+	public void putExtraPowerInHeating(int power) throws Exception;
 	
 	//------------COMPTEUR------------
 	public void startElectricMeter() throws Exception;
