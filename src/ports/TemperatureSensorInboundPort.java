@@ -1,23 +1,23 @@
 package ports;
 
-import components.HeatSensor;
+import components.TemperatureSensor;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.HeatSensorI;
+import interfaces.TemperatureSensorI;
 
-public class HeatSensorInboundPort extends AbstractInboundPort implements HeatSensorI {
+public class TemperatureSensorInboundPort extends AbstractInboundPort implements TemperatureSensorI {
 
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
 //-------------------------CONSTRUCTORS-------------------------
 //--------------------------------------------------------------
-	public HeatSensorInboundPort(String uri, ComponentI owner) throws Exception {
-		super(uri, HeatSensorI.class, owner);
+	public TemperatureSensorInboundPort(String uri, ComponentI owner) throws Exception {
+		super(uri, TemperatureSensorI.class, owner);
 	}
 	
-	public HeatSensorInboundPort(ComponentI owner) throws Exception {
-		super(HeatSensorI.class, owner);
+	public TemperatureSensorInboundPort(ComponentI owner) throws Exception {
+		super(TemperatureSensorI.class, owner);
 	}
 
 //--------------------------------------------------------------
@@ -26,6 +26,6 @@ public class HeatSensorInboundPort extends AbstractInboundPort implements HeatSe
 	@Override
 	public double sendTemperature() throws Exception {
 		return this.getOwner().handleRequestSync(
-				owner -> ((HeatSensor)owner).sendTemperature()) ;	
+				owner -> ((TemperatureSensor)owner).sendTemperature()) ;	
 	}
 }

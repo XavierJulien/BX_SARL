@@ -8,40 +8,40 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.HeatSensorI;
-import interfaces.HeatSensorHeatingI;
-import ports.HeatSensorInboundPort;
-import ports.HeatSensorHeatingOutboundPort;
+import interfaces.TemperatureSensorI;
+import interfaces.TemperatureSensorHeatingI;
+import ports.TemperatureSensorInboundPort;
+import ports.TemperatureSensorHeatingOutboundPort;
 
-@RequiredInterfaces(required = {HeatSensorI.class, HeatSensorHeatingI.class})
-@OfferedInterfaces(offered = {HeatSensorI.class, HeatSensorHeatingI.class})
-public class HeatSensor extends AbstractComponent {
+@RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
+@OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
+public class TemperatureSensor extends AbstractComponent {
 
 	protected final String				uri ;
 
-	protected final String				heatSensorInboundPortURI ;
+	protected final String				temperatureSensorInboundPortURI ;
 	
 	protected final String				linkWithHeatingOutboundPortURI ;
 
-	protected final HeatSensorInboundPort heatSensorInboundPort;
+	protected final TemperatureSensorInboundPort temperatureSensorInboundPort;
 	
-	protected final HeatSensorHeatingOutboundPort heatSensorHeatingOutboundPort;
+	protected final TemperatureSensorHeatingOutboundPort temperatureSensorHeatingOutboundPort;
 
 	protected double power = 0;
 
 
 
-	protected HeatSensor(String uri, String heatSensorInboundPortURI, String linkWithHeatingOutboundPortURI) throws Exception{
+	protected TemperatureSensor(String uri, String temperatureSensorInboundPortURI, String linkWithHeatingOutboundPortURI) throws Exception{
 
 		super(uri, 1, 1);
 		this.uri = uri;
-		this.heatSensorInboundPortURI = heatSensorInboundPortURI;
+		this.temperatureSensorInboundPortURI = temperatureSensorInboundPortURI;
 		this.linkWithHeatingOutboundPortURI = linkWithHeatingOutboundPortURI;
 
-		heatSensorInboundPort = new HeatSensorInboundPort(heatSensorInboundPortURI, this) ;
-		heatSensorInboundPort.publishPort() ;
-		heatSensorHeatingOutboundPort = new HeatSensorHeatingOutboundPort(linkWithHeatingOutboundPortURI, this);
-		heatSensorHeatingOutboundPort.localPublishPort() ;
+		temperatureSensorInboundPort = new TemperatureSensorInboundPort(temperatureSensorInboundPortURI, this) ;
+		temperatureSensorInboundPort.publishPort() ;
+		temperatureSensorHeatingOutboundPort = new TemperatureSensorHeatingOutboundPort(linkWithHeatingOutboundPortURI, this);
+		temperatureSensorHeatingOutboundPort.localPublishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -49,7 +49,7 @@ public class HeatSensor extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}	
 
-		this.tracer.setTitle("HeatSensor") ;
+		this.tracer.setTitle("TemperatureSensor") ;
 		this.tracer.setRelativePosition(3, 0) ;
 	}
 
@@ -77,7 +77,7 @@ public class HeatSensor extends AbstractComponent {
 							@Override
 							public void run() {
 								try {
-									((HeatSensor)this.getTaskOwner()).sendTemperature() ;
+									((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
 
 								} catch (Exception e) {
 									throw new RuntimeException(e) ;
@@ -88,8 +88,8 @@ public class HeatSensor extends AbstractComponent {
 	}
 	
 	public void getHeating() throws Exception {
-		double heat = this.heatSensorHeatingOutboundPort.getHeating();
-		this.logMessage("The HeatSensor sees that the heating increase the temperature of "+heat+" degrees") ;
+		double heat = this.temperatureSensorHeatingOutboundPort.getHeating();
+		this.logMessage("The TemperatureSensor sees that the heating increase the temperature of "+heat+" degrees") ;
 	}
 
 	// ------------------------------------------------------------------------
@@ -98,15 +98,15 @@ public class HeatSensor extends AbstractComponent {
 
 	@Override
 	public void finalise() throws Exception {
-		heatSensorHeatingOutboundPort.doDisconnection();
+		temperatureSensorHeatingOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			heatSensorInboundPort.unpublishPort();
-			heatSensorHeatingOutboundPort.unpublishPort();
+			temperatureSensorInboundPort.unpublishPort();
+			temperatureSensorHeatingOutboundPort.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

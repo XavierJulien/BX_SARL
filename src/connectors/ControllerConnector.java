@@ -3,7 +3,7 @@ package connectors;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.BatteryI;
 import interfaces.KettleI;
-import interfaces.HeatSensorI;
+import interfaces.TemperatureSensorI;
 import interfaces.WindSensorI;
 import interfaces.ChargerI;
 import interfaces.HeatingI;
@@ -110,7 +110,7 @@ public class ControllerConnector extends AbstractConnector implements Controller
 	}
 	@Override
 	public double getTemperature() throws Exception {
-		return ((HeatSensorI)this.offering).sendTemperature();
+		return ((TemperatureSensorI)this.offering).sendTemperature();
 	}
 
 

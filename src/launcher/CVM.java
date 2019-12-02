@@ -3,7 +3,7 @@ package launcher;
 
 import components.Battery;
 import components.Kettle;
-import components.HeatSensor;
+import components.TemperatureSensor;
 import components.WindSensor;
 import components.Charger;
 import components.Heating;
@@ -13,7 +13,7 @@ import components.WindTurbine;
 import connectors.BatteryControllerConnector;
 import connectors.KettleElectricMetterConnector;
 import connectors.KettleControllerConnector;
-import connectors.HeatSensorHeatingConnector;
+import connectors.TemperatureSensorHeatingConnector;
 import connectors.ChargerElectricMeterConnector;
 import connectors.ChargerControllerConnector;
 import connectors.HeatingElectricMeterConnector;
@@ -21,7 +21,7 @@ import connectors.HeatingControllerConnector;
 import connectors.ElectricMeterConnector;
 import connectors.ElectricMeterControllerConnector;
 import connectors.ControllerConnector;
-import connectors.WIndTurbineControllerConnector;
+import connectors.WindTurbineControllerConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 
@@ -231,7 +231,7 @@ public class CVM extends AbstractCVM {
 		//--------------------------------------------------------------
 		this.uriHeatSensorURI =
 				AbstractComponent.createComponent(
-						HeatSensor.class.getCanonicalName(),
+						TemperatureSensor.class.getCanonicalName(),
 						new Object[]{HEAT_SENSOR_COMPONENT_URI,
 								URIHeatSensorInboundPortURI,
 								URIHeatSensorToHeatingOutboundPortURI}) ;
@@ -390,7 +390,7 @@ public class CVM extends AbstractCVM {
 				this.uriWindTurbineURI,
 				URIWindTurbineOutboundPortURI,
 				URIControllerWindTurbineInboundPortURI,
-				WIndTurbineControllerConnector.class.getCanonicalName()) ;
+				WindTurbineControllerConnector.class.getCanonicalName()) ;
 		this.doPortConnection(
 				this.uriControllerURI,
 				URIControllerWindTurbineOutboundPortURI,
@@ -431,7 +431,7 @@ public class CVM extends AbstractCVM {
 				this.uriHeatSensorURI,
 				URIHeatSensorToHeatingOutboundPortURI,
 				URIHeatingToCapteurInboundPortURI,
-				HeatSensorHeatingConnector.class.getCanonicalName()) ;
+				TemperatureSensorHeatingConnector.class.getCanonicalName()) ;
  		
 
 //--------------------------------------------------------------

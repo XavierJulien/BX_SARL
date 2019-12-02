@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.ControllerI;
 import interfaces.WindTurbineI;
 
-public class WIndTurbineControllerConnector extends AbstractConnector implements WindTurbineI{
+public class WindTurbineControllerConnector extends AbstractConnector implements WindTurbineI{
  
 	@Override
 	public void startWindTurbine() throws Exception {

@@ -4,7 +4,7 @@ import components.Battery;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.BatteryChargerI;
-import interfaces.HeatSensorHeatingI;
+import interfaces.TemperatureSensorHeatingI;
 
 public class BatteryChargerInboundPort extends AbstractInboundPort implements BatteryChargerI{
 
@@ -14,7 +14,7 @@ public class BatteryChargerInboundPort extends AbstractInboundPort implements Ba
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
 		public BatteryChargerInboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, HeatSensorHeatingI.class, owner);
+			super(uri, TemperatureSensorHeatingI.class, owner);
 		}
 		
 		public BatteryChargerInboundPort(ComponentI owner) throws Exception {

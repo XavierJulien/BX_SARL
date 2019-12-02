@@ -3,21 +3,21 @@ package ports;
 import components.Heating;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
-import interfaces.HeatingHeatSensorI;
+import interfaces.HeatingTemperatureSensorI;
 
-public class HeatingHeatSensorInboundPort extends AbstractInboundPort implements HeatingHeatSensorI {
+public class HeatingTemperatureSensorInboundPort extends AbstractInboundPort implements HeatingTemperatureSensorI {
 
 	private static final long serialVersionUID = 1L;
 
 	//--------------------------------------------------------------
 	//-------------------------CONSTRUCTORS-------------------------
 	//--------------------------------------------------------------
-		public HeatingHeatSensorInboundPort(String uri, ComponentI owner) throws Exception {
-			super(uri, HeatingHeatSensorI.class, owner);
+		public HeatingTemperatureSensorInboundPort(String uri, ComponentI owner) throws Exception {
+			super(uri, HeatingTemperatureSensorI.class, owner);
 		}
 		
-		public HeatingHeatSensorInboundPort(ComponentI owner) throws Exception {
-			super(HeatingHeatSensorI.class, owner);
+		public HeatingTemperatureSensorInboundPort(ComponentI owner) throws Exception {
+			super(HeatingTemperatureSensorI.class, owner);
 		}
 
 		@Override

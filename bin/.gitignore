@@ -1,5 +1,11 @@
+/WindSensor/
+/models/
+/WindSensor2/
+/WIndTurbine/
 /components/
 /launcher/
 /ports/
 /connectors/
 /interfaces/
+/events/
+/modelisation/

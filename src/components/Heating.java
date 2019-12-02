@@ -9,13 +9,13 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.HeatingI;
-import interfaces.HeatingHeatSensorI;
-import ports.HeatingHeatSensorInboundPort;
+import interfaces.HeatingTemperatureSensorI;
+import ports.HeatingTemperatureSensorInboundPort;
 import ports.HeatingInboundPort;
 import ports.HeatingOutboundPort;
 
-@RequiredInterfaces(required = {HeatingI.class, HeatingHeatSensorI.class})
-@OfferedInterfaces(offered = {HeatingI.class, HeatingHeatSensorI.class})
+@RequiredInterfaces(required = {HeatingI.class, HeatingTemperatureSensorI.class})
+@OfferedInterfaces(offered = {HeatingI.class, HeatingTemperatureSensorI.class})
 public class Heating extends AbstractComponent {
 	
 	protected final String						uri ;
@@ -30,7 +30,7 @@ public class Heating extends AbstractComponent {
 	protected HeatingInboundPort				heatingInboundPort ;
 	protected HeatingOutboundPort				heatingElectricMeterOutboundPort ;
 	protected HeatingInboundPort				heatingElectricMeterInboundPort ;
-	protected HeatingHeatSensorInboundPort		heatingToHeatSensorInboundPort ;
+	protected HeatingTemperatureSensorInboundPort		heatingToHeatSensorInboundPort ;
 	protected boolean 							isOn=false;
 
 	protected Heating(String uri,
@@ -54,7 +54,7 @@ public class Heating extends AbstractComponent {
 		this.heatingToHeatSensorInboundPortURI = heatingToHeatSensorInboundPortURI;
 
 		//-------------------PUBLISH-------------------
-		heatingToHeatSensorInboundPort = new HeatingHeatSensorInboundPort(heatingToHeatSensorInboundPortURI, this) ;
+		heatingToHeatSensorInboundPort = new HeatingTemperatureSensorInboundPort(heatingToHeatSensorInboundPortURI, this) ;
 		heatingToHeatSensorInboundPort.publishPort() ;
 		heatingInboundPort = new HeatingInboundPort(heatingInboundPortURI, this) ;
 		heatingInboundPort.publishPort() ;
