@@ -66,4 +66,16 @@ public class HeatingInboundPort extends AbstractInboundPort implements HeatingI,
 				}) ;
 	}
 
+	@Override
+	public void slowHeating(int power) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Heating)this.getServiceOwner()).slowHeating(power);
+						return null;
+					}
+				}) ;		
+	}
+
 }

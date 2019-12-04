@@ -18,6 +18,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	public void startHeating() throws Exception;
 	public void stopHeating() throws Exception;
 	public void putExtraPowerInHeating(int power) throws Exception;
+	public void slowHeating(int power) throws Exception;
 	
 	//------------COMPTEUR------------
 	public void startElectricMeter() throws Exception;
@@ -36,7 +37,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	
 	//------------CAPTEURS------------
 	public double getWind() throws Exception;
-	public double getTemperature() throws Exception;
+	public void getTemperature(double temperature) throws Exception;
 	
 	
 }

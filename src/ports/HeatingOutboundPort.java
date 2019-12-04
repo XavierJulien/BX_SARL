@@ -33,8 +33,12 @@ public class HeatingOutboundPort extends AbstractOutboundPort implements Heating
 
 	@Override
 	public void putExtraPowerInHeating(int power) throws Exception {
-		System.out.println("LA");
-		
+		//Shouldn't be used
+	}
+
+	@Override
+	public void slowHeating(int power) throws Exception {
+		//Shouldn't be used
 	}
 	
 }

@@ -56,6 +56,10 @@ public class ControllerConnector extends AbstractConnector implements Controller
 	public void putExtraPowerInHeating(int power) throws Exception {
 		((HeatingI)this.offering).putExtraPowerInHeating(power);
 	}
+	@Override
+	public void slowHeating(int power) throws Exception {
+		((HeatingI)this.offering).slowHeating(power);		
+	}
 		
 	//---------------------------------------------------
 	//--------------------COMPTEUR-----------------------
@@ -113,9 +117,11 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		return ((WindSensorI)this.offering).sendWind();
 	}
 	@Override
-	public double getTemperature() throws Exception {
-		return ((TemperatureSensorI)this.offering).sendTemperature();
+	public void /*double*/ getTemperature(double temperature) throws Exception {
+		//return ((TemperatureSensorI)this.offering).sendTemperature();
+		//return 0;
 	}
+
 
 
 

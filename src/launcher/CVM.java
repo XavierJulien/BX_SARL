@@ -2,25 +2,26 @@ package launcher;
 
 
 import components.Battery;
+import components.Charger;
+import components.Controller;
+import components.ElectricMeter;
+import components.Heating;
 import components.Kettle;
 import components.TemperatureSensor;
 import components.WindSensor;
-import components.Charger;
-import components.Heating;
-import components.ElectricMeter;
-import components.Controller;
 import components.WindTurbine;
 import connectors.BatteryControllerConnector;
-import connectors.KettleElectricMetterConnector;
-import connectors.KettleControllerConnector;
-import connectors.TemperatureSensorHeatingConnector;
-import connectors.ChargerElectricMeterConnector;
 import connectors.ChargerControllerConnector;
-import connectors.HeatingElectricMeterConnector;
-import connectors.HeatingControllerConnector;
+import connectors.ChargerElectricMeterConnector;
+import connectors.ControllerConnector;
 import connectors.ElectricMeterConnector;
 import connectors.ElectricMeterControllerConnector;
-import connectors.ControllerConnector;
+import connectors.HeatingControllerConnector;
+import connectors.HeatingElectricMeterConnector;
+import connectors.KettleControllerConnector;
+import connectors.KettleElectricMetterConnector;
+import connectors.TemperatureSensorControllerConnector;
+import connectors.TemperatureSensorHeatingConnector;
 import connectors.WindTurbineControllerConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -115,8 +116,10 @@ public class CVM extends AbstractCVM {
 	//--------------------------------------------------------------
 	public static final String	HEAT_SENSOR_COMPONENT_URI = "my-URI-heat-sensor" ;
 	protected static final String	URIHeatSensorToHeatingOutboundPortURI = "heatSensorToHeatingOPort" ;
-	protected static final String	URIControllerHeatSensorOutboundPortURI = "heatSensorOPort" ;
+	protected static final String	URIControllerHeatSensorOutboundPortURI = "controllerHeatSensorOPort" ;
 	protected static final String	URIHeatSensorInboundPortURI = "heatSensorIPort" ;
+	protected static final String	URIHeatSensorOutboundPortURI = "heatSensorOPort" ;
+	protected static final String	URIControllerHeatSensorInboundPortURI = "controllerHeatSensorIPort" ;
 	
 	
 	
@@ -234,7 +237,8 @@ public class CVM extends AbstractCVM {
 						TemperatureSensor.class.getCanonicalName(),
 						new Object[]{HEAT_SENSOR_COMPONENT_URI,
 								URIHeatSensorInboundPortURI,
-								URIHeatSensorToHeatingOutboundPortURI}) ;
+								URIHeatSensorToHeatingOutboundPortURI,
+								URIHeatSensorOutboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriHeatSensorURI) ;
 		this.toggleTracing(this.uriHeatSensorURI) ;
 		this.toggleLogging(this.uriHeatSensorURI) ;
@@ -288,7 +292,8 @@ public class CVM extends AbstractCVM {
 								URIControllerBatteryOutboundPortURI,
 								URIControllerBatteryInboundPortURI,
 								URIControllerWindSensorOutboundPortURI,
-								URIControllerHeatSensorOutboundPortURI}) ;
+								URIControllerHeatSensorOutboundPortURI,
+								URIControllerHeatSensorInboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriControllerURI) ;
 		this.toggleTracing(this.uriControllerURI) ;
 		this.toggleLogging(this.uriControllerURI) ;
@@ -404,11 +409,19 @@ public class CVM extends AbstractCVM {
 				URIControllerWindSensorOutboundPortURI,
 				URIWindSensorInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;
+		
+		//TEMPERATURE SENSOR <=> CONTROLLER
 		this.doPortConnection(
 				this.uriControllerURI,
 				URIControllerHeatSensorOutboundPortURI,
 				URIHeatSensorInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;
+		
+		this.doPortConnection(
+				this.uriHeatSensorURI,
+				URIHeatSensorOutboundPortURI,
+				URIControllerHeatSensorInboundPortURI,
+				TemperatureSensorControllerConnector.class.getCanonicalName()) ;
 		
 		
 		

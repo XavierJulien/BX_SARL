@@ -1,6 +1,7 @@
 package ports;
 
 import components.Controller;
+import components.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
@@ -91,6 +92,7 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	//---------------------------------------------------
 	@Override
 	public void startHeating() throws Exception {
+		
 		this.owner.handleRequestAsync(
 				new AbstractComponent.AbstractService<Void>() {
 					@Override
@@ -117,6 +119,12 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	public void putExtraPowerInHeating(int power) throws Exception {
 		//shouldn't be used
 	}
+	
+	@Override
+	public void slowHeating(int power) throws Exception {
+		//shouldn't be used	
+	}
+
 
 	//---------------------------------------------------
 	//--------------------COMPTEUR-----------------------
@@ -222,9 +230,17 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 		return 0;
 	}
 	@Override
-	public double getTemperature() throws Exception {
-		return 0;
+	public void getTemperature(double temperature) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getTemperature(temperature);
+						return null;
+					}
+				}) ;
 	}
+
 
 	
 }

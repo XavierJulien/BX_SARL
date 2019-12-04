@@ -38,8 +38,8 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	}
 	
 	@Override
-	public double getTemperature() throws Exception {
-		return ((ControllerI)this.connector).getTemperature();
+	public void getTemperature(double temperature) throws Exception {
+		((ControllerI)this.connector).getTemperature(temperature);
 	}
 
 	@Override
@@ -65,6 +65,11 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	@Override
 	public void putExtraPowerInHeating(int power) throws Exception {
 		((ControllerI)this.connector).putExtraPowerInHeating(power);
+	}
+	
+	@Override
+	public void slowHeating(int power) throws Exception {
+		((ControllerI)this.connector).slowHeating(power);		
 	}
 
 	@Override
@@ -111,6 +116,8 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	public double getAllConsumption() throws Exception {
 		return ((ControllerI)this.connector).getAllConsumption();			
 	}
+
+
 
 
 		

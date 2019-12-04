@@ -1,6 +1,8 @@
 package ports;
 
+import components.Controller;
 import components.TemperatureSensor;
+import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.TemperatureSensorI;
@@ -24,8 +26,14 @@ public class TemperatureSensorInboundPort extends AbstractInboundPort implements
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public double sendTemperature() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((TemperatureSensor)owner).sendTemperature()) ;	
+	public void sendTemperature(double temperature) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((TemperatureSensor)this.getServiceOwner()).sendTemperature();
+						return null;
+					}
+				}) ;		
 	}
 }

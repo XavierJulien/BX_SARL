@@ -133,6 +133,9 @@ public static final String	WIND_TOO_STRONG_PLOTTING_PARAM_NAME = "wind-too-stron
 	/** windPower in meters per second.								*/
 	@ImportedVariable(type = Double.class)
 	protected Value<Double> windPower;
+	
+	@ImportedVariable(type = Boolean.class)
+	protected Value<Boolean> windTooStrong;
 
 	// -------------------------------------------------------------------------
 	// Constructors

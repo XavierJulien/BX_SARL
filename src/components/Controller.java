@@ -34,6 +34,7 @@ public class Controller extends AbstractComponent {
 	protected final String				controllerBatteryInboundPortURI ;
 	protected final String				controllerWindSensorOutboundPortURI ;
 	protected final String				controllerHeatSensorOutboundPortURI ;
+	protected final String				controllerHeatSensorInboundPortURI;
 
 	//--------------------------------------------------------------
 	//-------------------------INBOUND PORT-------------------------
@@ -44,6 +45,7 @@ public class Controller extends AbstractComponent {
 	protected ControllerInboundPort		controllerElectricMeterInboundPort ;
 	protected ControllerInboundPort		controllerChargerInboundPort ;
 	protected ControllerInboundPort		controllerBatteryInboundPort ;
+	protected ControllerInboundPort		controllerHeatSensorInboundPort;
 	//--------------------------------------------------------------
 	//-------------------------OUTBOUND PORT------------------------
 	//--------------------------------------------------------------
@@ -80,8 +82,9 @@ public class Controller extends AbstractComponent {
 						 String controllerBatteryOutboundPortURI, 
 						 String controllerBatteryInboundPortURI,
 						 String controllerWindSensorOutboundPortURI, 
-						 String controllerHeatSensorOutboundPortURI) throws Exception{
-		super(uri, 2, 2);
+						 String controllerHeatSensorOutboundPortURI,
+						 String controllerHeatSensorInboundPortURI) throws Exception{
+		super(uri, 8, 8);
 
 		assert uri != null;
 		//--------------------------------------------------------------
@@ -93,6 +96,7 @@ public class Controller extends AbstractComponent {
 		assert controllerElectricMeterInboundPortURI != null;
 		assert controllerChargerInboundPortURI != null;
 		assert controllerBatteryInboundPortURI != null;
+		assert controllerHeatSensorInboundPortURI != null;
 
 		//--------------------------------------------------------------
 		//-------------------------OUTBOUND PORT------------------------
@@ -105,6 +109,7 @@ public class Controller extends AbstractComponent {
 		assert controllerKettleOutboundPortURI != null;
 		assert controllerChargerOutboundPortURI != null;
 		assert controllerBatteryOutboundPortURI != null;
+		
 
 		this.uri = uri;
 		this.controllerWindTurbineInboundPortURI = controllerWindTurbineInboundPortURI;
@@ -121,6 +126,7 @@ public class Controller extends AbstractComponent {
 		this.controllerChargerInboundPortURI = controllerChargerInboundPortURI;
 		this.controllerBatteryOutboundPortURI = controllerChargerOutboundPortURI;
 		this.controllerBatteryInboundPortURI = controllerChargerInboundPortURI;
+		this.controllerHeatSensorInboundPortURI = controllerHeatSensorInboundPortURI;
 
 		//-------------------PUBLISH INBOUND PORT-------------------
 		controllerWindTurbineInboundPort = new ControllerInboundPort(controllerWindTurbineInboundPortURI, this) ;
@@ -135,6 +141,8 @@ public class Controller extends AbstractComponent {
 		controllerChargerInboundPort.publishPort() ;
 		controllerBatteryInboundPort = new ControllerInboundPort(controllerBatteryInboundPortURI, this) ;
 		controllerBatteryInboundPort.publishPort() ;
+		controllerHeatSensorInboundPort = new ControllerInboundPort(controllerHeatSensorInboundPortURI, this) ;
+		controllerHeatSensorInboundPort.publishPort() ;
 		
 		//-------------------PUBLISH INBOUND PORT-------------------
 		this.controllerWindTurbineOutboundPort = new ControllerOutboundPort(controllerWindTurbineOutboundPortURI, this) ;
@@ -229,6 +237,11 @@ public class Controller extends AbstractComponent {
 		this.controllerHeatingOutboundPort.putExtraPowerInHeating(power);
 	}
 	
+	public void slowHeating(int power) throws Exception{
+		this.logMessage("Controller decreases the Heating power by "+power+"%");
+		this.controllerHeatingOutboundPort.putExtraPowerInHeating(power);
+	}
+	
 	
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
@@ -278,10 +291,8 @@ public class Controller extends AbstractComponent {
 		this.logMessage("The controller is informed that the wind power is"+prod) ;
 	}	
 	
-	public void getTemperature() throws Exception{
-		double prod = this.controllerHeatSensorOutboundPort.getTemperature() ;
-		temperature = prod;
-		this.logMessage("The controller is informed that the current temperature is"+prod) ;
+	public void getTemperature(double temperature) throws Exception{
+		this.temperature = temperature;
 	}
 	
 	public void	start() throws ComponentStartException{
@@ -301,9 +312,10 @@ public class Controller extends AbstractComponent {
 							((Controller)this.getTaskOwner()).startElectricMeter() ;
 							((Controller)this.getTaskOwner()).startHeating();
 							while(true) {
+								((Controller)this.getTaskOwner()).logMessage("The temperature is "+temperature+" degrees");
 								((Controller)this.getTaskOwner()).putExtraPowerInHeating(1);
 								((Controller)this.getTaskOwner()).getAllConsumption() ;
-								((Controller)this.getTaskOwner()).getWind() ;
+//								((Controller)this.getTaskOwner()).getWind() ;
 								if(isWindTurbineOn) {
 									if(windSpeed < 0.5) {
 										((Controller)this.getTaskOwner()).getProduction() ;
@@ -352,6 +364,7 @@ public class Controller extends AbstractComponent {
 			controllerWindTurbineOutboundPort.unpublishPort();
 			controllerWindSensorOutboundPort.unpublishPort();
 			controllerHeatSensorOutboundPort.unpublishPort();
+			controllerHeatSensorInboundPort.unpublishPort();
 			controllerKettleInboundPort.unpublishPort();
 			controllerKettleOutboundPort.unpublishPort();
 			controllerHeatingInboundPort.unpublishPort();

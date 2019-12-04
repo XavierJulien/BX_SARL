@@ -21,4 +21,9 @@ public class HeatingControllerConnector extends AbstractConnector implements Hea
 		//shouldn't be used
 	}
 
+	@Override
+	public void slowHeating(int power) throws Exception {
+		//shouldn't be used		
+	}
+
 }

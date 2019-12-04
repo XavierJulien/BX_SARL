@@ -5,5 +5,5 @@ import fr.sorbonne_u.components.interfaces.RequiredI;
 
 public interface TemperatureSensorI extends OfferedI,RequiredI {
 	
-	public double sendTemperature() throws Exception;
+	public void sendTemperature(double temperature) throws Exception;
 }

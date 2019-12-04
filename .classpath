@@ -8,5 +8,6 @@
 	<classpathentry kind="lib" path="/users/Etu0/3300400/git/BX_SARL/jars/jing.jar"/>
 	<classpathentry kind="lib" path="/users/nfs/Etu0/3300400/git/BX_SARL/jars/jfreechart-1.6.0-snapshot.jar"/>
 	<classpathentry kind="lib" path="/users/nfs/Etu0/3300400/git/BX_SARL/jars/Simulation-26112019.jar"/>
+	<classpathentry kind="lib" path="/users/nfs/Etu0/3300400/git/BX_SARL/jars/BCM-CyPhy-Components-26112019.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

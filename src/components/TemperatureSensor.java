@@ -1,48 +1,72 @@
 package components;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.TemperatureSensorI;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
+import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
+import fr.sorbonne_u.devs_simulation.examples.molene.SimulationMain;
+import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import fr.sorbonne_u.utils.PlotterDescription;
 import interfaces.TemperatureSensorHeatingI;
-import ports.TemperatureSensorInboundPort;
+import interfaces.TemperatureSensorI;
+import modelisation.windSensor.models.atomicModels.WindSpeedModel;
 import ports.TemperatureSensorHeatingOutboundPort;
+import ports.TemperatureSensorInboundPort;
+import ports.TemperatureSensorOutboundPort;
 
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 public class TemperatureSensor extends AbstractComponent {
 
+	protected SupervisorPlugin		sp ;
+	
 	protected final String				uri ;
 
 	protected final String				temperatureSensorInboundPortURI ;
+	
+	protected final String				temperatureSensorOutboundPortURI ;
 	
 	protected final String				linkWithHeatingOutboundPortURI ;
 
 	protected final TemperatureSensorInboundPort temperatureSensorInboundPort;
 	
 	protected final TemperatureSensorHeatingOutboundPort temperatureSensorHeatingOutboundPort;
+	
+	protected final TemperatureSensorOutboundPort temperatureSensorOutboundPort;
 
-	protected double power = 0;
+	protected double power = 15;
 
 
 
-	protected TemperatureSensor(String uri, String temperatureSensorInboundPortURI, String linkWithHeatingOutboundPortURI) throws Exception{
+	protected TemperatureSensor(String uri, String temperatureSensorInboundPortURI, String linkWithHeatingOutboundPortURI, String temperatureSensorOutboundPortURI) throws Exception{
 
 		super(uri, 1, 1);
 		this.uri = uri;
 		this.temperatureSensorInboundPortURI = temperatureSensorInboundPortURI;
 		this.linkWithHeatingOutboundPortURI = linkWithHeatingOutboundPortURI;
+		this.temperatureSensorOutboundPortURI = temperatureSensorOutboundPortURI;
 
 		temperatureSensorInboundPort = new TemperatureSensorInboundPort(temperatureSensorInboundPortURI, this) ;
 		temperatureSensorInboundPort.publishPort() ;
 		temperatureSensorHeatingOutboundPort = new TemperatureSensorHeatingOutboundPort(linkWithHeatingOutboundPortURI, this);
 		temperatureSensorHeatingOutboundPort.localPublishPort() ;
-
+		temperatureSensorOutboundPort = new TemperatureSensorOutboundPort(temperatureSensorOutboundPortURI, this);
+		temperatureSensorOutboundPort.localPublishPort() ;
+		
+		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
 		} else {
@@ -53,11 +77,10 @@ public class TemperatureSensor extends AbstractComponent {
 		this.tracer.setRelativePosition(3, 0) ;
 	}
 
-	public double sendTemperature() throws Exception {
-		this.logMessage("Sending heat....") ;
-		power+=0.2;
-		return Math.abs(Math.sin(power));
-		//		return 0.3;
+	public void sendTemperature() throws Exception {
+		this.logMessage("The temperature is "+power+" degrees") ;
+		//return Math.abs(Math.sin(power));
+		this.temperatureSensorOutboundPort.sendTemperature(power+(int)(Math.random()*100)) ;
 
 	}
 
@@ -70,21 +93,79 @@ public class TemperatureSensor extends AbstractComponent {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		// Schedule the first service method invocation in one second.
 		
-				this.scheduleTask(
-						new AbstractComponent.AbstractTask() {
-							@Override
-							public void run() {
-								try {
-									((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
+				new HashMap<>() ;
 
-								} catch (Exception e) {
-									throw new RuntimeException(e) ;
-								}
+		System.out.println("AVANT PUT");
+		atomicModelDescriptors.put(
+			WindSpeedModel.URI,
+			AtomicModelDescriptor.create(
+				WindSpeedModel.class,
+				WindSpeedModel.URI,
+				TimeUnit.SECONDS,
+				null,
+				SimulationEngineCreationMode.ATOMIC_ENGINE)
+		) ;
+		
+		System.out.println("AVANT ARCHI");
+		
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
+				new HashMap<>() ;
+		
+		ArchitectureI architecture =
+				new Architecture(
+						WindSpeedModel.URI,
+						atomicModelDescriptors,
+						coupledModelDescriptors,
+						TimeUnit.SECONDS) ;
+		System.out.println("ICI");
+		SimulationEngine se = architecture.constructSimulator() ;
+		se.setDebugLevel(0);
+		
+		
+		System.out.println("APRES CONSTRUCT");
+		
+		Map<String, Object> simParams = new HashMap<String, Object>() ;
+
+		String modelURI = WindSpeedModel.URI;
+		simParams.put(
+				modelURI + ":" + PlotterDescription.PLOTTING_PARAM_NAME,
+				new PlotterDescription(
+						"Wind sensor Model",
+						"Time (sec)",
+						"Connected/Interrupted",
+						SimulationMain.ORIGIN_X,
+						SimulationMain.ORIGIN_Y,
+						SimulationMain.getPlotterWidth(),
+						SimulationMain.getPlotterHeight())) ;
+		se.setSimulationRunParameters(simParams) ;
+		this.logMessage("supervisor component begins simulation.") ;
+		
+		// Schedule the first service method invocation in one second.
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							while(true) {
+								((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
+								Thread.sleep(1000);
 							}
-						},
-						1000, TimeUnit.MILLISECONDS);
+							
+
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS);
+		
+		long start = System.currentTimeMillis() ;
+		se.doStandAloneSimulation(0.0, 5000.0) ;
+		long end = System.currentTimeMillis() ;
+		System.out.println(se.getFinalReport()) ;
+		System.out.println("Simulation ends. " + (end - start)) ;
 	}
 	
 	public void getHeating() throws Exception {
@@ -99,6 +180,7 @@ public class TemperatureSensor extends AbstractComponent {
 	@Override
 	public void finalise() throws Exception {
 		temperatureSensorHeatingOutboundPort.doDisconnection();
+		temperatureSensorOutboundPort.doDisconnection();
 		super.finalise();
 	}
 
@@ -107,6 +189,7 @@ public class TemperatureSensor extends AbstractComponent {
 		try {
 			temperatureSensorInboundPort.unpublishPort();
 			temperatureSensorHeatingOutboundPort.unpublishPort();
+			temperatureSensorOutboundPort.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

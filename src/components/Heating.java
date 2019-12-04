@@ -111,6 +111,12 @@ public class Heating extends AbstractComponent {
 	}
 	
 	
+	public void slowHeating(double power) throws Exception {
+		powerPercentage = (int) Math.max(0, powerPercentage-power);
+		this.logMessage("The heating is now running at "+powerPercentage+"% of his maximum power") ;
+	}
+	
+	
 	public double sendHeating() throws Exception {
 		this.logMessage("Sending Heat....") ;
 		return maxPower*(1.0/powerPercentage);
