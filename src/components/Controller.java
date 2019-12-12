@@ -8,9 +8,9 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ControllerI;
-import ports.ControllerInboundPort;
-import ports.ControllerOutboundPort;
+import interfaces.controller.ControllerI;
+import ports.controller.ControllerInboundPort;
+import ports.controller.ControllerOutboundPort;
 
 @RequiredInterfaces(required = {ControllerI.class})
 @OfferedInterfaces(offered = {ControllerI.class})

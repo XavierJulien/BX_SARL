@@ -8,9 +8,9 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.KettleI;
-import ports.KettleInboundPort;
-import ports.KettleOutboundPort;
+import interfaces.kettle.KettleI;
+import ports.kettle.KettleInboundPort;
+import ports.kettle.KettleOutboundPort;
 
 @RequiredInterfaces(required = {KettleI.class})
 @OfferedInterfaces(offered = {KettleI.class})

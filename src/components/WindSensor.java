@@ -19,9 +19,9 @@ import fr.sorbonne_u.devs_simulation.examples.molene.pcsm.PortableComputerStateM
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.utils.PlotterDescription;
-import interfaces.WindSensorI;
-import modelisation.windSensor.models.atomicModels.WindSpeedModel;
-import ports.WindSensorInboundPort;
+import interfaces.sensors.WindSensorI;
+import ports.sensors.WindSensorInboundPort;
+import simulation.models.sensors.WindSpeedModel;
 
 @RequiredInterfaces(required = {WindSensorI.class})
 @OfferedInterfaces(offered = {WindSensorI.class})

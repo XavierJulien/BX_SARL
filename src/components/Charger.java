@@ -8,11 +8,11 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ChargerElectricMeterI;
-import interfaces.ChargerI;
-import interfaces.ChargerBatteryI;
-import ports.ChargerInboundPort;
-import ports.ChargerOutboundPort;
+import interfaces.charger.ChargerBatteryI;
+import interfaces.charger.ChargerElectricMeterI;
+import interfaces.charger.ChargerI;
+import ports.charger.ChargerInboundPort;
+import ports.charger.ChargerOutboundPort;
 
 @RequiredInterfaces(required = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
 @OfferedInterfaces(offered = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})

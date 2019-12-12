@@ -6,9 +6,9 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.WindTurbineI;
-import ports.WindTurbineInboundPort;
-import ports.WindTurbineOutboundPort;
+import interfaces.windturbine.WindTurbineI;
+import ports.windturbine.WindTurbineInboundPort;
+import ports.windturbine.WindTurbineOutboundPort;
 
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})

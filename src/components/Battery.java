@@ -6,10 +6,10 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.BatteryI;
-import interfaces.BatteryChargerI;
-import ports.BatteryInboundPort;
-import ports.BatteryOutboundPort;
+import interfaces.battery.BatteryChargerI;
+import interfaces.battery.BatteryI;
+import ports.battery.BatteryInboundPort;
+import ports.battery.BatteryOutboundPort;
 
 @RequiredInterfaces(required = {BatteryI.class, BatteryChargerI.class})
 @OfferedInterfaces(offered = {BatteryI.class, BatteryChargerI.class})

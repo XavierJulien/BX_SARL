@@ -8,11 +8,11 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.HeatingI;
-import interfaces.HeatingTemperatureSensorI;
-import ports.HeatingTemperatureSensorInboundPort;
-import ports.HeatingInboundPort;
-import ports.HeatingOutboundPort;
+import interfaces.heating.HeatingI;
+import interfaces.heating.HeatingTemperatureSensorI;
+import ports.heating.HeatingInboundPort;
+import ports.heating.HeatingOutboundPort;
+import ports.heating.HeatingTemperatureSensorInboundPort;
 
 @RequiredInterfaces(required = {HeatingI.class, HeatingTemperatureSensorI.class})
 @OfferedInterfaces(offered = {HeatingI.class, HeatingTemperatureSensorI.class})

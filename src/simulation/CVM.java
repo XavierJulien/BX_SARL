@@ -1,7 +1,5 @@
 package simulation;
 
-import simulation.components.Kettle;
-
 // Copyright Jacques Malenfant, Sorbonne Universite.
 // Jacques.Malenfant@lip6.fr
 //
@@ -38,6 +36,7 @@ import simulation.components.Kettle;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import simulation.components.kettle.Kettle;
 
 //------------------------------------------------------------------------------
 /**

@@ -20,12 +20,12 @@ import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import fr.sorbonne_u.utils.PlotterDescription;
-import interfaces.TemperatureSensorHeatingI;
-import interfaces.TemperatureSensorI;
-import modelisation.windSensor.models.atomicModels.WindSpeedModel;
-import ports.TemperatureSensorHeatingOutboundPort;
-import ports.TemperatureSensorInboundPort;
-import ports.TemperatureSensorOutboundPort;
+import interfaces.sensors.TemperatureSensorHeatingI;
+import interfaces.sensors.TemperatureSensorI;
+import ports.sensors.TemperatureSensorHeatingOutboundPort;
+import ports.sensors.TemperatureSensorInboundPort;
+import ports.sensors.TemperatureSensorOutboundPort;
+import simulation.models.sensors.WindSpeedModel;
 
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})

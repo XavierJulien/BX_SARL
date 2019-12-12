@@ -8,10 +8,10 @@ import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import interfaces.ElectricMeterControllerI;
-import interfaces.ElectricMeterI;
-import ports.ElectricMeterInboundPort;
-import ports.ElectricMeterOutboundPort;
+import interfaces.electricmeter.ElectricMeterControllerI;
+import interfaces.electricmeter.ElectricMeterI;
+import ports.electricmeter.ElectricMeterInboundPort;
+import ports.electricmeter.ElectricMeterOutboundPort;
 
 @RequiredInterfaces(required = {ElectricMeterI.class, ElectricMeterControllerI.class})
 @OfferedInterfaces(offered = {ElectricMeterI.class, ElectricMeterControllerI.class})
