@@ -2,7 +2,6 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.ElectricMeterControllerI;
 import interfaces.ElectricMeterI;
 
 public class ElectricMeterOutboundPort extends AbstractOutboundPort implements ElectricMeterI{

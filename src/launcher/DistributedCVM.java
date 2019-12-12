@@ -58,9 +58,6 @@ import fr.sorbonne_u.components.AbstractComponent;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import fr.sorbonne_u.components.cvm.AbstractDistributedCVM;
-import fr.sorbonne_u.components.examples.basic_cs.components.URIConsumer;
-import fr.sorbonne_u.components.examples.basic_cs.components.URIProvider;
-import fr.sorbonne_u.components.examples.basic_cs.connectors.URIServiceConnector;
 
 //-----------------------------------------------------------------------------
 /**

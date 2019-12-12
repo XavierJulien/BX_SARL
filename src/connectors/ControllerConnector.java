@@ -3,7 +3,6 @@ package connectors;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 import interfaces.BatteryI;
 import interfaces.KettleI;
-import interfaces.TemperatureSensorI;
 import interfaces.WindSensorI;
 import interfaces.ChargerI;
 import interfaces.HeatingI;

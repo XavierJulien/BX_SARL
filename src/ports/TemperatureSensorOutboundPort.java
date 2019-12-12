@@ -2,9 +2,9 @@ package ports;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.ControllerI;
 import interfaces.TemperatureSensorI;
 
+@SuppressWarnings("serial")
 public class TemperatureSensorOutboundPort extends AbstractOutboundPort implements TemperatureSensorI {
 
 	public TemperatureSensorOutboundPort(ComponentI owner) throws Exception {

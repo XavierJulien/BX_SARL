@@ -1,6 +1,5 @@
 package ports;
 
-import components.Controller;
 import components.TemperatureSensor;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
