@@ -49,8 +49,7 @@ public class KettleInboundPort extends AbstractInboundPort implements KettleI,Ke
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Kettle)owner).sendConsumption()) ;	
+	public void sendConsumption(double consumption) throws Exception {
+		//unused
 	}
 }

@@ -33,12 +33,12 @@ public class BatteryOutboundPort extends AbstractOutboundPort implements Battery
 	}
 	
 	@Override
-	public double sendChargePercentage() throws Exception {
-		return 0;
+	public void sendChargePercentage(double percentage) throws Exception {
+		((BatteryI)this.connector).sendChargePercentage(percentage) ;
 	}
 
 	@Override
-	public double sendEnergy() throws Exception {
-		return 0;
+	public void sendEnergy(double energy) throws Exception {
+		((BatteryI)this.connector).sendEnergy(energy) ;
 	}
 }

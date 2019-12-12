@@ -1,9 +1,5 @@
-/simulation/
-/modelisation/
-/ports/
-/portscontroller/
-/components/
-/heating/
 /connectors/
-/launcher/
 /interfaces/
+/launcher/
+/ports/
+/simulation/

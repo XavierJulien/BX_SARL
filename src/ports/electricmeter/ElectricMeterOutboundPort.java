@@ -35,23 +35,23 @@ public class ElectricMeterOutboundPort extends AbstractOutboundPort implements E
 	}
 
 	@Override
-	public double sendAllConsumption() throws Exception {
-		return ((ElectricMeterI)this.connector).sendAllConsumption();		
+	public void sendAllConsumption(double total) throws Exception {
+		((ElectricMeterI)this.connector).sendAllConsumption(total);		
 	}
 
 	@Override
-	public double getHeatingConsumption() throws Exception {
-		return ((ElectricMeterI)this.connector).getHeatingConsumption();		
+	public void getHeatingConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.connector).getHeatingConsumption(consumption);		
 	}
 
 	@Override
-	public double getKettleConsumption() throws Exception {
-		return ((ElectricMeterI)this.connector).getKettleConsumption();	
+	public void getKettleConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.connector).getKettleConsumption(consumption);	
 	}
 
 	@Override
-	public double getChargerConsumption() throws Exception {
-		return ((ElectricMeterI)this.connector).getChargerConsumption();	
+	public void getChargerConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.connector).getChargerConsumption(consumption);	
 	}
 
 }

@@ -100,9 +100,9 @@ public class Heating extends AbstractComponent {
 		isOn =false;
 	}
 
-	public double sendConsumption() throws Exception {
+	public void sendConsumption() throws Exception {
 		this.logMessage("Sending comsumption....") ;
-		return (1.0/powerPercentage)*maxConsumption;
+		this.heatingElectricMeterOutboundPort.sendConsumption((1.0/powerPercentage)*maxConsumption) ;
 	}
 	
 	public void putExtraPowerInHeating(double power) throws Exception {

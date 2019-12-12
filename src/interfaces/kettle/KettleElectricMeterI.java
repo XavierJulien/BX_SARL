@@ -5,5 +5,5 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 public interface KettleElectricMeterI extends DataOfferedI,DataRequiredI{
 
-	public double sendConsumption() throws Exception;
+	public void sendConsumption(double consumption) throws Exception;
 }

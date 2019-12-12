@@ -89,9 +89,9 @@ public class Charger extends AbstractComponent{
 		isOn =false;
 	}
 	
-	public double sendConsumption() throws Exception {
+	public void sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
-		return conso;
+		this.chargerElectricMeterOutboundPort.sendConsumption(conso) ;
 	}
 	
 	public void	start() throws ComponentStartException{
@@ -107,7 +107,9 @@ public class Charger extends AbstractComponent{
 					public void run() {
 						try {
 							while(true) {
-								((Charger)this.getTaskOwner()).sendConsumption() ;
+								if(isOn) {
+									((Charger)this.getTaskOwner()).sendConsumption() ;
+								}
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

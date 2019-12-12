@@ -8,7 +8,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	//------------EOLIENNE------------
 	public void startWindTurbine() throws Exception;
 	public void stopWindTurbine() throws Exception;
-	public double getProduction() throws Exception;
+	public void getProduction(double production) throws Exception;
 	
 	//------------BOUILLOIRE------------
 	public void startKettle() throws Exception;
@@ -23,7 +23,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	//------------COMPTEUR------------
 	public void startElectricMeter() throws Exception;
 	public void stopElectricMeter() throws Exception;
-	public double getAllConsumption() throws Exception;
+	public void getAllConsumption(double total) throws Exception;
 	
 	//------------CHARGEUR------------
 	public void startCharger() throws Exception;
@@ -32,8 +32,8 @@ public interface ControllerI extends OfferedI,RequiredI{
 	//------------BATTERIE------------
 	public void startBattery() throws Exception;
 	public void stopBattery() throws Exception;
-	public double getBatteryChargePercentage() throws Exception;
-	public double getBatteryProduction() throws Exception;
+	public void getBatteryChargePercentage(double percentage) throws Exception;
+	public void getBatteryProduction(double energy) throws Exception;
 	
 	//------------CAPTEURS------------
 	public double getWind() throws Exception;

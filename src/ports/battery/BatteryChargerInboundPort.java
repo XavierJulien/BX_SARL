@@ -1,6 +1,5 @@
 package ports.battery;
 
-import components.Battery;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.battery.BatteryChargerI;
@@ -27,7 +26,6 @@ public class BatteryChargerInboundPort extends AbstractInboundPort implements Ba
 		
 		@Override
 		public void receivePower(double power) throws Exception {
-			this.getOwner().handleRequestSync(
-					owner -> ((Battery)owner).sendEnergy()) ;
+			//unused
 		}
 }

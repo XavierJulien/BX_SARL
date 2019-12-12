@@ -1,7 +1,5 @@
 package components;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -11,21 +9,11 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
-import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.architectures.ArchitectureI;
-import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
-import fr.sorbonne_u.devs_simulation.examples.molene.SimulationMain;
-import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
-import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import fr.sorbonne_u.utils.PlotterDescription;
 import interfaces.sensors.TemperatureSensorHeatingI;
 import interfaces.sensors.TemperatureSensorI;
 import ports.sensors.TemperatureSensorHeatingOutboundPort;
 import ports.sensors.TemperatureSensorInboundPort;
 import ports.sensors.TemperatureSensorOutboundPort;
-import simulation.models.sensors.WindSpeedModel;
 
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
@@ -94,7 +82,7 @@ public class TemperatureSensor extends AbstractComponent {
 	public void execute() throws Exception {
 		super.execute();
 		
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
+		/*Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
 				new HashMap<>() ;
 
 		System.out.println("AVANT PUT");
@@ -141,7 +129,7 @@ public class TemperatureSensor extends AbstractComponent {
 						SimulationMain.getPlotterHeight())) ;
 		se.setSimulationRunParameters(simParams) ;
 		this.logMessage("supervisor component begins simulation.") ;
-		
+		*/
 		// Schedule the first service method invocation in one second.
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
@@ -161,11 +149,11 @@ public class TemperatureSensor extends AbstractComponent {
 				},
 				1000, TimeUnit.MILLISECONDS);
 		
-		long start = System.currentTimeMillis() ;
+		/*long start = System.currentTimeMillis() ;
 		se.doStandAloneSimulation(0.0, 5000.0) ;
 		long end = System.currentTimeMillis() ;
 		System.out.println(se.getFinalReport()) ;
-		System.out.println("Simulation ends. " + (end - start)) ;
+		System.out.println("Simulation ends. " + (end - start)) ;*/
 	}
 	
 	public void getHeating() throws Exception {

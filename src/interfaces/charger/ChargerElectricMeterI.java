@@ -5,5 +5,5 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 public interface ChargerElectricMeterI extends DataOfferedI,DataRequiredI{
 
-	public double sendConsumption() throws Exception;
+	public void sendConsumption(double consumption) throws Exception;
 }

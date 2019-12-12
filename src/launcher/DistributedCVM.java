@@ -1,13 +1,13 @@
 package launcher;
 
 import components.Battery;
+import components.Charger;
+import components.Controller;
+import components.ElectricMeter;
+import components.Heating;
 import components.Kettle;
 import components.TemperatureSensor;
 import components.WindSensor;
-import components.Charger;
-import components.Heating;
-import components.ElectricMeter;
-import components.Controller;
 import components.WindTurbine;
 import connectors.battery.BatteryControllerConnector;
 import connectors.charger.ChargerControllerConnector;

@@ -119,25 +119,22 @@ public class ElectricMeter extends AbstractComponent {
 		isOn =false;
 	}
 	
-	public double sendAllConsumption() throws Exception {
+	public void sendAllConsumption() throws Exception {
 		this.logMessage("Sending all comsumption....") ;
-		return consumptionKettle+consumptionCharger+consumptionHeating;
+		this.electricMeterOutboundPort.sendAllConsumption(consumptionKettle+consumptionCharger+consumptionHeating) ;
 	}
 	
-	public void getHeatingConsumption() throws Exception {
-		double consumption = this.electricMeterHeatingOutboundPort.getHeatingConsumption();
+	public void getHeatingConsumption(double consumption) throws Exception {
 		this.consumptionHeating = consumption;
 		this.logMessage("The electric Meter is informed that the heating consumes "+consumption+" units of energy.") ;
 	}
 	
-	public void getKettleConsumption() throws Exception {
-		double consumption = this.electricMeterKettleOutboundPort.getKettleConsumption();
+	public void getKettleConsumption(double consumption) throws Exception {
 		this.consumptionKettle = consumption;
 		this.logMessage("The electric Meter is informed that the kettle consumes "+consumption+" units of energy.") ;
 	}
 	
-	public void getChargerConsumption() throws Exception {
-		double consumption = this.electricMeterChargerOutboundPort.getChargerConsumption();
+	public void getChargerConsumption(double consumption) throws Exception {
 		this.consumptionCharger = consumption;
 		this.logMessage("The electric Meter is informed that the charger consumes "+consumption+" units of energy.") ;
 	}
@@ -155,9 +152,7 @@ public class ElectricMeter extends AbstractComponent {
 					public void run() {
 						try {
 							while(true) {
-								((ElectricMeter)this.getTaskOwner()).getHeatingConsumption() ;
-								((ElectricMeter)this.getTaskOwner()).getKettleConsumption() ;
-								((ElectricMeter)this.getTaskOwner()).getChargerConsumption() ;
+								((ElectricMeter)this.getTaskOwner()).sendAllConsumption();
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

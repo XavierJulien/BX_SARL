@@ -86,9 +86,9 @@ public class Kettle extends AbstractComponent{
 		isOn =false;
 	}
 	
-	public double sendConsumption() throws Exception {
+	public void sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
-		return consumption;
+		this.kettleElectricMeterOutboundPort.sendConsumption(consumption) ;
 	}
 
 	public void	start() throws ComponentStartException{
@@ -105,7 +105,9 @@ public class Kettle extends AbstractComponent{
 					public void run() {
 						try {
 							while(true) {
-								((Kettle)this.getTaskOwner()).sendConsumption() ;
+								if(!isOn) {
+									((Kettle)this.getTaskOwner()).sendConsumption() ;
+								}
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

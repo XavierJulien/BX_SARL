@@ -17,12 +17,12 @@ public class BatteryControllerConnector extends AbstractConnector implements Bat
 	}
 
 	@Override
-	public double sendChargePercentage() throws Exception {
-		return 0;
+	public void sendChargePercentage(double energy) throws Exception {
+		((ControllerI)this.offering).getBatteryChargePercentage(energy);		
 	}
 
 	@Override
-	public double sendEnergy() throws Exception {
-		return 0;
+	public void sendEnergy(double energy) throws Exception {
+		((ControllerI)this.offering).getBatteryProduction(energy);		
 	}
 }

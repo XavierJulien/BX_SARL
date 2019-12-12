@@ -27,8 +27,8 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	}
 
 	@Override
-	public double getProduction() throws Exception {
-		return ((ControllerI)this.connector).getProduction();
+	public void getProduction(double production) throws Exception {
+		((ControllerI)this.connector).getProduction(production);
 		
 	}
 
@@ -103,18 +103,18 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	}
 
 	@Override
-	public double getBatteryChargePercentage() throws Exception {
-		return ((ControllerI)this.connector).getBatteryChargePercentage();
+	public void getBatteryChargePercentage(double percentage) throws Exception {
+		((ControllerI)this.connector).getBatteryChargePercentage(percentage);
 	}
 
 	@Override
-	public double getBatteryProduction() throws Exception {
-		return ((ControllerI)this.connector).getBatteryProduction();
+	public void getBatteryProduction(double energy) throws Exception {
+		 ((ControllerI)this.connector).getBatteryProduction(energy);
 	}
 
 	@Override
-	public double getAllConsumption() throws Exception {
-		return ((ControllerI)this.connector).getAllConsumption();			
+	public void getAllConsumption(double total) throws Exception {
+		((ControllerI)this.connector).getAllConsumption(total);			
 	}
 
 

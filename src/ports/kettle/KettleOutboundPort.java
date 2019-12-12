@@ -2,9 +2,10 @@ package ports.kettle;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import interfaces.kettle.KettleElectricMeterI;
 import interfaces.kettle.KettleI;
 
-public class KettleOutboundPort extends AbstractOutboundPort implements KettleI{
+public class KettleOutboundPort extends AbstractOutboundPort implements KettleI, KettleElectricMeterI{
 	
 	private static final long serialVersionUID = 1L;
 
@@ -33,9 +34,8 @@ public class KettleOutboundPort extends AbstractOutboundPort implements KettleI{
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		//shouldn't be used
-		return 0;
+	public void sendConsumption(double consumption) throws Exception {
+		((KettleElectricMeterI)this.connector).sendConsumption(consumption) ;
 	}
 
 

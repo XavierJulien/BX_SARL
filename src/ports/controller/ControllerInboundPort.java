@@ -53,9 +53,15 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	
 	
 	@Override
-	public double getProduction() throws Exception {
-		System.out.println("ERREUR");
-		return 0;
+	public void getProduction(double production) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getProduction(production);
+						return null;
+					}
+				}) ;
 	}
 
 	//---------------------------------------------------
@@ -153,9 +159,15 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	}
 	
 	@Override
-	public double getAllConsumption() throws Exception {
-		System.out.println("ERREUR");
-		return 0;	
+	public void getAllConsumption(double total) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getAllConsumption(total);
+						return null;
+					}
+				}) ;	
 	}
 	
 	//---------------------------------------------------
@@ -210,14 +222,26 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 				}) ;		
 	}
 	@Override
-	public double getBatteryChargePercentage() throws Exception {
-		// shouldn't be used
-		return 0;
+	public void getBatteryChargePercentage(double percentage) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getBatteryChargePercentage(percentage);
+						return null;
+					}
+				}) ;
 	}
 	@Override
-	public double getBatteryProduction() throws Exception {
-		// shouldn't be used
-		return 0;
+	public void getBatteryProduction(double energy) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getBatteryProduction(energy);
+						return null;
+					}
+				}) ;
 	}
 	
 	

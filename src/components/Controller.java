@@ -190,9 +190,8 @@ public class Controller extends AbstractComponent {
 		this.logMessage("Controller "+this.uri+" : tells wind turbine to stop.") ;
 		this.controllerWindTurbineOutboundPort.stopWindTurbine();
 	}
-	public void getProduction() throws Exception {
-		double prod = this.controllerWindTurbineOutboundPort.getProduction();
-		this.prod += prod;
+	public void getProduction(double production) throws Exception {
+		this.prod += production;
 		this.logMessage("The controller is getting "+prod+" units of energy from the wind turbine") ;
 	}
 
@@ -254,10 +253,9 @@ public class Controller extends AbstractComponent {
 		this.logMessage("Controller "+this.uri+" : tells electric meter to stop.") ;
 		this.controllerElectricMeterOutboundPort.stopElectricMeter();
 	}
-	public void getAllConsumption() throws Exception {
-		double conso = this.controllerElectricMeterOutboundPort.getAllConsumption();
-		this.prod -= conso;
-		this.logMessage("All the consumers consume "+conso);
+	public void getAllConsumption(double total) throws Exception {
+		this.prod -= total;
+		this.logMessage("All the consumers consume "+total);
 	}
 	
 	//--------------------------------------------------------------
@@ -271,14 +269,12 @@ public class Controller extends AbstractComponent {
 		this.logMessage("Controller "+this.uri+" : tells battery to stop.") ;
 		this.controllerBatteryOutboundPort.stopBattery();
 	}
-	public void getBatteryChargePercentage() throws Exception {
-		double charge = this.controllerBatteryOutboundPort.getBatteryChargePercentage();
-		this.batteryPercentage = charge;
-		this.logMessage("The battery is "+charge+"% loaded");
+	public void getBatteryChargePercentage(double percentage) throws Exception {
+		this.batteryPercentage = percentage;
+		this.logMessage("The battery is "+percentage+"% loaded");
 	}
-	public void getBatteryProduction() throws Exception {
-		double prod = this.controllerBatteryOutboundPort.getBatteryProduction();
-		this.prod += prod;
+	public void getBatteryProduction(double energy) throws Exception {
+		this.prod += energy;
 		this.logMessage("The controller is getting "+prod+" units of energy from the Battery");
 	}
 
@@ -314,12 +310,9 @@ public class Controller extends AbstractComponent {
 							while(true) {
 								((Controller)this.getTaskOwner()).logMessage("The temperature is "+temperature+" degrees");
 								((Controller)this.getTaskOwner()).putExtraPowerInHeating(1);
-								((Controller)this.getTaskOwner()).getAllConsumption() ;
 //								((Controller)this.getTaskOwner()).getWind() ;
 								if(isWindTurbineOn) {
-									if(windSpeed < 0.5) {
-										((Controller)this.getTaskOwner()).getProduction() ;
-									}else {
+									if(windSpeed > 0.5) {
 										((Controller)this.getTaskOwner()).stopWindTurbine();
 										isWindTurbineOn = false;
 									}

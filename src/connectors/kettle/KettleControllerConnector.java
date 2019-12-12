@@ -16,8 +16,4 @@ public class KettleControllerConnector extends	AbstractConnector implements Kett
 		((ControllerI)this.offering).stopKettle();
 	}
 
-	@Override
-	public double sendConsumption() throws Exception {
-		return 0;
-	}
 }

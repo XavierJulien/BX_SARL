@@ -7,8 +7,8 @@ import interfaces.heating.HeatingElectricMeterI;
 public class HeatingElectricMeterConnector extends AbstractConnector implements HeatingElectricMeterI{
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getHeatingConsumption();
+	public void sendConsumption(double total) throws Exception {
+		((ElectricMeterI)this.offering).getHeatingConsumption(total);
 	}
 
 }

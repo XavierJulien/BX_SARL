@@ -24,8 +24,8 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		((WindTurbineI)this.offering).stopWindTurbine();
 	}
 	@Override
-	public double getProduction() throws Exception {
-		return ((WindTurbineI)this.offering).sendProduction() ;	
+	public void getProduction(double production) throws Exception {
+		((WindTurbineI)this.offering).sendProduction(production) ;	
 	}
 
 	//---------------------------------------------------
@@ -72,8 +72,8 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		((ElectricMeterI)this.offering).stopElectricMeter();
 	}
 	@Override
-	public double getAllConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).sendAllConsumption();
+	public void getAllConsumption(double total) throws Exception {
+		((ElectricMeterI)this.offering).sendAllConsumption(total);
 	}
 	
 	//---------------------------------------------------
@@ -100,12 +100,12 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		((BatteryI)this.offering).stopBattery();
 	}
 	@Override
-	public double getBatteryChargePercentage() throws Exception {
-		return ((BatteryI)this.offering).sendChargePercentage();
+	public void getBatteryChargePercentage(double percentage) throws Exception {
+		((BatteryI)this.offering).sendChargePercentage(percentage);
 	}
 	@Override
-	public double getBatteryProduction() throws Exception {
-		return ((BatteryI)this.offering).sendEnergy();
+	public void getBatteryProduction(double energy) throws Exception {
+		((BatteryI)this.offering).sendEnergy(energy);
 	}
 	
 	//---------------------------------------------------
@@ -116,9 +116,8 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		return ((WindSensorI)this.offering).sendWind();
 	}
 	@Override
-	public void /*double*/ getTemperature(double temperature) throws Exception {
-		//return ((TemperatureSensorI)this.offering).sendTemperature();
-		//return 0;
+	public void getTemperature(double temperature) throws Exception {
+		//unused
 	}
 
 

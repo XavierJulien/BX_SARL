@@ -48,14 +48,12 @@ public class BatteryInboundPort extends AbstractInboundPort implements BatteryI{
 	}
 
 	@Override
-	public double sendChargePercentage() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Battery)owner).sendChargePercentage()) ;	
+	public void sendChargePercentage(double energy) throws Exception {
+		//unused
 	}
 
 	@Override
-	public double sendEnergy() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Battery)owner).sendEnergy()) ;
+	public void sendEnergy(double energy) throws Exception {
+		//unused
 	}
 }

@@ -106,7 +106,7 @@ extends		AbstractEvent
 	@Override
 	public boolean			hasPriorityOver(EventI e)
 	{
-		return false ;
+		return true ;
 	}
 
 	/**
@@ -117,7 +117,7 @@ extends		AbstractEvent
 	{
 		assert	model instanceof KettleModel ;
 
-		((KettleModel)model).setState(KettleModel.State.OFF) ;
+		((KettleModel)model).updateState(KettleModel.State.OFF) ;
 	}
 }
 //------------------------------------------------------------------------------

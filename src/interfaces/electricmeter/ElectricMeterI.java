@@ -7,9 +7,9 @@ public interface ElectricMeterI extends DataOfferedI,DataRequiredI{
 
 	public void startElectricMeter() throws Exception;
 	public void stopElectricMeter() throws Exception;
-	public double sendAllConsumption() throws Exception;
-	public double getHeatingConsumption() throws Exception;
-	public double getKettleConsumption() throws Exception;
-	public double getChargerConsumption() throws Exception;
+	public void sendAllConsumption(double total) throws Exception;
+	public void getHeatingConsumption(double consumption) throws Exception;
+	public void getKettleConsumption(double consumption) throws Exception;
+	public void getChargerConsumption(double consumption) throws Exception;
 
 }

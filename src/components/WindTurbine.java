@@ -72,9 +72,9 @@ public class WindTurbine extends AbstractComponent {
 		isOn =false;
 	}
 	
-	public double sendProduction() throws Exception {
+	public void sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
-		return Math.random()*10;
+		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
 
 	public void	start() throws ComponentStartException{

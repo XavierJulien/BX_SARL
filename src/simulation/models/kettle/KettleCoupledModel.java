@@ -1,43 +1,12 @@
 package simulation.models.kettle;
 
-//Copyright Jacques Malenfant, Sorbonne Universite.
-//Jacques.Malenfant@lip6.fr
-//
-//This software is a computer program whose purpose is to provide an extension
-//of the BCM component model that aims to define a components tailored for
-//cyber-physical control systems (CPCS) for Java.
-//
-//This software is governed by the CeCILL-C license under French law and
-//abiding by the rules of distribution of free software.  You can use,
-//modify and/ or redistribute the software under the terms of the
-//CeCILL-C license as circulated by CEA, CNRS and INRIA at the following
-//URL "http://www.cecill.info".
-//
-//As a counterpart to the access to the source code and  rights to copy,
-//modify and redistribute granted by the license, users are provided only
-//with a limited warranty  and the software's author,  the holder of the
-//economic rights,  and the successive licensors  have only  limited
-//liability. 
-//
-//In this respect, the user's attention is drawn to the risks associated
-//with loading,  using,  modifying and/or developing or reproducing the
-//software by the user in light of its specific status of free software,
-//that may mean  that it is complicated to manipulate,  and  that  also
-//therefore means  that it is reserved for developers  and  experienced
-//professionals having in-depth computer knowledge. Users are therefore
-//encouraged to load and test the software's suitability as regards their
-//requirements in conditions enabling the security of their systems and/or 
-//data to be ensured and,  more generally, to use and operate it in the 
-//same conditions as regards security. 
-//
-//The fact that you are presently reading this means that you have had
-//knowledge of the CeCILL-C license and that you accept its terms.
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetHigh;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetLow;
+
 import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOff;
 import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOn;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
@@ -59,26 +28,10 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import java.util.HashMap;
-import java.util.HashSet;
+import simulation.events.kettle.EmptyKettle;
+import simulation.events.kettle.FillKettle;
+import simulation.events.kettle.KettleUpdater;
 
-//-----------------------------------------------------------------------------
-/**
-* The class <code>KettleCoupledModel</code> implements the DEVS simulation
-* coupled model for the kettle example.
-*
-* <p><strong>Description</strong></p>
-* 
-* <p><strong>Invariant</strong></p>
-* 
-* <pre>
-* invariant		true
-* </pre>
-* 
-* <p>Created on : 2019-10-11</p>
-* 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-*/
 public class			KettleCoupledModel
 extends		CoupledModel
 {
@@ -116,9 +69,6 @@ extends		CoupledModel
 	// Methods
 	// -------------------------------------------------------------------------
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.CoupledModel#getFinalReport()
-	 */
 	@Override
 	public SimulationReportI	getFinalReport() throws Exception
 	{
@@ -130,19 +80,6 @@ extends		CoupledModel
 		return ret ;
 	}
 
-	/**
-	 * build the simulation architecture corresponding to this coupled model.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true			// no precondition.
-	 * post	true			// no postcondition.
-	 * </pre>
-	 *
-	 * @return				the simulation architecture corresponding to this coupled model.
-	 * @throws Exception	<i>TO DO.</i>
-	 */
 	public static Architecture	build() throws Exception
 	{
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
@@ -186,16 +123,21 @@ extends		CoupledModel
 				new EventSink(KettleModel.URI, SwitchOff.class)} ;
 		connections.put(from2, to2) ;
 		EventSource from3 =
-				new EventSource(KettleUserModel.URI, SetLow.class) ;
+				new EventSource(KettleUserModel.URI, EmptyKettle.class) ;
 		EventSink[] to3 = new EventSink[] {
-				new EventSink(KettleModel.URI, SetLow.class)} ;
+				new EventSink(KettleModel.URI, EmptyKettle.class)} ;
 		connections.put(from3, to3) ;
 		EventSource from4 =
-				new EventSource(KettleUserModel.URI, SetHigh.class) ;
+				new EventSource(KettleUserModel.URI, FillKettle.class) ;
 		EventSink[] to4 = new EventSink[] {
-				new EventSink(KettleModel.URI, SetHigh.class)} ;
+				new EventSink(KettleModel.URI, FillKettle.class)} ;
 		connections.put(from4, to4) ;
-
+		EventSource from5 =
+				new EventSource(KettleUserModel.URI, KettleUpdater.class) ;
+		EventSink[] to5 = new EventSink[] {
+				new EventSink(KettleModel.URI, KettleUpdater.class)} ;
+		connections.put(from5, to5) ;
+		
 		coupledModelDescriptors.put(
 					KettleCoupledModel.URI,
 					new CoupledHIOA_Descriptor(

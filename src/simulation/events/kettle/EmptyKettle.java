@@ -1,25 +1,27 @@
 package simulation.events.kettle;
 
+import java.util.Random;
+
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
 import simulation.models.kettle.KettleModel;
 
-public class			SwitchOn
+public class			EmptyKettle
 extends		AbstractEvent
 {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 1L ;
+	private static final long serialVersionUID = 1L;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				SwitchOn(Time timeOfOccurrence)
+	public				EmptyKettle(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
@@ -31,25 +33,22 @@ extends		AbstractEvent
 	@Override
 	public String			eventAsString()
 	{
-		return "Kettle::SwitchOn" ;
+		return "Kettle::FillKettle" ;
 	}
-
 	@Override
 	public boolean			hasPriorityOver(EventI e)
 	{
-		if (e instanceof FillKettle || e instanceof EmptyKettle) {
+		if (e instanceof SwitchOff) {
 			return false ;
 		} else {
 			return true ;
 		}
 	}
-
 	@Override
 	public void				executeOn(AtomicModel model)
 	{
 		assert	model instanceof KettleModel ;
-
-		((KettleModel)model).updateState(KettleModel.State.ON) ;
+		((KettleModel)model).updateContent(KettleModel.Content.EMPTY);
 	}
 }
 //-----------------------------------------------------------------------------

@@ -48,27 +48,44 @@ public class ElectricMeterInboundPort extends AbstractInboundPort implements Ele
 	}
 
 	@Override
-	public double sendAllConsumption() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((ElectricMeter)owner).sendAllConsumption()) ;	
+	public void sendAllConsumption(double total) throws Exception {
+		//unused
 	}
 
 	@Override
-	public double getHeatingConsumption() throws Exception {
-		System.out.println("ERREUR");
-		return 0;
+	public void getHeatingConsumption(double consumption) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((ElectricMeter)this.getServiceOwner()).getHeatingConsumption(consumption);
+						return null;
+					}
+				}) ;
 	}
 
 	@Override
-	public double getKettleConsumption() throws Exception {
-		System.out.println("ERREUR");
-		return 0;
+	public void getKettleConsumption(double consumption) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((ElectricMeter)this.getServiceOwner()).getKettleConsumption(consumption);
+						return null;
+					}
+				}) ;
 	}
 
 	@Override
-	public double getChargerConsumption() throws Exception {
-		System.out.println("ERREUR");
-		return 0;
+	public void getChargerConsumption(double consumption) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((ElectricMeter)this.getServiceOwner()).getChargerConsumption(consumption);
+						return null;
+					}
+				}) ;
 	}
 
 }

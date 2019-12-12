@@ -7,5 +7,4 @@ public interface KettleI extends DataOfferedI,DataRequiredI{
 
 	public void startKettle() throws Exception;
 	public void stopKettle() throws Exception;
-	public double sendConsumption() throws Exception;
 }

@@ -2,9 +2,10 @@ package ports.heating;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import interfaces.heating.HeatingElectricMeterI;
 import interfaces.heating.HeatingI;
 
-public class HeatingOutboundPort extends AbstractOutboundPort implements HeatingI{
+public class HeatingOutboundPort extends AbstractOutboundPort implements HeatingI, HeatingElectricMeterI{
 	private static final long serialVersionUID = 1L;
 
 //--------------------------------------------------------------
@@ -39,6 +40,11 @@ public class HeatingOutboundPort extends AbstractOutboundPort implements Heating
 	@Override
 	public void slowHeating(int power) throws Exception {
 		//Shouldn't be used
+	}
+
+	@Override
+	public void sendConsumption(double consumption) throws Exception {
+		((HeatingElectricMeterI)this.connector).sendConsumption(consumption) ;
 	}
 	
 }

@@ -16,8 +16,8 @@ public class ChargerControllerConnector extends AbstractConnector implements Cha
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		//shouldn't be used
-		return 0;
-	}	
+	public void sendConsumption(double consumption) throws Exception {
+		//unused		
+	}
+
 }

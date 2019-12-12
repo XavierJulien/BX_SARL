@@ -51,8 +51,8 @@ public class ChargerInboundPort extends AbstractInboundPort implements ChargerI,
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Charger)owner).sendConsumption()) ;	
+	public void sendConsumption(double consumption) throws Exception {
+		//unused
 	}
+
 }

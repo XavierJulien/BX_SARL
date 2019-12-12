@@ -1,5 +1,7 @@
 package components;
 
+import java.util.concurrent.TimeUnit;
+
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -62,7 +64,7 @@ public class Battery extends AbstractComponent {
 		//----------------Variables----------------
 		
 		this.maxCharge = 500;
-		this.chargePercentage = 0;
+		this.chargePercentage = 100;
 		this.prod = 10;
 		
 		
@@ -84,14 +86,14 @@ public class Battery extends AbstractComponent {
 		isOn =false;
 	}
 
-	public double sendChargePercentage() throws Exception {
+	public void sendChargePercentage() throws Exception {
 		this.logMessage("Sending charge percentage....") ;
-		return chargePercentage;
+		this.batteryOutboundPort.sendChargePercentage(chargePercentage);
 	}
 	
-	public double sendEnergy() throws Exception {
+	public void sendEnergy() throws Exception {
 		this.logMessage("Sending energy....") ;
-		return Math.random()*10;
+		this.batteryOutboundPort.sendEnergy(prod) ;
 	}
 
 	public void	start() throws ComponentStartException{
@@ -102,6 +104,28 @@ public class Battery extends AbstractComponent {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+		
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							while(true) {
+								if(!isOn) {
+									((Battery)this.getTaskOwner()).sendEnergy();
+									((Battery)this.getTaskOwner()).sendChargePercentage();
+								}
+								
+								Thread.sleep(1000);
+							}
+							
+
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS);
 	}
 
 

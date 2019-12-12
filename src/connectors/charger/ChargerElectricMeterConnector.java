@@ -7,8 +7,8 @@ import interfaces.electricmeter.ElectricMeterI;
 public class ChargerElectricMeterConnector extends AbstractConnector implements ChargerElectricMeterI{
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getChargerConsumption();
+	public void sendConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.offering).getChargerConsumption(consumption);
 	}
 
 }

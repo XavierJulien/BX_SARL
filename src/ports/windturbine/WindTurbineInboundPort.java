@@ -48,8 +48,7 @@ public class WindTurbineInboundPort extends AbstractInboundPort implements WindT
 	}
 
 	@Override
-	public double sendProduction() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((WindTurbine)owner).sendProduction()) ;	
+	public void sendProduction(double production) throws Exception {
+		//unused
 	}
 }

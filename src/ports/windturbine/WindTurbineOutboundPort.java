@@ -33,7 +33,7 @@ public class WindTurbineOutboundPort extends AbstractOutboundPort implements Win
 	}
 
 	@Override
-	public double sendProduction() throws Exception {
-		return 0;
+	public void sendProduction(double production) throws Exception {
+		((WindTurbineI)this.connector).sendProduction(production) ;
 	}
 }

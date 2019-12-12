@@ -20,8 +20,8 @@ public class ElectricMeterConnector extends AbstractConnector implements Electri
 	}
 	
 	@Override
-	public double sendAllConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).sendAllConsumption();
+	public void sendAllConsumption(double total) throws Exception {
+		((ElectricMeterI)this.offering).sendAllConsumption(total);
 	}
 
 	//---------------------------------------------------
@@ -29,8 +29,8 @@ public class ElectricMeterConnector extends AbstractConnector implements Electri
 	//---------------------------------------------------
 
 	@Override
-	public double getKettleConsumption() throws Exception {
-		return ((KettleElectricMeterI)this.offering).sendConsumption();
+	public void getKettleConsumption(double consumption) throws Exception {
+		((KettleElectricMeterI)this.offering).sendConsumption(consumption);
 	}
 	
 	//---------------------------------------------------
@@ -38,8 +38,8 @@ public class ElectricMeterConnector extends AbstractConnector implements Electri
 	//---------------------------------------------------
 
 	@Override
-	public double getHeatingConsumption() throws Exception {
-		return ((HeatingElectricMeterI)this.offering).sendConsumption();
+	public void getHeatingConsumption(double consumption) throws Exception {
+		((HeatingElectricMeterI)this.offering).sendConsumption(consumption);
 	}
 
 	//---------------------------------------------------
@@ -47,7 +47,7 @@ public class ElectricMeterConnector extends AbstractConnector implements Electri
 	//---------------------------------------------------
 
 	@Override
-	public double getChargerConsumption() throws Exception {
-		return ((ChargerElectricMeterI)this.offering).sendConsumption();
+	public void getChargerConsumption(double consumption) throws Exception {
+		((ChargerElectricMeterI)this.offering).sendConsumption(consumption);
 	}
 }

@@ -49,9 +49,8 @@ public class HeatingInboundPort extends AbstractInboundPort implements HeatingI,
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((Heating)owner).sendConsumption()) ;	
+	public void sendConsumption(double consumption) throws Exception {
+		//unused
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class WindTurbineControllerConnector extends AbstractConnector implements
 
 	//not used
 	@Override
-	public double sendProduction() throws Exception {
-		return ((WindTurbineI)this.offering).sendProduction();
+	public void sendProduction(double production) throws Exception {
+		((WindTurbineI)this.offering).sendProduction(production);
 	}
 }

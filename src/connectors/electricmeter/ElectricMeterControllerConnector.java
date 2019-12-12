@@ -17,23 +17,23 @@ public class ElectricMeterControllerConnector extends AbstractConnector implemen
 	}
 
 	@Override
-	public double sendAllConsumption() throws Exception {
-		return ((ControllerI)this.offering).getAllConsumption();
+	public void sendAllConsumption(double total) throws Exception {
+		((ControllerI)this.offering).getAllConsumption(total);
 	}
 
 	@Override
-	public double getHeatingConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getHeatingConsumption();
+	public void getHeatingConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.offering).getHeatingConsumption(consumption);
 	}
 
 	@Override
-	public double getKettleConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getKettleConsumption();
+	public void getKettleConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.offering).getKettleConsumption(consumption);
 	}
 
 	@Override
-	public double getChargerConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getChargerConsumption();
+	public void getChargerConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.offering).getChargerConsumption(consumption);
 	}
 	
 }

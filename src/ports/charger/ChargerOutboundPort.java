@@ -2,6 +2,7 @@ package ports.charger;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
+import interfaces.charger.ChargerElectricMeterI;
 import interfaces.charger.ChargerI;
 
 public class ChargerOutboundPort extends AbstractOutboundPort implements ChargerI{
@@ -34,8 +35,9 @@ public class ChargerOutboundPort extends AbstractOutboundPort implements Charger
 	}
 
 	@Override
-	public double sendConsumption() throws Exception {
-		//shouldn't be used
-		return 0;
+	public void sendConsumption(double consumption) throws Exception {
+		((ChargerElectricMeterI)this.connector).sendConsumption(consumption) ;
 	}
+
+
 }

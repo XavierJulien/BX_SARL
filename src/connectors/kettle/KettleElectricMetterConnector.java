@@ -7,8 +7,8 @@ import interfaces.kettle.KettleElectricMeterI;
 public class KettleElectricMetterConnector extends AbstractConnector implements KettleElectricMeterI{
 
 	@Override
-	public double sendConsumption() throws Exception {
-		return ((ElectricMeterI)this.offering).getKettleConsumption();
+	public void sendConsumption(double consumption) throws Exception {
+		((ElectricMeterI)this.offering).getKettleConsumption(consumption);
 	}
 
 }
