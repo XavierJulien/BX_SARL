@@ -25,23 +25,20 @@ implements	EmbeddingComponentStateAccessI
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	protected			Kettle() throws Exception
-	{
+	protected Kettle() throws Exception{
 		// 2 threads to be able to execute tasks and requests while executing
 		// the DEVS simulation.
-		super(2, 0) ;
+		super(5, 1) ;
 		this.initialise() ;
 
 	}
 
-	protected Kettle(String reflectionInboundPortURI) throws Exception
-	{
+	protected Kettle(String reflectionInboundPortURI) throws Exception{
 		super(reflectionInboundPortURI, 1, 0) ;
 		this.initialise() ;
 	}
 
-	protected void		initialise() throws Exception
-	{
+	protected void initialise() throws Exception {
 		// The coupled model has been made able to create the simulation
 		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
@@ -63,12 +60,17 @@ implements	EmbeddingComponentStateAccessI
 	// -------------------------------------------------------------------------
 
 	@Override
-	protected Architecture	createLocalArchitecture(String architectureURI)
-	throws Exception
-	{
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
 		return KettleCoupledModel.build() ;
 	}
 
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception{
+		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
+			   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
+			   this.asp.getModelStateValue(KettleModel.URI, "temperature");
+	}
+	
 	@Override
 	public void			execute() throws Exception
 	{
@@ -96,25 +98,10 @@ implements	EmbeddingComponentStateAccessI
 		// to use the simulation model access facility by the component.
 		for (int i = 0 ; i < 100 ; i++) {
 			this.logMessage("Kettle " +
-				this.asp.getModelStateValue(KettleModel.URI, "state") + " " +
-				this.asp.getModelStateValue(KettleModel.URI, "intensity")) ;
+				this.asp.getModelStateValue(KettleModel.URI, "state") + " "+
+				this.asp.getModelStateValue(KettleModel.URI, "content") + " " +
+				this.asp.getModelStateValue(KettleModel.URI, "temperature")) ;
 			Thread.sleep(5L) ;
 		}
 	}
-
-	@Override
-	public Object		getEmbeddingComponentStateValue(String name)
-	throws Exception
-	{
-		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + this.asp.getModelStateValue(KettleModel.URI, "content") + " " + this.asp.getModelStateValue(KettleModel.URI, "temperature");
-
-		// As there is only one value, don't care about the name.
-		 // just an example...
-		// With this facility, the state of the kettle can be set by the
-		// component part (e.g., the controller) rather than by the user model
-		// included in the kettle model in a development process going from
-		// a pure MIL simulation to a SIL simulation.
-	}
 }
-//------------------------------------------------------------------------------
-

@@ -20,11 +20,10 @@ import simulation.events.kettle.KettleUpdater;
 @ModelExternalEvents(exported = {SwitchOn.class,
 								 SwitchOff.class,
 								 FillKettle.class,
-								 EmptyKettle.class})
+								 EmptyKettle.class,
+								 KettleUpdater.class})
 
-public class			KettleUserModel
-extends		AtomicES_Model
-{
+public class KettleUserModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
@@ -42,13 +41,17 @@ extends		AtomicES_Model
 	protected double	meanTimeAtHigh ;
 	/** during one use, mean time the kettle is at low temperature.		*/
 	protected double	meanTimeAtLow ;
+
+	protected double	meanTimeBetweenTempUpdate ;
 	/** next event to be sent.												*/
 	protected Class<?>	nextEvent ;
 
 	/**	a random number generator from common math library.					*/
 	protected final RandomDataGenerator		rg ;
 	/** the current state of the kettle simulation model.				*/
-	protected KettleModel.State hds ;
+	protected KettleModel.State ks ;
+	
+	protected boolean initialCall;
 
 	// -------------------------------------------------------------------------
 	// Constructors
@@ -72,18 +75,20 @@ extends		AtomicES_Model
 	// Methods
 	// -------------------------------------------------------------------------
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
-	 */
 	@Override
 	public void			initialiseState(Time initialTime) 
 	{
+		
 		this.initialDelay = 10.0 ;
 		this.interdayDelay = 100.0 ;
 		this.meanTimeBetweenUsages = 10.0 ;
 		this.meanTimeAtHigh = 4.0 ;
 		this.meanTimeAtLow = 3.0 ;
-		this.hds = KettleModel.State.OFF ;
+		
+		this.initialCall = true;
+		
+		this.meanTimeBetweenTempUpdate = 7.0;
+		this.ks = KettleModel.State.OFF ;
 
 		this.rg.reSeedSecure() ;
 
@@ -102,6 +107,8 @@ extends		AtomicES_Model
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
 		this.scheduleEvent(new FillKettle(t)) ;
 
+		
+		
 		// Redo the initialisation to take into account the initial event
 		// just scheduled.
 		this.nextTimeAdvance = this.timeAdvance() ;
@@ -172,9 +179,9 @@ extends		AtomicES_Model
 		// and then it starts in low mode, is set in high mode shortly after,
 		// used for a while in high mode and then set back in low mode to
 		// complete the drying.
-
 		Duration d ;
 		// See what is the type of event to be executed
+		
 		if (this.nextEvent.equals(FillKettle.class)) {
 			// when a switch on event has been issued, plan the next event as
 			// a set high (the kettle is switched on in low mode
@@ -184,30 +191,34 @@ extends		AtomicES_Model
 			Time t = this.getCurrentStateTime().add(d) ;
 			// schedule the event
 			this.scheduleEvent(new SwitchOn(t)) ;
-			System.out.println("Switch ON");
+
 			// also, plan the next switch on for the next day
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(
 						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-			System.out.println("Kettle Update" + nextEvent.equals(KettleUpdater.class));
-		} 
-		// when a set high event has been issued, plan the next set low
-		// after some time of usage
-		d =	new Duration(
-				2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
-				this.getSimulatedTimeUnit()) ;
-		this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-		if (this.nextEvent.equals(KettleUpdater.class)) {
-			System.out.println("sdffzef");
-			// when a set high event has been issued, plan the next switch off
-			// after some time of usage
-			d =	new Duration(
-					2.0 * this.meanTimeAtLow * this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(
-					new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-			System.out.println("Kettle Update");
+			System.out.println("Kettle Update " + nextEvent.toString());
+		
+			if(this.initialCall)
+			{
+				this.logMessage("test initial call...");
+				d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
+				this.scheduleEvent(
+							new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+				this.initialCall = false;
+			}
+		}else {
+			if (this.nextEvent.equals(KettleUpdater.class)) {
+				System.out.println("next event : KettleUpdater");
+				// when a set high event has been issued, plan the next switch off
+				// after some time of usage
+				d =	new Duration(
+						2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),
+						this.getSimulatedTimeUnit()) ;
+				this.scheduleEvent(
+						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+			}
 		}
+		
 	}
+	
 }
-//-----------------------------------------------------------------------------

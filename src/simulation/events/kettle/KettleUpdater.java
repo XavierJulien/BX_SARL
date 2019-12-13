@@ -6,15 +6,26 @@ import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
 import simulation.models.kettle.KettleModel;
 
-public class KettleUpdater extends		AbstractEvent
-{
-private static final long serialVersionUID = 1L;
+public class KettleUpdater extends AbstractEvent {
 	
+	// -------------------------------------------------------------------------
+	// Constants and variables
+	// -------------------------------------------------------------------------
+	private static final long serialVersionUID = 1L;
+	
+	// -------------------------------------------------------------------------
+	// Constructors
+	// -------------------------------------------------------------------------
+
 	public KettleUpdater(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
 	
+	// ------------------------------------------------------------------------
+	// Methods
+	// ------------------------------------------------------------------------
+
 	@Override
 	public String eventAsString()
 	{
@@ -24,7 +35,7 @@ private static final long serialVersionUID = 1L;
 	@Override
 	public boolean hasPriorityOver(EventI e)
 	{
-		return false ;
+		return false;
 	}
 	
 	@Override
@@ -33,7 +44,7 @@ private static final long serialVersionUID = 1L;
 		assert	model instanceof KettleModel ;
 
 		((KettleModel)model).updateTemperature() ;
-		((KettleModel)model).updateContent();
 		((KettleModel)model).updateState();
+		((KettleModel)model).updateContent();
 	}
 }

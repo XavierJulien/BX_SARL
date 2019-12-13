@@ -32,9 +32,8 @@ import simulation.events.kettle.KettleUpdater;
 								 EmptyKettle.class,
 								 KettleUpdater.class})
 
-public class			KettleModel
-extends		AtomicHIOAwithEquations
-{
+public class KettleModel extends AtomicHIOAwithEquations {
+	
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
@@ -77,9 +76,12 @@ extends		AtomicHIOAwithEquations
 	private static final String		SERIES = "temperature";
 	public static final String		URI = "KettleModel";
 	protected XYPlotter				temperaturePlotter;
+	
+	//CURRENT
 	protected State					currentState;
 	protected Content 				currentContent;
 	protected final Value<Double>	currentTemperature = new Value<Double>(this, 0.0, 0);
+	
 	protected EmbeddingComponentStateAccessI componentRef;
 
 	// -------------------------------------------------------------------------
@@ -305,14 +307,24 @@ extends		AtomicHIOAwithEquations
 
 	public void			updateTemperature() {
 		if(currentState == State.ON) {
-			if(currentContent == Content.FULL) currentTemperature.v += 3.0;
-			if(currentContent == Content.HALF) currentTemperature.v += 6.0;
+			if(currentContent == Content.FULL) {
+				currentTemperature.v += 3.0;
+				System.out.println("ON/FULL Temperature : "+currentTemperature.v);
+			}
+			if(currentContent == Content.HALF) {
+				currentTemperature.v += 6.0;
+				System.out.println("ON/HALF Temperature : "+currentTemperature.v);
+			}
 		}
 		if(currentState == State.OFF) {
-			if(currentContent == Content.EMPTY) currentTemperature.v = 0.0;
+			if(currentContent == Content.EMPTY) {
+				currentTemperature.v = 0.0;
+				System.out.println("OFF/EMPTY Temperature : "+currentTemperature.v);
+			}
 			else{
 				if(currentTemperature.v > 0 ) {
 					currentTemperature.v -= 1.0;
+					System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
 				}
 			}
 		}
@@ -323,10 +335,12 @@ extends		AtomicHIOAwithEquations
 			System.out.println("State : OFF");
 			currentState = State.OFF;
 		}
-		if(currentContent != Content.EMPTY && currentTemperature.v < 100.0 && currentState == State.OFF) {
+		if(currentTemperature.v == 0.0 && currentState == State.OFF && currentContent != Content.EMPTY) {
 			System.out.println("State : ON");
 			currentState = State.ON;
 		}
+		
+		
 	}
 	
 	public void			updateState(State s)
@@ -335,15 +349,22 @@ extends		AtomicHIOAwithEquations
 	}
 	
 	public void 		updateContent() {
-		Random r = new Random();
-		int random_empty_kettle = r.nextInt(3);
-		if(random_empty_kettle == 0) {
-			System.out.println("Content : EMPTY");
-			this.currentContent = Content.EMPTY;
+		if(currentContent == Content.EMPTY) {
+			if(Math.random() <= 0.5) {
+				currentContent = Content.HALF;
+			}else {
+				currentContent = Content.FULL;
+			}
+		}
+		if(currentTemperature.v > 0.0 && currentState == State.OFF) {
+			if(Math.random() < 0.25) {
+				currentContent = Content.EMPTY;
+			}
 		}
 	}
 	
-	public void 		updateContent(Content c) {
+	public void			updateContent(Content c)
+	{
 		this.currentContent = c;
 	}
 }

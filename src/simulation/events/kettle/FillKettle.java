@@ -8,19 +8,17 @@ import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
 import simulation.models.kettle.KettleModel;
 
-public class			FillKettle
-extends		AbstractEvent
-{
+public class FillKettle extends AbstractEvent {
+	
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
-
 	private static final long serialVersionUID = 1L;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	
 	public				FillKettle(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
@@ -35,6 +33,8 @@ extends		AbstractEvent
 	{
 		return "Kettle::FillKettle" ;
 	}
+	
+	
 	@Override
 	public boolean			hasPriorityOver(EventI e)
 	{
@@ -44,13 +44,16 @@ extends		AbstractEvent
 			return true ;
 		}
 	}
+	
 	@Override
 	public void				executeOn(AtomicModel model)
 	{
 		assert	model instanceof KettleModel ;
 		if(new Random().nextBoolean()) {
+			System.out.println("Fill Kettle : Full");
 			((KettleModel)model).updateContent(KettleModel.Content.FULL);			
 		}else {
+			System.out.println("Fill Kettle : Half");
 			((KettleModel)model).updateContent(KettleModel.Content.HALF);
 		}
 	}

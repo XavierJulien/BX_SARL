@@ -32,9 +32,7 @@ import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.FillKettle;
 import simulation.events.kettle.KettleUpdater;
 
-public class			KettleCoupledModel
-extends		CoupledModel
-{
+public class KettleCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
@@ -69,21 +67,9 @@ extends		CoupledModel
 	// Methods
 	// -------------------------------------------------------------------------
 
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
-	}
-
 	public static Architecture	build() throws Exception
 	{
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
 
 		atomicModelDescriptors.put(
 				KettleModel.URI,
@@ -109,8 +95,7 @@ extends		CoupledModel
 		submodels.add(KettleModel.URI) ;
 		submodels.add(KettleUserModel.URI) ;
 
-		Map<EventSource,EventSink[]> connections =
-									new HashMap<EventSource,EventSink[]>() ;
+		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
 				new EventSource(KettleUserModel.URI, SwitchOn.class) ;
 		EventSink[] to1 =
@@ -158,6 +143,17 @@ extends		CoupledModel
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);
+	}
+
+	@Override
+	public SimulationReportI	getFinalReport() throws Exception
+	{
+		StandardCoupledModelReport ret =
+							new StandardCoupledModelReport(this.getURI()) ;
+		for (int i = 0 ; i < this.submodels.length ; i++) {
+			ret.addReport(this.submodels[i].getFinalReport()) ;
+		}
+		return ret ;
 	}
 }
 //-----------------------------------------------------------------------------

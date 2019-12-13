@@ -29,7 +29,7 @@ extends		AbstractCVM
 	public static void	main(String[] args)
 	{
 		try {
-			CVM c = new CVM() ;
+			CVM c = new CVM();
 			c.startStandardLifeCycle(10000L) ;
 			System.exit(0) ;
 		} catch (Exception e) {
