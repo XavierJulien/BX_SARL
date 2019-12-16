@@ -1,20 +1,30 @@
 package components;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.kettle.KettleI;
 import ports.kettle.KettleInboundPort;
 import ports.kettle.KettleOutboundPort;
+import simulation.components.kettle.KettleSimulatorPlugin;
+import simulation.models.kettle.KettleCoupledModel;
+import simulation.models.kettle.KettleModel;
 
 @RequiredInterfaces(required = {KettleI.class})
 @OfferedInterfaces(offered = {KettleI.class})
-public class Kettle extends AbstractComponent{
+public class Kettle 
+extends AbstractCyPhyComponent 
+implements EmbeddingComponentStateAccessI{
 	
 	protected final String				uri ;
 	protected final String				kettleInboundPortURI ;	
@@ -25,8 +35,14 @@ public class Kettle extends AbstractComponent{
 	protected KettleInboundPort			kettleInboundPort ;
 	protected KettleOutboundPort		kettleElectricMeterOutboundPort ;
 	protected KettleInboundPort			kettleElectricMeterInboundPort ;
+	
+	
+	protected KettleSimulatorPlugin		asp ;
+	
 	protected boolean 					isOn=false;
 	protected final double 				consumption = 10;
+	
+	
 
 	
 	//------------------------------------------------------------------------
@@ -69,6 +85,7 @@ public class Kettle extends AbstractComponent{
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 2) ;
+		this.initialise();
 	}
 
 
@@ -95,16 +112,70 @@ public class Kettle extends AbstractComponent{
 		super.start() ;
 		this.logMessage("starting Kettle component.") ;
 	}
+	
+	
+	
+	protected void initialise() throws Exception {
+		// The coupled model has been made able to create the simulation
+		// architecture description.
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		// Create the appropriate DEVS simulation plug-in.
+		this.asp = new KettleSimulatorPlugin() ;
+		// Set the URI of the plug-in, using the URI of its associated
+		// simulation model.
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		// Set the simulation architecture.
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		// Install the plug-in on the component, starting its own life-cycle.
+		this.installPlugin(this.asp) ;
+
+		// Toggle logging on to get a log on the screen.
+		this.toggleLogging() ;
+	}
+	
+	
+	
+	
 
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 100L ;
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put("componentRef", this) ;
+		this.asp.setSimulationRunParameters(simParams) ;
+		// Start the simulation.
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 500.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				}) ;
+		Thread.sleep(10L) ;
+		// During the simulation, the following lines provide an example how
+		// to use the simulation model access facility by the component.
+		/*for (int i = 0 ; i < 100 ; i++) {
+			this.logMessage("Kettle " +
+				this.asp.getModelStateValue(KettleModel.URI, "state") + " "+
+				this.asp.getModelStateValue(KettleModel.URI, "content") + " " +
+				this.asp.getModelStateValue(KettleModel.URI, "temperature")) ;
+			Thread.sleep(5L) ;
+		}*/
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
 					public void run() {
 						try {
 							while(true) {
+								this.taskOwner.logMessage("Kettle " +
+										asp.getModelStateValue(KettleModel.URI, "state") + " "+
+										asp.getModelStateValue(KettleModel.URI, "content") + " " +
+										asp.getModelStateValue(KettleModel.URI, "temperature")) ;
 								if(!isOn) {
 									((Kettle)this.getTaskOwner()).sendConsumption() ;
 								}
@@ -139,5 +210,19 @@ public class Kettle extends AbstractComponent{
 			kettleElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
+	}
+
+
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return KettleCoupledModel.build() ;
+	}
+
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
+				   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
+				   this.asp.getModelStateValue(KettleModel.URI, "temperature");
 	}
 }

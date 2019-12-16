@@ -25,6 +25,7 @@ import connectors.sensors.TemperatureSensorHeatingConnector;
 import connectors.windturbine.WindTurbineControllerConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 
 public class CVM extends AbstractCVM {
 	
@@ -141,6 +142,7 @@ public class CVM extends AbstractCVM {
 //--------------------------------------------------------------
 	protected CVM() throws Exception{
 		super();
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
 	}
 
 
@@ -150,7 +152,7 @@ public class CVM extends AbstractCVM {
 	@Override
 	public void	deploy() throws Exception{
 		assert	!this.deploymentDone() ;
-
+		
 		//--------------------------------------------------------------
 		//-------------------------WINDTURBINE-----------------------------
 		//--------------------------------------------------------------
@@ -167,6 +169,8 @@ public class CVM extends AbstractCVM {
 		//--------------------------------------------------------------
 		//-------------------------KETTLE---------------------------
 		//--------------------------------------------------------------
+		
+		
 		this.uriKettleURI =
 				AbstractComponent.createComponent(
 						Kettle.class.getCanonicalName(),
@@ -175,6 +179,7 @@ public class CVM extends AbstractCVM {
 								URIKettleInboundPortURI,
 								URIElectricMeterKettleOutboundPortURI,
 								URIElectricMeterKettleInboundPortURI}) ;
+		
 
 		assert	this.isDeployedComponent(this.uriKettleURI) ;
 		this.toggleTracing(this.uriKettleURI) ;

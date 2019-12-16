@@ -44,13 +44,16 @@ implements	EmbeddingComponentStateAccessI
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		// Create the appropriate DEVS simulation plug-in.
 		this.asp = new KettleSimulatorPlugin() ;
+		
 		// Set the URI of the plug-in, using the URI of its associated
 		// simulation model.
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		
 		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
 		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
+		
 
 		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
