@@ -33,8 +33,8 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	}
 
 	@Override
-	public double getWind() throws Exception {
-		return ((ControllerI)this.connector).getWind();
+	public void getWindSpeed(double speed) throws Exception {
+		((ControllerI)this.connector).getWindSpeed(speed);
 	}
 	
 	@Override

@@ -249,9 +249,17 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	//--------------------CAPTEUR------------------------
 	//---------------------------------------------------
 	@Override
-	public double getWind() throws Exception {
-		return 0;
+	public void getWindSpeed(double speed) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Controller)this.getServiceOwner()).getWindSpeed(speed);
+						return null;
+					}
+				}) ;
 	}
+	
 	@Override
 	public void getTemperature(double temperature) throws Exception {
 		this.owner.handleRequestAsync(

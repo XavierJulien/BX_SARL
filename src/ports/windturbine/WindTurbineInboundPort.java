@@ -1,5 +1,6 @@
 package ports.windturbine;
 
+import components.ElectricMeter;
 import components.WindTurbine;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.ComponentI;
@@ -50,5 +51,17 @@ public class WindTurbineInboundPort extends AbstractInboundPort implements WindT
 	@Override
 	public void sendProduction(double production) throws Exception {
 		//unused
+	}
+
+	@Override
+	public void getWindSpeed(double speed) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((WindTurbine)this.getServiceOwner()).getWindSpeed(speed);
+						return null;
+					}
+				}) ;
 	}
 }

@@ -111,7 +111,7 @@ public class Battery extends AbstractComponent {
 					public void run() {
 						try {
 							while(true) {
-								if(!isOn) {
+								if(isOn) {
 									((Battery)this.getTaskOwner()).sendEnergy();
 									((Battery)this.getTaskOwner()).sendChargePercentage();
 								}

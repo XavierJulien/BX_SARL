@@ -36,7 +36,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	public void getBatteryProduction(double energy) throws Exception;
 	
 	//------------CAPTEURS------------
-	public double getWind() throws Exception;
+	public void getWindSpeed(double speed) throws Exception;
 	public void getTemperature(double temperature) throws Exception;
 	
 	

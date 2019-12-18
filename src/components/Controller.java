@@ -281,10 +281,9 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------CAPTEURS-----------------------------
 	//--------------------------------------------------------------
-	public void getWind() throws Exception{
-		double prod = this.controllerWindSensorOutboundPort.getWind() ;
-		windSpeed = prod;
-		this.logMessage("The controller is informed that the wind power is"+prod) ;
+	public void getWindSpeed(double speed) throws Exception{
+		windSpeed = speed;
+		this.logMessage("The controller is informed that the wind power is"+speed) ;
 	}	
 	
 	public void getTemperature(double temperature) throws Exception{

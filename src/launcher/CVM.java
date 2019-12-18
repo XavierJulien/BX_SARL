@@ -22,6 +22,7 @@ import connectors.kettle.KettleControllerConnector;
 import connectors.kettle.KettleElectricMetterConnector;
 import connectors.sensors.TemperatureSensorControllerConnector;
 import connectors.sensors.TemperatureSensorHeatingConnector;
+import connectors.sensors.WindSensorWindTurbineConnector;
 import connectors.windturbine.WindTurbineControllerConnector;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
@@ -44,6 +45,7 @@ public class CVM extends AbstractCVM {
 	public static final String	WINDTURBINE_COMPONENT_URI = "my-URI-windTurbine" ;
 	protected static final String	URIWindTurbineOutboundPortURI = "windTurbineOPort" ;
 	protected static final String	URIWindTurbineInboundPortURI = "windTurbineIPort" ;	
+	protected static final String	URIWindTurbineSensorInboundPortURI = "windTurbineSensorIPort" ;	
 	protected static final String	URIControllerWindTurbineOutboundPortURI = "controllerWindTurbineOPort" ;
 	protected static final String	URIControllerWindTurbineInboundPortURI = "controllerWindTurbineIPort" ;
 	
@@ -110,7 +112,10 @@ public class CVM extends AbstractCVM {
 	//--------------------------------------------------------------
 	public static final String	WIND_SENSOR_COMPONENT_URI = "my-URI-wind-sensor" ;
 	protected static final String	URIControllerWindSensorOutboundPortURI = "windSensorOPort" ;
+	protected static final String	URIWindSensorWindTurbineOutboundPortURI = "windSensorWindTurbineOPort" ;
 	protected static final String	URIWindSensorInboundPortURI = "windSensorIPort" ;
+	
+	
 	
 	//--------------------------------------------------------------
 	//-------------------------CAPTEUR CHALEUR----------------------
@@ -161,6 +166,7 @@ public class CVM extends AbstractCVM {
 						WindTurbine.class.getCanonicalName(),
 						new Object[]{WINDTURBINE_COMPONENT_URI,
 								URIWindTurbineOutboundPortURI,
+								URIWindTurbineSensorInboundPortURI,
 								URIWindTurbineInboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriWindTurbineURI) ;
 		this.toggleTracing(this.uriWindTurbineURI) ;
@@ -229,7 +235,8 @@ public class CVM extends AbstractCVM {
 				AbstractComponent.createComponent(
 						WindSensor.class.getCanonicalName(),
 						new Object[]{WIND_SENSOR_COMPONENT_URI,
-								URIWindSensorInboundPortURI}) ;
+								URIWindSensorInboundPortURI,
+								URIWindSensorWindTurbineOutboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriWindSensorURI) ;
 		this.toggleTracing(this.uriWindSensorURI) ;
 		this.toggleLogging(this.uriWindSensorURI) ;
@@ -408,6 +415,15 @@ public class CVM extends AbstractCVM {
 				ControllerConnector.class.getCanonicalName()) ;	
 
 		
+		//WIND TURBINE <=> WIND SENSOR
+
+		this.doPortConnection(
+				this.uriWindSensorURI,
+				URIWindSensorWindTurbineOutboundPortURI,
+				URIWindTurbineSensorInboundPortURI,
+				WindSensorWindTurbineConnector.class.getCanonicalName()) ;	
+		
+		
 		//WIND SENSOR <=> CONTROLLER
 		this.doPortConnection(
 				this.uriControllerURI,
@@ -482,7 +498,7 @@ public class CVM extends AbstractCVM {
 	public static void main(String[] args) {
 		try {
 			CVM a = new CVM();
-			a.startStandardLifeCycle(5000L);
+			a.startStandardLifeCycle(50000L);
 			Thread.sleep(5000L);
 			System.exit(0);
 		} catch (Exception e) {throw new RuntimeException(e);}

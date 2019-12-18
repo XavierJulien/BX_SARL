@@ -139,7 +139,7 @@ public class KettleUpdaterModel extends AtomicES_Model
 		Duration d ;
 		// See what is the type of event to be executed
 		if (this.nextEvent.equals(KettleUpdater.class)) {
-			System.out.println("In KettleUpdaterModef");
+			//System.out.println("In KettleUpdaterModef");
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			// compute the time of occurrence (in the future)
 			Time t = this.getCurrentStateTime().add(d) ;

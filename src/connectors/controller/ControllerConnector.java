@@ -112,8 +112,8 @@ public class ControllerConnector extends AbstractConnector implements Controller
 	//--------------------CAPTEUR------------------------
 	//---------------------------------------------------
 	@Override
-	public double getWind() throws Exception {
-		return ((WindSensorI)this.offering).sendWind();
+	public void getWindSpeed(double speed) throws Exception {
+		//unused
 	}
 	@Override
 	public void getTemperature(double temperature) throws Exception {

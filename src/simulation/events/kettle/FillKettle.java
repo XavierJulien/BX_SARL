@@ -50,10 +50,10 @@ public class FillKettle extends AbstractEvent {
 	{
 		assert	model instanceof KettleModel ;
 		if(new Random().nextBoolean()) {
-			System.out.println("Fill Kettle : Full");
+			//System.out.println("Fill Kettle : Full");
 			((KettleModel)model).updateContent(KettleModel.Content.FULL);			
 		}else {
-			System.out.println("Fill Kettle : Half");
+			//System.out.println("Fill Kettle : Half");
 			((KettleModel)model).updateContent(KettleModel.Content.HALF);
 		}
 	}

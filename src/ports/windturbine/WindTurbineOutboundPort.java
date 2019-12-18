@@ -36,4 +36,10 @@ public class WindTurbineOutboundPort extends AbstractOutboundPort implements Win
 	public void sendProduction(double production) throws Exception {
 		((WindTurbineI)this.connector).sendProduction(production) ;
 	}
+
+	@Override
+	public void getWindSpeed(double speed) throws Exception {
+		//unused
+		
+	}
 }

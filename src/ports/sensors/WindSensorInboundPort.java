@@ -24,8 +24,7 @@ public class WindSensorInboundPort extends AbstractInboundPort implements WindSe
 //-------------------------SERVICES-----------------------------
 //--------------------------------------------------------------
 	@Override
-	public double sendWind() throws Exception {
-		return this.getOwner().handleRequestSync(
-				owner -> ((WindSensor)owner).sendWind()) ;	
-	}	
+	public void sendWindSpeed(double speed) throws Exception {
+		//unused
+	}
 }

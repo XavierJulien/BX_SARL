@@ -14,7 +14,7 @@ public class			MIL_Kettle
 			Architecture localArchitecture = KettleCoupledModel.build() ;
 			se = localArchitecture.constructSimulator() ;
 			se.setDebugLevel(0) ;
-			System.out.println(se.simulatorAsString()) ;
+			//System.out.println(se.simulatorAsString()) ;
 			SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 0L ;
 			se.doStandAloneSimulation(0.0, 500.0) ;
 		} catch (Exception e) {

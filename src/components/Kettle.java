@@ -12,6 +12,7 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.kettle.KettleI;
 import ports.kettle.KettleInboundPort;
@@ -41,6 +42,7 @@ implements EmbeddingComponentStateAccessI{
 	
 	protected boolean 					isOn=false;
 	protected final double 				consumption = 10;
+	protected double 					currentConsumption;
 	
 	
 
@@ -86,6 +88,10 @@ implements EmbeddingComponentStateAccessI{
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 2) ;
 		this.initialise();
+		
+		
+		
+		this.currentConsumption = consumption;
 	}
 
 
@@ -104,8 +110,8 @@ implements EmbeddingComponentStateAccessI{
 	}
 	
 	public void sendConsumption() throws Exception {
-		this.logMessage("Sending consumption....") ;
-		this.kettleElectricMeterOutboundPort.sendConsumption(consumption) ;
+		this.logMessage("Sending consumption.... " +currentConsumption ) ;
+		this.kettleElectricMeterOutboundPort.sendConsumption(currentConsumption) ;
 	}
 
 	public void	start() throws ComponentStartException{
@@ -114,6 +120,29 @@ implements EmbeddingComponentStateAccessI{
 	}
 	
 	
+	
+	//------------------------------------------------------------------------
+	//-------------------------TREATMENT METHODS------------------------------
+	//------------------------------------------------------------------------
+	
+	protected void updateConsumption(KettleModel.Content content) {
+		if(content == KettleModel.Content.EMPTY) {
+			currentConsumption = consumption*0.1;
+		}else{
+			if(content == KettleModel.Content.HALF) {
+				currentConsumption = consumption*0.5;
+			}else {
+				currentConsumption = consumption;
+			}
+		}
+	}
+	
+	
+	
+	
+	//------------------------------------------------------------------------
+	//------------------------------EXECUTION---------------------------------
+	//------------------------------------------------------------------------
 	
 	protected void initialise() throws Exception {
 		// The coupled model has been made able to create the simulation
@@ -150,6 +179,7 @@ implements EmbeddingComponentStateAccessI{
 					@Override
 					public void run() {
 						try {
+							Thread.sleep(2000);
 							asp.doStandAloneSimulation(0.0, 500.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
@@ -168,15 +198,15 @@ implements EmbeddingComponentStateAccessI{
 		}*/
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
+					@SuppressWarnings("unchecked")
 					@Override
 					public void run() {
 						try {
+							//System.out.println("DEBUT EXEC //////////////////////////////////////////////////");
 							while(true) {
-								this.taskOwner.logMessage("Kettle " +
-										asp.getModelStateValue(KettleModel.URI, "state") + " "+
-										asp.getModelStateValue(KettleModel.URI, "content") + " " +
-										asp.getModelStateValue(KettleModel.URI, "temperature")) ;
-								if(!isOn) {
+								isOn = asp.getModelStateValue(KettleModel.URI, "state")== KettleModel.State.ON;
+								if(isOn) {
+									((Kettle)this.getTaskOwner()).updateConsumption((KettleModel.Content)asp.getModelStateValue(KettleModel.URI, "content"));
 									((Kettle)this.getTaskOwner()).sendConsumption() ;
 								}
 								Thread.sleep(1000);

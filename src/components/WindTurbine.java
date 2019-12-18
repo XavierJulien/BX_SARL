@@ -1,5 +1,7 @@
 package components;
 
+import java.util.concurrent.TimeUnit;
+
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
@@ -9,6 +11,8 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.windturbine.WindTurbineI;
 import ports.windturbine.WindTurbineInboundPort;
 import ports.windturbine.WindTurbineOutboundPort;
+import simulation.events.sensors.WindTooStrongEvent;
+import simulation.models.kettle.KettleModel;
 
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})
@@ -17,34 +21,43 @@ public class WindTurbine extends AbstractComponent {
 	protected final String				uri;
 	protected final String				windTurbineInboundPortURI;	
 	protected final String				windTurbineOutboundPortURI;
+	protected final String				windTurbineSensorInboundPortURI;
 	protected WindTurbineOutboundPort	windTurbineOutboundPort;
+	protected WindTurbineInboundPort	windTurbineSensorInboundPort;
 	protected WindTurbineInboundPort	windTurbineInboundPort;
 	protected double 					prod;
 	protected boolean 					isOn=false;
+	protected double 					windSpeed;
 
 	
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
 	protected WindTurbine(String uri,
-					   String windTurbineOutboundPortURI,
+			String windTurbineOutboundPortURI,
+			String windTurbineSensorInboundPortURI,
 					   String windTurbineInboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
 		assert windTurbineOutboundPortURI != null;
 		assert windTurbineInboundPortURI != null;
-
+		assert windTurbineSensorInboundPortURI != null;
+		
 		this.uri = uri;
 		this.windTurbineInboundPortURI = windTurbineInboundPortURI;
 		this.windTurbineOutboundPortURI = windTurbineOutboundPortURI;
+		this.windTurbineSensorInboundPortURI = windTurbineSensorInboundPortURI;
 		this.prod = 0;
+		this.windSpeed = 0;
 
 		//-------------------PUBLISH-------------------
 		windTurbineInboundPort = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
 		windTurbineInboundPort.publishPort() ;
 		windTurbineOutboundPort = new WindTurbineOutboundPort(windTurbineOutboundPortURI, this);
 		windTurbineOutboundPort.localPublishPort() ;
+		windTurbineSensorInboundPort = new WindTurbineInboundPort(windTurbineSensorInboundPortURI, this);
+		windTurbineSensorInboundPort.publishPort() ;
 		
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir"));
@@ -76,6 +89,11 @@ public class WindTurbine extends AbstractComponent {
 		this.logMessage("Sending energy....") ;
 		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
+	
+	public void getWindSpeed(double speed) throws Exception{
+		this.windSpeed = speed;
+		this.logMessage("The wind power is "+ windSpeed) ;
+	}
 
 	public void	start() throws ComponentStartException{
 		super.start() ;
@@ -85,6 +103,24 @@ public class WindTurbine extends AbstractComponent {
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+		
+		this.scheduleTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							
+							while(true) {
+								
+								if(isOn) {
+									((WindTurbine)this.getTaskOwner()).sendProduction();
+								}
+								Thread.sleep(1000);
+							}
+						} catch (Exception e) {throw new RuntimeException(e) ;}
+					}
+				},
+				1000, TimeUnit.MILLISECONDS);
 	}
 
 
@@ -105,6 +141,7 @@ public class WindTurbine extends AbstractComponent {
 		try {
 			windTurbineInboundPort.unpublishPort();
 			windTurbineOutboundPort.unpublishPort();
+			windTurbineSensorInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}

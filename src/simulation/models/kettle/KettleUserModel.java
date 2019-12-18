@@ -196,7 +196,7 @@ public class KettleUserModel extends AtomicES_Model {
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(
 						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-			System.out.println("Kettle Update " + nextEvent.toString());
+			//System.out.println("Kettle Update " + nextEvent.toString());
 		
 			if(this.initialCall)
 			{
@@ -208,7 +208,7 @@ public class KettleUserModel extends AtomicES_Model {
 			}
 		}else {
 			if (this.nextEvent.equals(KettleUpdater.class)) {
-				System.out.println("next event : KettleUpdater");
+				//System.out.println("next event : KettleUpdater");
 				// when a set high event has been issued, plan the next switch off
 				// after some time of usage
 				d =	new Duration(

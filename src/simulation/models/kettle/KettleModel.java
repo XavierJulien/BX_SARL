@@ -214,7 +214,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	public void			userDefinedExternalTransition(Duration elapsedTime)
 	{
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("KettleModel::userDefinedExternalTransition 1");
+//			this.logMessage("KettleModel::userDefinedExternalTransition 1");
 		}
 
 		// get the vector of current external events
@@ -227,8 +227,8 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("KettleModel::userDefinedExternalTransition 2 "
-										+ ce.getClass().getCanonicalName());
+//			this.logMessage("KettleModel::userDefinedExternalTransition 2 "
+//										+ ce.getClass().getCanonicalName());
 		}
 
 		// the plot is piecewise constant; this data will close the currently
@@ -239,8 +239,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				this.getTemperature());
 
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("KettleModel::userDefinedExternalTransition 3 "
-															+ this.getState());
+			//this.logMessage("KettleModel::userDefinedExternalTransition 3 "+ this.getState());
 		}
 
 		// execute the current external event on this model, changing its state
@@ -248,8 +247,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		ce.executeOn(this);
 
 		if (this.hasDebugLevel(1)) {
-			this.logMessage("KettleModel::userDefinedExternalTransition 4 "
-															+ this.getState());
+			//this.logMessage("KettleModel::userDefinedExternalTransition 4 " + this.getState());
 		}
 
 		// add a new data on the plotter; this data will open a new piece
@@ -260,7 +258,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("KettleModel::userDefinedExternalTransition 5");
+			//this.logMessage("KettleModel::userDefinedExternalTransition 5");
 		}
 	}
 
@@ -309,22 +307,22 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		if(currentState == State.ON) {
 			if(currentContent == Content.FULL) {
 				currentTemperature.v += 3.0;
-				System.out.println("ON/FULL Temperature : "+currentTemperature.v);
+				//System.out.println("ON/FULL Temperature : "+currentTemperature.v);
 			}
 			if(currentContent == Content.HALF) {
 				currentTemperature.v += 6.0;
-				System.out.println("ON/HALF Temperature : "+currentTemperature.v);
+				//System.out.println("ON/HALF Temperature : "+currentTemperature.v);
 			}
 		}
 		if(currentState == State.OFF) {
 			if(currentContent == Content.EMPTY) {
 				currentTemperature.v = 0.0;
-				System.out.println("OFF/EMPTY Temperature : "+currentTemperature.v);
+				//System.out.println("OFF/EMPTY Temperature : "+currentTemperature.v);
 			}
 			else{
 				if(currentTemperature.v > 0 ) {
 					currentTemperature.v -= 1.0;
-					System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
+					//System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
 				}
 			}
 		}
@@ -332,11 +330,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	
 	public void			updateState() {
 		if(currentTemperature.v >= 100.0 && currentState == State.ON) {
-			System.out.println("State : OFF");
+			//System.out.println("State : OFF");
 			currentState = State.OFF;
 		}
 		if(currentTemperature.v == 0.0 && currentState == State.OFF && currentContent != Content.EMPTY) {
-			System.out.println("State : ON");
+			//System.out.println("State : ON");
 			currentState = State.ON;
 		}
 		
