@@ -1,4 +1,4 @@
-package simulation.models.kettle;
+package simulation.models.heating;
 
 import java.util.Map;
 import java.util.Vector;
@@ -19,41 +19,41 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.kettle.EmptyKettle;
-import simulation.events.kettle.FillKettle;
-import simulation.events.kettle.KettleUpdater;
-import simulation.events.kettle.SwitchOff;
-import simulation.events.kettle.SwitchOn;
+import simulation.events.heating.HeatingMode;
+import simulation.events.heating.HeatingUpdater;
+import simulation.events.heating.RestMode;
+import simulation.events.heating.SwitchOff;
+import simulation.events.heating.SwitchOn;
 
 @ModelExternalEvents(imported = {SwitchOn.class,
 								 SwitchOff.class,
-								 FillKettle.class,
-								 EmptyKettle.class,
-								 KettleUpdater.class})
+								 RestMode.class,
+								 HeatingMode.class,
+								 HeatingUpdater.class})
 
-public class KettleModel extends AtomicHIOAwithEquations {
+public class HeatingModel extends AtomicHIOAwithEquations {
 	
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
 
-	public static enum State {
+	public static enum 		State {
 		OFF,
 		ON
 	}
 	
-	public static enum Content {
-		FULL,
-		HALF,
-		EMPTY
+	public static enum 		Mode {
+		OFF,
+		REST,
+		HEATING
 	}
 
-	public static class		KettleReport
+	public static class		HeatingReport
 	extends		AbstractSimulationReport
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public			KettleReport(String modelURI)
+		public			HeatingReport(String modelURI)
 		{
 			super(modelURI);
 		}
@@ -62,7 +62,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		@Override
 		public String	toString()
 		{
-			return "KettleReport(" + this.getModelURI() + ")";
+			return "HeatingReport(" + this.getModelURI() + ")";
 		}
 	}
 
@@ -70,24 +70,24 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
-	private static final long		serialVersionUID = 1L;
-	protected static final double	CONSUMPTION = 1200.0; // Watts
-	private static final String		SERIES = "temperature";
-	public static final String		URI = "KettleModel";
-	protected XYPlotter				temperaturePlotter;
+	private static final long					serialVersionUID = 1L;
+	protected static final double				CONSUMPTION = 1200.0; // Watts
+	private static final String					SERIES = "temperature";
+	public static final String					URI = "HeatingModel";
+	protected XYPlotter							temperaturePlotter;
 	
 	//CURRENT
-	protected State					currentState;
-	protected Content 				currentContent;
-	protected final Value<Double>	currentTemperature = new Value<Double>(this, 0.0, 0);
+	protected State								currentState;
+	protected Mode 								currentMode;
+	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
 	
-	protected EmbeddingComponentStateAccessI componentRef;
+	protected EmbeddingComponentStateAccessI 	componentRef;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				KettleModel(
+	public						HeatingModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
@@ -99,7 +99,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
-						"Kettle temperature",
+						"Heating temperature",
 						"Time (sec)",
 						"Temperature (C)",
 						100,
@@ -119,7 +119,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void			setSimulationRunParameters(
+	public void					setSimulationRunParameters(
 		Map<String, Object> simParams
 		) throws Exception
 	{
@@ -130,11 +130,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void			initialiseState(Time initialTime)
+	public void					initialiseState(Time initialTime)
 	{
-		// the kettle starts in mode OFF
-		this.currentState = State.OFF;
-		this.currentContent = Content.EMPTY;
+		// the heating starts in mode OFF
+		this.currentState = State.ON;
+		this.currentMode = Mode.OFF;
 
 		// initialisation of the temperature plotter 
 		this.temperaturePlotter.initialise();
@@ -153,9 +153,9 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	protected void		initialiseVariables(Time startTime)
+	protected void				initialiseVariables(Time startTime)
 	{
-		// as the kettle starts in mode OFF, its power consumption is 0
+		// as the heating starts in mode OFF, its power consumption is 0
 		this.currentTemperature.v = 0.0;
 
 		// first data in the plotter to start the plot.
@@ -169,7 +169,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public Vector<EventI>	output()
+	public Vector<EventI>		output()
 	{
 		// the model does not export any event.
 		return null;
@@ -177,7 +177,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public Duration		timeAdvance()
+	public Duration				timeAdvance()
 	{
 		if (this.componentRef == null) {
 			// the model has no internal event, however, its state will evolve
@@ -191,7 +191,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void			userDefinedInternalTransition(Duration elapsedTime)
+	public void					userDefinedInternalTransition(Duration elapsedTime)
 	{
 		if (this.componentRef != null) {
 			// This is an example showing how to access the component state
@@ -210,23 +210,23 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void			userDefinedExternalTransition(Duration elapsedTime)
+	public void					userDefinedExternalTransition(Duration elapsedTime)
 	{
 		if (this.hasDebugLevel(2)) {
-//			this.logMessage("KettleModel::userDefinedExternalTransition 1");
+//			this.logMessage("HeatingModel::userDefinedExternalTransition 1");
 		}
 
 		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 		// when this method is called, there is at least one external event,
-		// and for the kettle model, there will be exactly one by
+		// and for the heating model, there will be exactly one by
 		// construction.
 		assert	currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
 		if (this.hasDebugLevel(2)) {
-//			this.logMessage("KettleModel::userDefinedExternalTransition 2 "
+//			this.logMessage("HeatingModel::userDefinedExternalTransition 2 "
 //										+ ce.getClass().getCanonicalName());
 		}
 
@@ -238,7 +238,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				this.getTemperature());
 
 		if (this.hasDebugLevel(2)) {
-			//this.logMessage("KettleModel::userDefinedExternalTransition 3 "+ this.getState());
+			//this.logMessage("HeatingModel::userDefinedExternalTransition 3 "+ this.getState());
 		}
 
 		// execute the current external event on this model, changing its state
@@ -246,7 +246,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		ce.executeOn(this);
 
 		if (this.hasDebugLevel(1)) {
-			//this.logMessage("KettleModel::userDefinedExternalTransition 4 " + this.getState());
+			//this.logMessage("HeatingModel::userDefinedExternalTransition 4 " + this.getState());
 		}
 
 		// add a new data on the plotter; this data will open a new piece
@@ -257,13 +257,13 @@ public class KettleModel extends AtomicHIOAwithEquations {
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
-			//this.logMessage("KettleModel::userDefinedExternalTransition 5");
+			//this.logMessage("HeatingModel::userDefinedExternalTransition 5");
 		}
 	}
 
 
 	@Override
-	public void			endSimulation(Time endTime) throws Exception
+	public void					endSimulation(Time endTime) throws Exception
 	{
 		this.temperaturePlotter.addData(
 				SERIES,
@@ -279,21 +279,21 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	@Override
 	public SimulationReportI	getFinalReport() throws Exception
 	{
-		return new KettleReport(this.getURI());
+		return new HeatingReport(this.getURI());
 	}
 
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 
-	public State		getState()
+	public State				getState()
 	{
 		return this.currentState;
 	}
-	public Content		getContent() {
-		return this.currentContent;
+	public Mode					getMode() {
+		return this.currentMode;
 	}
-	public double		getTemperature()
+	public double				getTemperature()
 	{
 		return this.currentTemperature.v;
 	}
@@ -302,70 +302,48 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	// Utils
 	// ------------------------------------------------------------------------
 
-	public void			updateTemperature() {
+	public void					updateTemperature() {
+		System.out.println(currentState);
 		if(currentState == State.ON) {
-			if(currentContent == Content.FULL) {
-				currentTemperature.v += 3.0;
+			if(currentMode == Mode.REST) {
+				currentTemperature.v -= 0.2;
 				//System.out.println("ON/FULL Temperature : "+currentTemperature.v);
 			}
-			if(currentContent == Content.HALF) {
-				currentTemperature.v += 6.0;
+			if(currentMode == Mode.HEATING) {
+				currentTemperature.v += 2.0;
 				//System.out.println("ON/HALF Temperature : "+currentTemperature.v);
 			}
 		}
 		if(currentState == State.OFF) {
-			if(currentContent == Content.EMPTY) {
-				currentTemperature.v = 0.0;
-				//System.out.println("OFF/EMPTY Temperature : "+currentTemperature.v);
-			}
-			else{
-				if(currentTemperature.v > 0 ) {
-					currentTemperature.v -= 1.0;
+			currentTemperature.v -= 0.5;
 					//System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
-				}
-			}
 		}
 	}
 	
-	public void			updateState() {
-		if(currentTemperature.v >= 100.0 && currentState == State.ON) {
-			//System.out.println("State : OFF");
-			currentState = State.OFF;
-		}
-		if(currentTemperature.v == 0.0 && currentState == State.OFF && currentContent != Content.EMPTY) {
-			//System.out.println("State : ON");
-			currentState = State.ON;
-		}
-		
-		
-	}
-	
-	public void			updateState(State s)
-	{
+	public void					updateState(State s){
+		System.out.println("updateState "+ s);
 		this.currentState = s;
 	}
 	
-	public void 		updateContent() {
-		if(currentContent == Content.EMPTY) {
-			Double rand = Math.random();
-			if(rand <= 0.3) {
-				currentContent = Content.HALF;
-			}else {
-				if(rand <= 0.6){
-					currentContent = Content.FULL;
-				}
+	public void 				updateMode() {
+		System.out.println(currentMode);
+		if(this.currentMode == Mode.REST){
+			if(currentTemperature.v < 15){
+				this.logMessage("Heating mode ON.") ;
+				updateMode(Mode.HEATING);
 			}
 		}
-		if(currentTemperature.v > 0.0 && currentState == State.OFF) {
-			if(Math.random() < 0.25) {
-				currentContent = Content.EMPTY;
+		if(this.currentMode == Mode.HEATING){
+			if(currentTemperature.v > 20){
+				this.logMessage("REST mode ON.") ;
+				updateMode(Mode.REST);
 			}
 		}
 	}
 	
-	public void			updateContent(Content c)
+	public void					updateMode(Mode c)
 	{
-		this.currentContent = c;
+		this.currentMode = c;
 	}
 }
 //------------------------------------------------------------------------------

@@ -12,7 +12,6 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.kettle.KettleI;
 import ports.kettle.KettleInboundPort;
@@ -198,7 +197,6 @@ implements EmbeddingComponentStateAccessI{
 		}*/
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
-					@SuppressWarnings("unchecked")
 					@Override
 					public void run() {
 						try {

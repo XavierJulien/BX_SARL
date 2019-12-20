@@ -1,6 +1,4 @@
-/simulation/
-/components/
 /connectors/
 /ports/
-/interfaces/
-/launcher/
+/simulation/
+/components/

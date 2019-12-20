@@ -1,4 +1,4 @@
-package simulation.models.kettle;
+package simulation.models.heating;
 
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -11,49 +11,49 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.kettle.FillKettle;
-import simulation.events.kettle.EmptyKettle;
-import simulation.events.kettle.SwitchOff;
-import simulation.events.kettle.SwitchOn;
-import simulation.events.kettle.KettleUpdater;
+import simulation.events.heating.HeatingMode;
+import simulation.events.heating.HeatingUpdater;
+import simulation.events.heating.RestMode;
+import simulation.events.heating.SwitchOff;
+import simulation.events.heating.SwitchOn;
 
 @ModelExternalEvents(exported = {SwitchOn.class,
 								 SwitchOff.class,
-								 FillKettle.class,
-								 EmptyKettle.class,
-								 KettleUpdater.class})
+								 RestMode.class,
+								 HeatingMode.class,
+								 HeatingUpdater.class})
 
-public class KettleUserModel extends AtomicES_Model {
+public class HeatingUserModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	public static final String	URI = "KettleUserModel" ;
+	public static final String	URI = "HeatingUserModel" ;
 
 	/** initial delay before sending the first switch on event.				*/
-	protected double	initialDelay ;
-	/** delay between uses of the kettle from one day to another.		*/
-	protected double	interdayDelay ;
-	/** mean time between uses of the kettle in the same day.			*/
-	protected double	meanTimeBetweenUsages ;
+	protected double			initialDelay ;
+	/** delay between uses of the heating from one day to another.		*/
+	protected double			interdayDelay ;
+	/** mean time between uses of the heating in the same day.			*/
+	protected double			meanTimeBetweenUsages ;
 
-	protected double	meanTimeBetweenTempUpdate ;
+	protected double			meanTimeBetweenTempUpdate ;
 	/** next event to be sent.												*/
-	protected Class<?>	nextEvent ;
+	protected Class<?>			nextEvent ;
 
 	/**	a random number generator from common math library.					*/
 	protected final RandomDataGenerator		rg ;
-	/** the current state of the kettle simulation model.				*/
-	protected KettleModel.State ks ;
+	/** the current state of the heating simulation model.				*/
+	protected HeatingModel.State hs ;
 	
-	protected boolean initialCall;
+	protected boolean 			initialCall;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				KettleUserModel(
+	public				HeatingUserModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
@@ -82,7 +82,7 @@ public class KettleUserModel extends AtomicES_Model {
 		this.initialCall = true;
 		
 		this.meanTimeBetweenTempUpdate = 7.0;
-		this.ks = KettleModel.State.OFF ;
+		this.hs = HeatingModel.State.OFF ;
 
 		this.rg.reSeedSecure() ;
 
@@ -99,7 +99,7 @@ public class KettleUserModel extends AtomicES_Model {
 											this.rg.nextBeta(1.75, 1.75),
 					this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new FillKettle(t)) ;
+		this.scheduleEvent(new SwitchOn(t)) ;
 
 		
 		
@@ -127,7 +127,7 @@ public class KettleUserModel extends AtomicES_Model {
 		// model is given by the earliest time among the currently scheduled
 		// events.
 		Duration d = super.timeAdvance() ;
-		this.logMessage("KettleUserModel::timeAdvance() 1 " + d +
+		this.logMessage("HeatingUserModel::timeAdvance() 1 " + d +
 									" " + this.eventListAsString()) ;
 		return d ;
 	}
@@ -158,61 +158,45 @@ public class KettleUserModel extends AtomicES_Model {
 		// to keep it for the internal transition)
 		this.nextEvent = ret.get(0).getClass() ;
 
-		this.logMessage("KettleUserModel::output() " +
+		this.logMessage("HeatingUserModel::output() " +
 									this.nextEvent.getCanonicalName()) ;
 		return ret ;
 	}
 
 	@Override
-	public void				userDefinedInternalTransition(
-		Duration elapsedTime
-		)
-	{
-		// This method implements a usage scenario for the kettle.
-		// Here, we assume that the kettle is used once each cycle (day)
-		// and then it starts in low mode, is set in high mode shortly after,
-		// used for a while in high mode and then set back in low mode to
-		// complete the drying.
+	public void				userDefinedInternalTransition(Duration elapsedTime){
 		Duration d ;
-		// See what is the type of event to be executed
 		
-		if (this.nextEvent.equals(FillKettle.class)) {
-			// when a switch on event has been issued, plan the next event as
-			// a set high (the kettle is switched on in low mode
+		if (this.nextEvent.equals(SwitchOn.class)) {
+			//first event
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
 							 this.getSimulatedTimeUnit()) ;
-			// compute the time of occurrence (in the future)
 			Time t = this.getCurrentStateTime().add(d) ;
-			// schedule the event
-			this.scheduleEvent(new SwitchOn(t)) ;
-
-			// also, plan the next switch on for the next day
+			this.scheduleEvent(new HeatingMode(t));
+			
+			//everyday event
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(
-						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-			//System.out.println("Kettle Update " + nextEvent.toString());
-		
-			if(this.initialCall)
-			{
+						new SwitchOn(this.getCurrentStateTime().add(d))) ;
+			
+			if(this.initialCall){
 				this.logMessage("test initial call...");
 				d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 				this.scheduleEvent(
-							new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+							new HeatingUpdater(this.getCurrentStateTime().add(d))) ;
 				this.initialCall = false;
 			}
-		}else {
-			if (this.nextEvent.equals(KettleUpdater.class)) {
-				//System.out.println("next event : KettleUpdater");
-				// when a set high event has been issued, plan the next switch off
-				// after some time of usage
-				d =	new Duration(
-						2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),
-						this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(
-						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
-			}
+			
+		}else if (this.nextEvent.equals(HeatingUpdater.class)) {
+				d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
+				Time t = this.getCurrentStateTime().add(d) ;
+				this.scheduleEvent(new HeatingUpdater(t)) ;
+		}else if (this.nextEvent.equals(HeatingMode.class)) {
+			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
+			Time t = this.getCurrentStateTime().add(d);
+			if(Math.random() < 0.75)
+				this.scheduleEvent(new SwitchOff(t)) ;
 		}
-		
 	}
 	
 }

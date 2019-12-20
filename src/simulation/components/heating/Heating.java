@@ -1,4 +1,4 @@
-package simulation.components.kettle;
+package simulation.components.heating;
 
 import java.util.HashMap;
 
@@ -7,11 +7,11 @@ import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulation.models.kettle.KettleCoupledModel;
-import simulation.models.kettle.KettleModel;
+import simulation.models.heating.HeatingCoupledModel;
+import simulation.models.heating.HeatingModel;
 
 
-public class			Kettle
+public class			Heating
 extends		AbstractCyPhyComponent
 implements	EmbeddingComponentStateAccessI
 {
@@ -19,13 +19,13 @@ implements	EmbeddingComponentStateAccessI
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
-	protected KettleSimulatorPlugin		asp ;
+	protected HeatingSimulatorPlugin		asp ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	protected Kettle() throws Exception{
+	protected Heating() throws Exception{
 		// 2 threads to be able to execute tasks and requests while executing
 		// the DEVS simulation.
 		super(5, 1) ;
@@ -33,7 +33,7 @@ implements	EmbeddingComponentStateAccessI
 
 	}
 
-	protected Kettle(String reflectionInboundPortURI) throws Exception{
+	protected Heating(String reflectionInboundPortURI) throws Exception{
 		super(reflectionInboundPortURI, 1, 0) ;
 		this.initialise() ;
 	}
@@ -43,7 +43,7 @@ implements	EmbeddingComponentStateAccessI
 		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		// Create the appropriate DEVS simulation plug-in.
-		this.asp = new KettleSimulatorPlugin() ;
+		this.asp = new HeatingSimulatorPlugin() ;
 		
 		// Set the URI of the plug-in, using the URI of its associated
 		// simulation model.
@@ -64,14 +64,14 @@ implements	EmbeddingComponentStateAccessI
 
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
-		return KettleCoupledModel.build() ;
+		return HeatingCoupledModel.build() ;
 	}
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception{
-		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
-			   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
-			   this.asp.getModelStateValue(KettleModel.URI, "temperature");
+		return this.asp.getModelStateValue(HeatingModel.URI, "state") + " " + 
+			   this.asp.getModelStateValue(HeatingModel.URI, "mode") + " " + 
+			   this.asp.getModelStateValue(HeatingModel.URI, "temperature");
 	}
 	
 	@Override
@@ -99,12 +99,12 @@ implements	EmbeddingComponentStateAccessI
 		Thread.sleep(10L) ;
 		// During the simulation, the following lines provide an example how
 		// to use the simulation model access facility by the component.
-		/*for (int i = 0 ; i < 100 ; i++) {
-			this.logMessage("Kettle " +
-				this.asp.getModelStateValue(KettleModel.URI, "state") + " "+
-				this.asp.getModelStateValue(KettleModel.URI, "content") + " " +
-				this.asp.getModelStateValue(KettleModel.URI, "temperature")) ;
+		for (int i = 0 ; i < 100 ; i++) {
+			this.logMessage("Heating " +
+				this.asp.getModelStateValue(HeatingModel.URI, "state") + " "+
+				this.asp.getModelStateValue(HeatingModel.URI, "mode") + " " +
+				this.asp.getModelStateValue(HeatingModel.URI, "temperature")) ;
 			Thread.sleep(5L) ;
-		}*/
+		}
 	}
 }

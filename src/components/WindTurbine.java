@@ -11,8 +11,6 @@ import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import interfaces.windturbine.WindTurbineI;
 import ports.windturbine.WindTurbineInboundPort;
 import ports.windturbine.WindTurbineOutboundPort;
-import simulation.events.sensors.WindTooStrongEvent;
-import simulation.models.kettle.KettleModel;
 
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})

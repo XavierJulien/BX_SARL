@@ -1,12 +1,12 @@
-package simulation.events.kettle;
+package simulation.events.heating;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
-import simulation.models.kettle.KettleModel;
+import simulation.models.heating.HeatingModel;
 
-public class			EmptyKettle
+public class			HeatingMode
 extends		AbstractEvent
 {
 	// -------------------------------------------------------------------------
@@ -19,7 +19,7 @@ extends		AbstractEvent
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				EmptyKettle(Time timeOfOccurrence)
+	public				HeatingMode(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
@@ -31,7 +31,7 @@ extends		AbstractEvent
 	@Override
 	public String			eventAsString()
 	{
-		return "Kettle::FillKettle" ;
+		return "Heating::HeatingMode" ;
 	}
 	@Override
 	public boolean			hasPriorityOver(EventI e)
@@ -45,8 +45,8 @@ extends		AbstractEvent
 	@Override
 	public void				executeOn(AtomicModel model)
 	{
-		assert	model instanceof KettleModel ;
-		((KettleModel)model).updateContent(KettleModel.Content.EMPTY);
+		assert	model instanceof HeatingModel ;
+		((HeatingModel)model).updateMode(HeatingModel.Mode.HEATING);
 	}
 }
 //-----------------------------------------------------------------------------

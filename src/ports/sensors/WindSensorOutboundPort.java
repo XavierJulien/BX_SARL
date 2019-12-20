@@ -2,7 +2,6 @@ package ports.sensors;
 
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractOutboundPort;
-import interfaces.sensors.TemperatureSensorI;
 import interfaces.sensors.WindSensorI;
 
 @SuppressWarnings("serial")

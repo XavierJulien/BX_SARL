@@ -7,7 +7,6 @@ import interfaces.controller.ControllerI;
 import interfaces.electricmeter.ElectricMeterI;
 import interfaces.heating.HeatingI;
 import interfaces.kettle.KettleI;
-import interfaces.sensors.WindSensorI;
 import interfaces.windturbine.WindTurbineI;
 
 public class ControllerConnector extends AbstractConnector implements ControllerI{

@@ -1,7 +1,6 @@
 package connectors.sensors;
 
 import fr.sorbonne_u.components.connectors.AbstractConnector;
-import interfaces.controller.ControllerI;
 import interfaces.sensors.WindSensorI;
 import interfaces.windturbine.WindTurbineI;
 

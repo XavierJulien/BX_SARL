@@ -1,6 +1,5 @@
 package ports.sensors;
 
-import components.WindSensor;
 import fr.sorbonne_u.components.ComponentI;
 import fr.sorbonne_u.components.ports.AbstractInboundPort;
 import interfaces.sensors.WindSensorI;
