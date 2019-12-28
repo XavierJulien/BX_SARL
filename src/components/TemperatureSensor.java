@@ -35,7 +35,7 @@ public class TemperatureSensor extends AbstractComponent {
 	
 	protected final TemperatureSensorOutboundPort temperatureSensorOutboundPort;
 
-	protected double power = 15;
+	protected double temperature = 5;
 
 
 
@@ -66,11 +66,27 @@ public class TemperatureSensor extends AbstractComponent {
 	}
 
 	public void sendTemperature() throws Exception {
-		this.logMessage("The temperature is "+power+" degrees") ;
+		this.logMessage("The temperature is "+temperature+" degrees") ;
 		//return Math.abs(Math.sin(power));
-		this.temperatureSensorOutboundPort.sendTemperature(power+(int)(Math.random()*100)) ;
+		this.temperatureSensorOutboundPort.sendTemperature(temperature) ;
 
 	}
+	/**
+	 * This method gets the temperature update from the heating
+	 * @throws Exception
+	 */
+	public void getHeating() throws Exception {
+		double heat = this.temperatureSensorHeatingOutboundPort.getHeating();
+		temperature += heat;
+		//this.logMessage("The TemperatureSensor sees that the heating increase the temperature of "+heat+" degrees") ;
+	}
+	
+	
+	public void temperatureNaturalDecrease() {
+		temperature -= temperature *(5.0/100);
+	}
+	
+	
 
 	@Override
 	public void	start() throws ComponentStartException{
@@ -138,6 +154,8 @@ public class TemperatureSensor extends AbstractComponent {
 						try {
 							while(true) {
 								((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
+								((TemperatureSensor)this.getTaskOwner()).getHeating() ;
+								((TemperatureSensor)this.getTaskOwner()).temperatureNaturalDecrease();
 								Thread.sleep(1000);
 							}
 							
@@ -156,10 +174,7 @@ public class TemperatureSensor extends AbstractComponent {
 		System.out.println("Simulation ends. " + (end - start)) ;*/
 	}
 	
-	public void getHeating() throws Exception {
-		double heat = this.temperatureSensorHeatingOutboundPort.getHeating();
-		this.logMessage("The TemperatureSensor sees that the heating increase the temperature of "+heat+" degrees") ;
-	}
+	
 
 	// ------------------------------------------------------------------------
 	// FINALISE / SHUTDOWN

@@ -89,7 +89,7 @@ public class Heating extends AbstractComponent {
 	public void startHeating() throws Exception{
 		this.logMessage("The heating is starting his job....") ;
 		powerPercentage = 10;
-		consumption = (int) ((1.0/powerPercentage)*maxConsumption);
+		consumption = (int) ((powerPercentage/100.0)*maxConsumption);
 		isOn = true;
 	}
 
@@ -118,8 +118,15 @@ public class Heating extends AbstractComponent {
 	
 	
 	public double sendHeating() throws Exception {
-		this.logMessage("Sending Heat....") ;
-		return maxPower*(1.0/powerPercentage);
+		if(isOn) {
+			this.logMessage("Sending Heat....") ;
+			return maxPower*(powerPercentage/100.0);
+		}else {
+			return 0;
+		}
+		
+		
+		
 	}
 
 	public void	start() throws ComponentStartException{

@@ -1,4 +1,5 @@
-/connectors/
-/ports/
-/simulation/
 /components/
+/simulation/
+/connectors/
+/interfaces/
+/ports/

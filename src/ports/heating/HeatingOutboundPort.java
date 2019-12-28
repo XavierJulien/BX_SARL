@@ -46,5 +46,6 @@ public class HeatingOutboundPort extends AbstractOutboundPort implements Heating
 	public void sendConsumption(double consumption) throws Exception {
 		((HeatingElectricMeterI)this.connector).sendConsumption(consumption) ;
 	}
+
 	
 }

@@ -347,14 +347,18 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	
 	public void 		updateContent() {
 		if(currentContent == Content.EMPTY) {
-			Double rand = Math.random();
-			if(rand <= 0.3) {
-				currentContent = Content.HALF;
-			}else {
-				if(rand <= 0.6){
-					currentContent = Content.FULL;
+			Double stay_empty = Math.random();
+			if(stay_empty > 0.95) {
+				Double rand = Math.random();
+				if(rand <= 0.3) {
+					currentContent = Content.HALF;
+				}else {
+					if(rand <= 0.6){
+						currentContent = Content.FULL;
+					}
 				}
 			}
+			
 		}
 		if(currentTemperature.v > 0.0 && currentState == State.OFF) {
 			if(Math.random() < 0.25) {

@@ -125,14 +125,20 @@ implements EmbeddingComponentStateAccessI{
 	//------------------------------------------------------------------------
 	
 	protected void updateConsumption(KettleModel.Content content) {
-		if(content == KettleModel.Content.EMPTY) {
-			currentConsumption = consumption*0.1;
-		}else{
-			if(content == KettleModel.Content.HALF) {
-				currentConsumption = consumption*0.5;
-			}else {
+		if(content == KettleModel.Content.HALF) {
+			currentConsumption = consumption*0.5;
+		}else {
+			if(content == KettleModel.Content.FULL) {
 				currentConsumption = consumption;
 			}
+		}
+	}
+	
+	protected void updateState(KettleModel.State state) {
+		if(state == KettleModel.State.ON) {
+			isOn = true;
+		}else {
+			isOn = false;
 		}
 	}
 	
@@ -168,7 +174,7 @@ implements EmbeddingComponentStateAccessI{
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 100L ;
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("componentRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
@@ -178,31 +184,22 @@ implements EmbeddingComponentStateAccessI{
 					@Override
 					public void run() {
 						try {
-							Thread.sleep(2000);
-							asp.doStandAloneSimulation(0.0, 500.0) ;
+							Thread.sleep(1000);
+							asp.doStandAloneSimulation(0.0, 5000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
 					}
 				}) ;
 		Thread.sleep(10L) ;
-		// During the simulation, the following lines provide an example how
-		// to use the simulation model access facility by the component.
-		/*for (int i = 0 ; i < 100 ; i++) {
-			this.logMessage("Kettle " +
-				this.asp.getModelStateValue(KettleModel.URI, "state") + " "+
-				this.asp.getModelStateValue(KettleModel.URI, "content") + " " +
-				this.asp.getModelStateValue(KettleModel.URI, "temperature")) ;
-			Thread.sleep(5L) ;
-		}*/
+		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
 					public void run() {
 						try {
-							//System.out.println("DEBUT EXEC //////////////////////////////////////////////////");
 							while(true) {
-								isOn = asp.getModelStateValue(KettleModel.URI, "state")== KettleModel.State.ON;
+								((Kettle)this.getTaskOwner()).updateState((KettleModel.State)asp.getModelStateValue(KettleModel.URI, "state"));
 								if(isOn) {
 									((Kettle)this.getTaskOwner()).updateConsumption((KettleModel.Content)asp.getModelStateValue(KettleModel.URI, "content"));
 									((Kettle)this.getTaskOwner()).sendConsumption() ;

@@ -305,9 +305,25 @@ public class Controller extends AbstractComponent {
 					public void run() {
 						try {
 							((Controller)this.getTaskOwner()).startElectricMeter() ;
-							((Controller)this.getTaskOwner()).startHeating();
+							boolean isOnHeating = false;
 							while(true) {
 								((Controller)this.getTaskOwner()).logMessage("The temperature is "+temperature+" degrees");
+								if(temperature < 10) {
+									if(!isOnHeating) {
+										((Controller)this.getTaskOwner()).startHeating();
+									}
+									isOnHeating=true;
+									((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
+								}else {
+									if(temperature < 20) {
+										if(isOnHeating) {
+											((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
+										}
+									}else {
+										((Controller)this.getTaskOwner()).stopHeating();
+										isOnHeating = false;
+									}
+								}
 								((Controller)this.getTaskOwner()).putExtraPowerInHeating(1);
 //								((Controller)this.getTaskOwner()).getWind() ;
 								if(isWindTurbineOn) {
