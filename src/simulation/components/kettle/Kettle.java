@@ -28,7 +28,7 @@ implements	EmbeddingComponentStateAccessI
 	protected Kettle() throws Exception{
 		// 2 threads to be able to execute tasks and requests while executing
 		// the DEVS simulation.
-		super(5, 1) ;
+		super(2, 0) ;
 		this.initialise() ;
 
 	}

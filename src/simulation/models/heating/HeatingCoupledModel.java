@@ -7,8 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOff;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOn;
+
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
@@ -30,6 +29,8 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.heating.HeatingMode;
 import simulation.events.heating.RestMode;
+import simulation.events.heating.SwitchOff;
+import simulation.events.heating.SwitchOn;
 import simulation.events.heating.HeatingUpdater;
 
 public class HeatingCoupledModel extends CoupledModel {
@@ -87,6 +88,16 @@ public class HeatingCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
+		
+		atomicModelDescriptors.put(
+				HeatingUpdaterModel.URI,
+				AtomicModelDescriptor.create(
+						HeatingUpdaterModel.class,
+						HeatingUpdaterModel.URI,
+						TimeUnit.SECONDS,
+						null,
+						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
+
 
 		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
 				new HashMap<String,CoupledModelDescriptor>() ;
@@ -94,6 +105,7 @@ public class HeatingCoupledModel extends CoupledModel {
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(HeatingModel.URI) ;
 		submodels.add(HeatingUserModel.URI) ;
+		submodels.add(HeatingUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
@@ -122,6 +134,12 @@ public class HeatingCoupledModel extends CoupledModel {
 		EventSink[] to5 = new EventSink[] {
 				new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
 		connections.put(from5, to5) ;
+		
+		EventSource from6 =
+				new EventSource(HeatingUpdaterModel.URI, HeatingUpdater.class) ;
+		EventSink[] to6 = new EventSink[] {
+				new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
+		connections.put(from6, to6) ;
 		
 		coupledModelDescriptors.put(
 					HeatingCoupledModel.URI,

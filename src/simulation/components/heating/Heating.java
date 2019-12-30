@@ -1,11 +1,19 @@
 package simulation.components.heating;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
+import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.events.EventI;
+import fr.sorbonne_u.devs_simulation.models.events.EventSink;
+import fr.sorbonne_u.devs_simulation.models.events.EventSource;
+import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.heating.HeatingCoupledModel;
 import simulation.models.heating.HeatingModel;
@@ -28,7 +36,7 @@ implements	EmbeddingComponentStateAccessI
 	protected Heating() throws Exception{
 		// 2 threads to be able to execute tasks and requests while executing
 		// the DEVS simulation.
-		super(5, 1) ;
+		super(2, 0) ;
 		this.initialise() ;
 
 	}

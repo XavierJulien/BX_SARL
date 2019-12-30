@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOff;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOn;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
@@ -31,6 +29,8 @@ import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.FillKettle;
 import simulation.events.kettle.KettleUpdater;
+import simulation.events.kettle.SwitchOff;
+import simulation.events.kettle.SwitchOn;
 
 public class KettleCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
@@ -87,6 +87,15 @@ public class KettleCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
+		
+		atomicModelDescriptors.put(
+				KettleUpdaterModel.URI,
+				AtomicModelDescriptor.create(
+						KettleUpdaterModel.class,
+						KettleUpdaterModel.URI,
+						TimeUnit.SECONDS,
+						null,
+						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 
 		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
 				new HashMap<String,CoupledModelDescriptor>() ;
@@ -94,6 +103,7 @@ public class KettleCoupledModel extends CoupledModel {
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(KettleModel.URI) ;
 		submodels.add(KettleUserModel.URI) ;
+		submodels.add(KettleUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
@@ -122,6 +132,11 @@ public class KettleCoupledModel extends CoupledModel {
 		EventSink[] to5 = new EventSink[] {
 				new EventSink(KettleModel.URI, KettleUpdater.class)} ;
 		connections.put(from5, to5) ;
+		EventSource from6 =
+				new EventSource(KettleUpdaterModel.URI, KettleUpdater.class) ;
+		EventSink[] to6 = new EventSink[] {
+				new EventSink(KettleModel.URI, KettleUpdater.class)} ;
+		connections.put(from6, to6) ;
 		
 		coupledModelDescriptors.put(
 					KettleCoupledModel.URI,

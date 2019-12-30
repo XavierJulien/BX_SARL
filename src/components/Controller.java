@@ -182,17 +182,10 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------EOLIENNE-----------------------------
 	//--------------------------------------------------------------
-	public void startWindTurbine() throws Exception {
-		this.logMessage("Controller "+this.uri+" : tells wind turbine to start.") ;
-		this.controllerWindTurbineOutboundPort.startWindTurbine();
-	}
-	public void stopWindTurbine() throws Exception{
-		this.logMessage("Controller "+this.uri+" : tells wind turbine to stop.") ;
-		this.controllerWindTurbineOutboundPort.stopWindTurbine();
-	}
+	
 	public void getProduction(double production) throws Exception {
 		this.prod += production;
-		this.logMessage("The controller is getting "+prod+" units of energy from the wind turbine") ;
+		this.logMessage("The controller is getting "+production+" units of energy from the wind turbine") ;
 	}
 
 	//--------------------------------------------------------------
@@ -320,23 +313,18 @@ public class Controller extends AbstractComponent {
 											((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
 										}
 									}else {
-										((Controller)this.getTaskOwner()).stopHeating();
-										isOnHeating = false;
+										if(isOnHeating) {
+											((Controller)this.getTaskOwner()).stopHeating();
+											isOnHeating = false;
+										}
+										
 									}
 								}
-								((Controller)this.getTaskOwner()).putExtraPowerInHeating(1);
-//								((Controller)this.getTaskOwner()).getWind() ;
-								if(isWindTurbineOn) {
-									if(windSpeed > 0.5) {
-										((Controller)this.getTaskOwner()).stopWindTurbine();
-										isWindTurbineOn = false;
-									}
-								}else {
-									if(windSpeed < 0.5) {
-										((Controller)this.getTaskOwner()).startWindTurbine();
-										isWindTurbineOn = true;
-									}
+								if(prod<0) {
+									//TODO s'occuper de ca
+									((Controller)this.getTaskOwner()).logMessage("TOO MUCH CONSUMPTION");
 								}
+								
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

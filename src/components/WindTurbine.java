@@ -85,12 +85,13 @@ public class WindTurbine extends AbstractComponent {
 	
 	public void sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
+		prod = 2*windSpeed;
 		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
 	
 	public void getWindSpeed(double speed) throws Exception{
 		this.windSpeed = speed;
-		this.logMessage("The wind power is "+ windSpeed) ;
+		this.logMessage("The wind speed is "+ windSpeed) ;
 	}
 
 	public void	start() throws ComponentStartException{
@@ -109,7 +110,13 @@ public class WindTurbine extends AbstractComponent {
 						try {
 							
 							while(true) {
-								
+								if(windSpeed > 7.5 && isOn) {
+									stopWindTurbine();
+								}else {
+									if(!isOn && windSpeed <=7.5) {
+										startWindTurbine();
+									}
+								}
 								if(isOn) {
 									((WindTurbine)this.getTaskOwner()).sendProduction();
 								}

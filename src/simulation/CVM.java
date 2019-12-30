@@ -18,16 +18,16 @@ extends		AbstractCVM
 	@Override
 	public void			deploy() throws Exception
 	{
-		/*@SuppressWarnings("unused")
+		@SuppressWarnings("unused")
 		String kettleURI =
 				AbstractComponent.createComponent(
 						Kettle.class.getCanonicalName(),
-						new Object[]{}) ;*/
-		@SuppressWarnings("unused")
-		String heatingURI =
-				AbstractComponent.createComponent(
-						Heating.class.getCanonicalName(),
 						new Object[]{}) ;
+//		@SuppressWarnings("unused")
+//		String heatingURI =
+//				AbstractComponent.createComponent(
+//						Heating.class.getCanonicalName(),
+//						new Object[]{}) ;
 
 		super.deploy();
 	}

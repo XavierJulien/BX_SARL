@@ -30,25 +30,11 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 	//--------------------EOLIENNE-----------------------
 	//---------------------------------------------------
 	public void startWindTurbine() throws Exception {
-		this.owner.handleRequestAsync(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((Controller)this.getServiceOwner()).startWindTurbine();
-						return null;
-					}
-				}) ;
+		//unused
 	}
 	@Override
 	public void stopWindTurbine() throws Exception {
-		this.owner.handleRequestAsync(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((Controller)this.getServiceOwner()).stopWindTurbine();
-						return null;
-					}
-				}) ;
+		//unused
 	}
 	
 	

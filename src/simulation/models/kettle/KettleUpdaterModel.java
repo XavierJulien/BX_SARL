@@ -6,12 +6,15 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
+import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import simulation.events.kettle.KettleUpdater;
+
+@ModelExternalEvents(exported = {KettleUpdater.class})
 
 public class KettleUpdaterModel extends AtomicES_Model
 {

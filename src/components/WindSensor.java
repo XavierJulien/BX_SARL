@@ -38,6 +38,10 @@ public class WindSensor extends AbstractCyPhyComponent {
 	protected final WindSensorInboundPort windSensorInboundPort;
 	protected final WindSensorOutboundPort windSensorOutboundPort;
 
+	private static double x = 0;
+	
+	
+	
 	protected double power = 0;
 
 
@@ -67,8 +71,9 @@ public class WindSensor extends AbstractCyPhyComponent {
 
 	public void sendWindSpeed() throws Exception {
 		this.logMessage("Sending wind power....") ;
-		power+=0.2;
-		power = Math.abs(Math.sin(power));
+		//Waiting for simulation, here's a little function to replace it for the moment
+		x+=0.1;
+		power =(((Math.sin(x+8)+1.0/10*Math.cos((x+2)*5)+ Math.cos((x*7)/2.0))*3)+6);
 		this.windSensorOutboundPort.sendWindSpeed(power) ;
 		//		return 0.3;
 
