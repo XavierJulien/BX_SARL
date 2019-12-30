@@ -96,8 +96,8 @@ public class KettleUpdaterModel extends AtomicES_Model
 		// model is given by the earliest time among the currently scheduled
 		// events.
 		Duration d = super.timeAdvance() ;
-		this.logMessage("KettleUpdaterModel::timeAdvance() 1 " + d +
-									" " + this.eventListAsString()) ;
+//		this.logMessage("KettleUpdaterModel::timeAdvance() 1 " + d +
+//									" " + this.eventListAsString()) ;
 		return d ;
 	}
 	
@@ -124,8 +124,8 @@ public class KettleUpdaterModel extends AtomicES_Model
 		// to keep it for the internal transition)
 		this.nextEvent = ret.get(0).getClass() ;
 
-		this.logMessage("KettleUpdaterModel::output() " +
-									this.nextEvent.getCanonicalName()) ;
+//		this.logMessage("KettleUpdaterModel::output() " +
+//									this.nextEvent.getCanonicalName()) ;
 		return ret ;
 	}
 	
