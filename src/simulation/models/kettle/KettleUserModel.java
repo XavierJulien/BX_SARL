@@ -4,6 +4,8 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.math3.random.RandomDataGenerator;
 
+import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetHigh;
+import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetLow;
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -48,6 +50,7 @@ public class KettleUserModel extends AtomicES_Model {
 	protected KettleModel.State ks ;
 	
 	protected boolean initialCall;
+	protected boolean offCalled;
 
 	// -------------------------------------------------------------------------
 	// Constructors
@@ -80,6 +83,7 @@ public class KettleUserModel extends AtomicES_Model {
 		this.meanTimeBetweenUsages = 10.0 ;
 		
 		this.initialCall = true;
+		this.offCalled = false;
 		
 		this.meanTimeBetweenTempUpdate = 7.0;
 		this.ks = KettleModel.State.OFF ;
@@ -176,7 +180,7 @@ public class KettleUserModel extends AtomicES_Model {
 		Duration d ;
 		// See what is the type of event to be executed
 		
-		if (this.nextEvent.equals(FillKettle.class)) {
+	/*	if (this.nextEvent.equals(FillKettle.class)) {
 			// when a switch on event has been issued, plan the next event as
 			// a set high (the kettle is switched on in low mode
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
@@ -200,17 +204,73 @@ public class KettleUserModel extends AtomicES_Model {
 							new KettleUpdater(this.getCurrentStateTime().add(d))) ;
 				this.initialCall = false;
 			}
+			
+			
 		}else {
 			if (this.nextEvent.equals(KettleUpdater.class)) {
 				//System.out.println("next event : KettleUpdater");
 				// when a set high event has been issued, plan the next switch off
 				// after some time of usage
+				System.out.println("PROCESS");
 				d =	new Duration(
 						2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),
 						this.getSimulatedTimeUnit()) ;
 				this.scheduleEvent(
-						new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+					new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+				
+				
 			}
+		}*/
+		if (this.nextEvent.equals(FillKettle.class)) {
+			System.out.println("FILLING KETTLE");
+			// when a fill kettle event has been issued, plan the next event as
+			// a switchOn (the kettle is initialized as OFF)
+			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
+							 this.getSimulatedTimeUnit()) ;
+			// compute the time of occurrence (in the future)
+			Time t = this.getCurrentStateTime().add(d) ;
+			// schedule the event
+			this.scheduleEvent(new SwitchOn(t)) ;
+			// also, plan the EmptyKettle Event 
+			
+			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(
+						new EmptyKettle(this.getCurrentStateTime().add(d))) ;
+		} else if (this.nextEvent.equals(SwitchOn.class)) {
+			//When a SwitchOn is issued, plan the SwitchOff event, then update the KettleData
+			System.out.println("SWITCH ON KETTLE");
+			d =	new Duration(
+					2.0 * this.interdayDelay * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			//Plan the SwitchOff event
+			/*this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
+			d =	new Duration(
+					2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;*/
+			//update data
+			this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d)));
+		} else if (this.nextEvent.equals(KettleUpdater.class)) {
+			//when a KettleUpdater is issued, continue the data update
+			System.out.println("UPDATING...");
+			d =	new Duration(
+					2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(
+					new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+		}else if(this.nextEvent.equals(EmptyKettle.class)) {
+			//when an EmptyKettle is issued, 
+			System.out.println("EMPTY KETTLE");
+			d =	new Duration(
+					this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(
+					new SwitchOff(this.getCurrentStateTime().add(d))) ;
+			
+			d =	new Duration(
+					2.0 * this.interdayDelay * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(
+					new FillKettle(this.getCurrentStateTime().add(d))) ;
 		}
 		
 	}

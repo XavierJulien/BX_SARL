@@ -43,7 +43,6 @@ public class SwitchOff extends AbstractEvent {
 	public void				executeOn(AtomicModel model)
 	{
 		assert	model instanceof KettleModel ;
-
 		((KettleModel)model).updateState(KettleModel.State.OFF) ;
 	}
 }

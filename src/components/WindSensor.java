@@ -169,6 +169,7 @@ super.execute();
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			windSensorInboundPort.unpublishPort();
+			windSensorOutboundPort.unpublishPort();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
