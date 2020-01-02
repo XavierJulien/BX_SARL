@@ -23,11 +23,11 @@ extends		AbstractCVM
 				AbstractComponent.createComponent(
 						Kettle.class.getCanonicalName(),
 						new Object[]{}) ;
-//		@SuppressWarnings("unused")
-//		String heatingURI =
-//				AbstractComponent.createComponent(
-//						Heating.class.getCanonicalName(),
-//						new Object[]{}) ;
+		@SuppressWarnings("unused")
+		String heatingURI =
+				AbstractComponent.createComponent(
+						Heating.class.getCanonicalName(),
+						new Object[]{}) ;
 
 		super.deploy();
 	}

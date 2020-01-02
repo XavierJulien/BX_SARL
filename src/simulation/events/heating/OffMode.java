@@ -1,14 +1,12 @@
-package simulation.events.kettle;
-
-import java.util.Random;
+package simulation.events.heating;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
-import simulation.models.kettle.KettleModel;
+import simulation.models.heating.HeatingModel;
 
-public class FillKettle extends AbstractEvent {
+public class OffMode extends AbstractEvent {
 	
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -19,7 +17,7 @@ public class FillKettle extends AbstractEvent {
 	// Constructors
 	// -------------------------------------------------------------------------
 	
-	public				FillKettle(Time timeOfOccurrence)
+	public				OffMode(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
@@ -31,14 +29,14 @@ public class FillKettle extends AbstractEvent {
 	@Override
 	public String			eventAsString()
 	{
-		return "Kettle::FillKettle" ;
+		return "Heating::OffMode" ;
 	}
 	
 	
 	@Override
 	public boolean			hasPriorityOver(EventI e)
 	{
-		if (e instanceof SwitchOff || e instanceof EmptyKettle) {
+		if (e instanceof SwitchOff || e instanceof HeatingMode) {
 			return false ;
 		} else {
 			return true ;
@@ -48,12 +46,8 @@ public class FillKettle extends AbstractEvent {
 	@Override
 	public void				executeOn(AtomicModel model)
 	{
-		assert	model instanceof KettleModel ;
-		if(new Random().nextBoolean()) {
-			((KettleModel)model).updateContent(KettleModel.Content.FULL);			
-		}else {
-			((KettleModel)model).updateContent(KettleModel.Content.HALF);
-		}
+		assert	model instanceof HeatingModel ;
+		((HeatingModel)model).updateMode(HeatingModel.Mode.OFF);	
 	}
 }
 //-----------------------------------------------------------------------------

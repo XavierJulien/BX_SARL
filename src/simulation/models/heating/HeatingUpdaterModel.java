@@ -99,8 +99,8 @@ public class HeatingUpdaterModel extends AtomicES_Model
 		// model is given by the earliest time among the currently scheduled
 		// events.
 		Duration d = super.timeAdvance() ;
-		this.logMessage("HeatingUpdaterModel::timeAdvance() 1 " + d +
-									" " + this.eventListAsString()) ;
+//		this.logMessage("HeatingUpdaterModel::timeAdvance() 1 " + d +
+//									" " + this.eventListAsString()) ;
 		return d ;
 	}
 	
@@ -127,8 +127,8 @@ public class HeatingUpdaterModel extends AtomicES_Model
 		// to keep it for the internal transition)
 		this.nextEvent = ret.get(0).getClass() ;
 
-		this.logMessage("HeatingUpdaterModel::output() " +
-									this.nextEvent.getCanonicalName()) ;
+//		this.logMessage("HeatingUpdaterModel::output() " +
+//									this.nextEvent.getCanonicalName()) ;
 		return ret ;
 	}
 	

@@ -1,19 +1,11 @@
 package simulation.components.heating;
 
 import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import fr.sorbonne_u.devs_simulation.models.architectures.CoupledModelDescriptor;
-import fr.sorbonne_u.devs_simulation.models.events.EventI;
-import fr.sorbonne_u.devs_simulation.models.events.EventSink;
-import fr.sorbonne_u.devs_simulation.models.events.EventSource;
-import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.heating.HeatingCoupledModel;
 import simulation.models.heating.HeatingModel;
@@ -107,12 +99,12 @@ implements	EmbeddingComponentStateAccessI
 		Thread.sleep(10L) ;
 		// During the simulation, the following lines provide an example how
 		// to use the simulation model access facility by the component.
-		for (int i = 0 ; i < 100 ; i++) {
+		/*for (int i = 0 ; i < 100 ; i++) {
 			this.logMessage("Heating " +
 				this.asp.getModelStateValue(HeatingModel.URI, "state") + " "+
 				this.asp.getModelStateValue(HeatingModel.URI, "mode") + " " +
 				this.asp.getModelStateValue(HeatingModel.URI, "temperature")) ;
 			Thread.sleep(5L) ;
-		}
+		}*/
 	}
 }

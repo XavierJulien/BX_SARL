@@ -43,10 +43,8 @@ extends		AbstractEvent
 	@Override
 	public void				executeOn(AtomicModel model)
 	{
-		System.out.println("Model");
 		assert	model instanceof HeatingModel ;
 		((HeatingModel)model).updateState(HeatingModel.State.ON) ;
-		System.out.println("State : "+((HeatingModel)model).getState());
 	}
 }
 //-----------------------------------------------------------------------------
