@@ -73,8 +73,10 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	private static final long		serialVersionUID = 1L;
 	protected static final double	CONSUMPTION = 1200.0; // Watts
 	private static final String		SERIES = "temperature";
+	private static final String		SERIESONOFF = "OnOff";
 	public static final String		URI = "KettleModel";
 	protected XYPlotter				temperaturePlotter;
+	protected XYPlotter				onOffPlotter; 
 	
 	//CURRENT
 	protected State					currentState;
@@ -104,10 +106,25 @@ public class KettleModel extends AtomicHIOAwithEquations {
 						"Temperature (C)",
 						100,
 						0,
-						600,
-						400);
+						300,
+						200);
+		
+		PlotterDescription pdOnOff =
+				new PlotterDescription(
+						"Kettle State",
+						"Time (sec)",
+						"State (ON = 1/OFF = 0)",
+						400,
+						0,
+						300,
+						200);
+		
 		this.temperaturePlotter = new XYPlotter(pd);
 		this.temperaturePlotter.createSeries(SERIES);
+
+		
+		this.onOffPlotter = new XYPlotter(pdOnOff);
+		this.onOffPlotter.createSeries(SERIESONOFF);
 
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger());
@@ -140,6 +157,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		this.temperaturePlotter.initialise();
 		// show the plotter on the screen
 		this.temperaturePlotter.showPlotter();
+		
+		
+		//initialise the plotter for the state
+		this.onOffPlotter.initialise();
+		this.onOffPlotter.showPlotter();
 
 		try {
 			// set the debug level triggering the production of log messages.
@@ -163,6 +185,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
+		
+		this.onOffPlotter.addData(
+				SERIESONOFF,
+				this.getCurrentStateTime().getSimulatedTime(),
+				0);
 
 		super.initialiseVariables(startTime);
 	}
@@ -236,6 +263,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
+		
+		this.onOffPlotter.addData(
+				SERIESONOFF,
+				this.getCurrentStateTime().getSimulatedTime(),
+				this.getStateDouble());
 
 		if (this.hasDebugLevel(2)) {
 			//this.logMessage("KettleModel::userDefinedExternalTransition 3 "+ this.getState());
@@ -254,6 +286,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
+		
+		this.onOffPlotter.addData(
+				SERIESONOFF,
+				this.getCurrentStateTime().getSimulatedTime(),
+				this.getStateDouble());
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
@@ -271,6 +308,15 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				this.getTemperature());
 		Thread.sleep(10000L);
 		this.temperaturePlotter.dispose();
+		
+
+		
+		this.onOffPlotter.addData(
+				SERIESONOFF,
+				endTime.getSimulatedTime(),
+				this.getStateDouble());
+		Thread.sleep(10000L);
+		this.onOffPlotter.dispose();
 
 		super.endSimulation(endTime);
 	}
@@ -290,6 +336,15 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	{
 		return this.currentState;
 	}
+	
+	public double getStateDouble() {
+		if(this.getState() == State.ON) {
+			return 1;
+		}else {
+			return 0;
+		}
+	}
+	
 	public Content		getContent() {
 		return this.currentContent;
 	}
