@@ -401,7 +401,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	}
 	
 	public void 		updateContent() {
-		if(currentContent == Content.EMPTY) {
+/*		if(currentContent == Content.EMPTY) {
 			Double stay_empty = Math.random();
 			if(stay_empty > 0.95) {
 				Double rand = Math.random();
@@ -419,7 +419,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			if(Math.random() < 0.25) {
 				currentContent = Content.EMPTY;
 			}
-		}
+		}*/
 	}
 	
 	public void			updateContent(Content c)

@@ -3,8 +3,7 @@ package simulation;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulation.components.heating.Heating;
-import simulation.components.kettle.Kettle;
+import simulation.components.windSensor.WindSensor;
 
 public class			CVM
 extends		AbstractCVM
@@ -18,15 +17,21 @@ extends		AbstractCVM
 	@Override
 	public void			deploy() throws Exception
 	{
-		@SuppressWarnings("unused")
+		/*@SuppressWarnings("unused")
 		String kettleURI =
 				AbstractComponent.createComponent(
 						Kettle.class.getCanonicalName(),
-						new Object[]{}) ;
+						new Object[]{}) ;*/
+//		@SuppressWarnings("unused")
+//		String heatingURI =
+//				AbstractComponent.createComponent(
+//						Heating.class.getCanonicalName(),
+//						new Object[]{}) ;
+		
 		@SuppressWarnings("unused")
-		String heatingURI =
+		String windTurbineURI =
 				AbstractComponent.createComponent(
-						Heating.class.getCanonicalName(),
+						WindSensor.class.getCanonicalName(),
 						new Object[]{}) ;
 
 		super.deploy();
@@ -36,7 +41,7 @@ extends		AbstractCVM
 	{
 		try {
 			CVM c = new CVM();
-			c.startStandardLifeCycle(10000L) ;
+			c.startStandardLifeCycle(50000L) ;
 			System.exit(0) ;
 		} catch (Exception e) {
 			throw new RuntimeException(e) ;

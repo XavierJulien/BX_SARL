@@ -1,4 +1,4 @@
-package simulation.models.heating;
+package simulation.models.windSensor;
 
 import java.util.Map;
 import java.util.Vector;
@@ -19,41 +19,24 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.heating.HeatingMode;
-import simulation.events.heating.HeatingUpdater;
-import simulation.events.heating.RestMode;
-import simulation.events.heating.SwitchOff;
-import simulation.events.heating.SwitchOn;
+import simulation.events.windSensor.WindSensorUpdater;
+import simulation.models.heating.HeatingModel.HeatingReport;
 
-@ModelExternalEvents(imported = {SwitchOn.class,
-								 SwitchOff.class,
-								 RestMode.class,
-								 HeatingMode.class,
-								 HeatingUpdater.class})
+@ModelExternalEvents(imported = {WindSensorUpdater.class})
 
-public class HeatingModel extends AtomicHIOAwithEquations {
+public class WindSensorModel extends AtomicHIOAwithEquations {
 	
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
 
-	public static enum 		State {
-		OFF,
-		ON
-	}
-	
-	public static enum 		Mode {
-		OFF,
-		REST,
-		HEATING
-	}
 
-	public static class		HeatingReport
+	public static class		WindSensorReport
 	extends		AbstractSimulationReport
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public			HeatingReport(String modelURI)
+		public			WindSensorReport(String modelURI)
 		{
 			super(modelURI);
 		}
@@ -72,16 +55,12 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 	private static final long					serialVersionUID = 1L;
 	protected static final double				CONSUMPTION = 1200.0; // Watts
-	private static final String					SERIES = "temperature";
-	private static final String					SERIESONOFF = "OnOff";
-	public static final String					URI = "HeatingModel";
-	protected XYPlotter							temperaturePlotter;
-	protected XYPlotter							onOffPlotter; 
+	private static final String					SERIES = "wind";
+	public static final String					URI = "WindSensorModel";
+	protected XYPlotter							windPlotter;
 	
 	//CURRENT
-	protected State								currentState;
-	protected Mode 								currentMode;
-	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
+	protected final Value<Double>				currentWind = new Value<Double>(this, 0.0, 0);
 	
 	protected EmbeddingComponentStateAccessI 	componentRef;
 
@@ -89,7 +68,7 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public						HeatingModel(
+	public						WindSensorModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
@@ -101,29 +80,15 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
-						"Heating temperature",
+						"Wind Speed",
 						"Time (sec)",
-						"Temperature (C)",
+						"Wind (m/s)",
 						100,
 						0,
 						600,
 						400);
-		this.temperaturePlotter = new XYPlotter(pd);
-		this.temperaturePlotter.createSeries(SERIES);
-
-		
-		PlotterDescription pdOnOff =
-				new PlotterDescription(
-						"Heating State",
-						"Time (sec)",
-						"State (ON = 1/OFF = 0)",
-						700,
-						0,
-						600,
-						200);
-		
-		this.onOffPlotter = new XYPlotter(pdOnOff);
-		this.onOffPlotter.createSeries(SERIESONOFF);
+		this.windPlotter = new XYPlotter(pd);
+		this.windPlotter.createSeries(SERIES);
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger());
 	}
@@ -148,18 +113,11 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	public void					initialiseState(Time initialTime)
 	{
 		// the heating starts in mode OFF
-		this.currentState = State.OFF;
-		this.currentMode = Mode.OFF;
 
 		// initialisation of the temperature plotter 
-		this.temperaturePlotter.initialise();
+		this.windPlotter.initialise();
 		// show the plotter on the screen
-		this.temperaturePlotter.showPlotter();
-
-		
-		//initialise the plotter for the state
-		this.onOffPlotter.initialise();
-		this.onOffPlotter.showPlotter();
+		this.windPlotter.showPlotter();
 		
 		
 		try {
@@ -177,18 +135,14 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	protected void				initialiseVariables(Time startTime)
 	{
 		// as the heating starts in mode OFF, its power consumption is 0
-		this.currentTemperature.v = 0.0;
+		this.currentWind.v = 0.0;
 
 		// first data in the plotter to start the plot.
-		this.temperaturePlotter.addData(
+		this.windPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
+				this.getWind());
 
-		this.onOffPlotter.addData(
-				SERIESONOFF,
-				this.getCurrentStateTime().getSimulatedTime(),
-				0);
 		
 		super.initialiseVariables(startTime);
 	}
@@ -258,15 +212,12 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 		// the plot is piecewise constant; this data will close the currently
 		// open piece
-		this.temperaturePlotter.addData(
+		this.windPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
+				this.getWind());
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
-				this.getCurrentStateTime().getSimulatedTime(),
-				this.getStateDouble());
+		
 
 		if (this.hasDebugLevel(2)) {
 			//this.logMessage("HeatingModel::userDefinedExternalTransition 3 "+ this.getState());
@@ -281,15 +232,11 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		}
 
 		// add a new data on the plotter; this data will open a new piece
-		this.temperaturePlotter.addData(
+		this.windPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
+				this.getWind());
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
-				this.getCurrentStateTime().getSimulatedTime(),
-				this.getStateDouble());
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
@@ -301,19 +248,14 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	@Override
 	public void					endSimulation(Time endTime) throws Exception
 	{
-		this.temperaturePlotter.addData(
+		this.windPlotter.addData(
 				SERIES,
 				endTime.getSimulatedTime(),
-				this.getTemperature());
+				this.getWind());
 		Thread.sleep(10000L);
-		this.temperaturePlotter.dispose();
+		this.windPlotter.dispose();
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
-				endTime.getSimulatedTime(),
-				this.getStateDouble());
-		Thread.sleep(10000L);
-		this.onOffPlotter.dispose();
+		
 
 		super.endSimulation(endTime);
 	}
@@ -329,76 +271,21 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 	
-	public State				getState()
+	
+	public double				getWind()
 	{
-		return this.currentState;
-	}
-	public Mode					getMode() {
-		return this.currentMode;
-	}
-	public double				getTemperature()
-	{
-		return this.currentTemperature.v;
+		return this.currentWind.v;
 	}
 	
-	public double getStateDouble() {
-		if(this.getState() == State.ON) {
-			return 1;
-		}else {
-			return 0;
-		}
-	}
 	
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
 
-	public void					updateTemperature() {
-		if(currentState == State.ON) {
-			if(currentMode == Mode.REST) {
-				currentTemperature.v -= 1;
-				//System.out.println("ON/FULL Temperature : "+currentTemperature.v);
-			}
-			if(currentMode == Mode.HEATING) {
-				currentTemperature.v += 4;
-				//System.out.println("ON/HALF Temperature : "+currentTemperature.v);
-			}
-		}
-		if(currentState == State.OFF) {
-			if(currentTemperature.v > 0.2) {
-				currentTemperature.v -= 0.2;
-			}else {
-				currentTemperature.v = 0.;
-			}
-					//System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
-		}
-	}
-	
-	public void					updateState(State s){
-		this.currentState = s;
-	}
-	
-	public void 				updateMode() {
-		System.out.println(currentMode);
-		if(currentState == State.ON) {
-			if(this.currentMode == Mode.REST){
-				if(currentTemperature.v < 15){
-					updateMode(Mode.HEATING);
-				}
-			}
-			if(this.currentMode == Mode.HEATING){
-				if(currentTemperature.v > 20){
-					updateMode(Mode.REST);
-				}
-			}
-		}else {
-			updateMode(Mode.OFF);
-		}
-	}
-	
-	public void					updateMode(Mode c)
-	{
-		this.currentMode = c;
+	public void					updateWind() {
+		//TODO will be changed 
+		currentWind.v += 3;
+		
 	}
 }
 //------------------------------------------------------------------------------

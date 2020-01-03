@@ -1,4 +1,4 @@
-package simulation.components.heating;
+package simulation.components.windSensor;
 
 import java.util.HashMap;
 
@@ -7,11 +7,11 @@ import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulation.models.heating.HeatingCoupledModel;
-import simulation.models.heating.HeatingModel;
+import simulation.models.windSensor.WindSensorCoupledModel;
+import simulation.models.windSensor.WindSensorModel;
 
 
-public class			Heating
+public class			WindSensor
 extends		AbstractCyPhyComponent
 implements	EmbeddingComponentStateAccessI
 {
@@ -19,13 +19,13 @@ implements	EmbeddingComponentStateAccessI
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
-	protected HeatingSimulatorPlugin		asp ;
+	protected WindSensorSimulatorPlugin		asp ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	protected Heating() throws Exception{
+	protected WindSensor() throws Exception{
 		// 2 threads to be able to execute tasks and requests while executing
 		// the DEVS simulation.
 		super(2, 0) ;
@@ -33,7 +33,7 @@ implements	EmbeddingComponentStateAccessI
 
 	}
 
-	protected Heating(String reflectionInboundPortURI) throws Exception{
+	protected WindSensor(String reflectionInboundPortURI) throws Exception{
 		super(reflectionInboundPortURI, 1, 0) ;
 		this.initialise() ;
 	}
@@ -43,7 +43,7 @@ implements	EmbeddingComponentStateAccessI
 		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		// Create the appropriate DEVS simulation plug-in.
-		this.asp = new HeatingSimulatorPlugin() ;
+		this.asp = new WindSensorSimulatorPlugin() ;
 		
 		// Set the URI of the plug-in, using the URI of its associated
 		// simulation model.
@@ -64,14 +64,12 @@ implements	EmbeddingComponentStateAccessI
 
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
-		return HeatingCoupledModel.build() ;
+		return WindSensorCoupledModel.build() ;
 	}
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception{
-		return this.asp.getModelStateValue(HeatingModel.URI, "state") + " " + 
-			   this.asp.getModelStateValue(HeatingModel.URI, "mode") + " " + 
-			   this.asp.getModelStateValue(HeatingModel.URI, "temperature");
+		return this.asp.getModelStateValue(WindSensorModel.URI, "wind");
 	}
 	
 	@Override
