@@ -20,7 +20,6 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.windSensor.WindSensorUpdater;
-import simulation.models.heating.HeatingModel.HeatingReport;
 
 @ModelExternalEvents(imported = {WindSensorUpdater.class})
 
@@ -54,8 +53,8 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 
 	private static final long					serialVersionUID = 1L;
-	protected static final double				CONSUMPTION = 1200.0; // Watts
 	private static final String					SERIES = "wind";
+	private static double 						xValue = 0;
 	public static final String					URI = "WindSensorModel";
 	protected XYPlotter							windPlotter;
 	
@@ -76,7 +75,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	{
 		super(uri, simulatedTimeUnit, simulationEngine);
 
-		// creation of a plotter to show the evolution of the temperature over
+		// creation of a plotter to show the evolution of the wind speed over
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
@@ -114,7 +113,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	{
 		// the heating starts in mode OFF
 
-		// initialisation of the temperature plotter 
+		// initialisation of the wind speed plotter 
 		this.windPlotter.initialise();
 		// show the plotter on the screen
 		this.windPlotter.showPlotter();
@@ -134,8 +133,8 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	@Override
 	protected void				initialiseVariables(Time startTime)
 	{
-		// as the heating starts in mode OFF, its power consumption is 0
-		this.currentWind.v = 0.0;
+		// the wind sensor starts to emit the wind speed
+		this.currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
 
 		// first data in the plotter to start the plot.
 		this.windPlotter.addData(
@@ -174,11 +173,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	public void					userDefinedInternalTransition(Duration elapsedTime)
 	{
 		if (this.componentRef != null) {
-			// This is an example showing how to access the component state
-			// from a simulation model; this must be done with care and here
-			// we are not synchronising with other potential component threads
-			// that may access the state of the component object at the same
-			// time.
+			
 			try {
 				this.logMessage("component state = " +
 						componentRef.getEmbeddingComponentStateValue("state"));
@@ -193,22 +188,18 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	public void					userDefinedExternalTransition(Duration elapsedTime)
 	{
 		if (this.hasDebugLevel(2)) {
-//			this.logMessage("HeatingModel::userDefinedExternalTransition 1");
+//			this.logMessage("WindSensorModel::userDefinedExternalTransition 1");
 		}
 
 		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 		// when this method is called, there is at least one external event,
-		// and for the heating model, there will be exactly one by
+		// and for the wind sensor model, there will be exactly one by
 		// construction.
 		assert	currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("HeatingModel::userDefinedExternalTransition 2 "
-//										+ ce.getClass().getCanonicalName());
-		}
 
 		// the plot is piecewise constant; this data will close the currently
 		// open piece
@@ -219,17 +210,12 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		
 		
 
-		if (this.hasDebugLevel(2)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 3 "+ this.getState());
-		}
 
 		// execute the current external event on this model, changing its state
-		// and temperature level
+		// and Wind speed
 		ce.executeOn(this);
 
-		if (this.hasDebugLevel(1)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 4 " + this.getState());
-		}
+
 
 		// add a new data on the plotter; this data will open a new piece
 		this.windPlotter.addData(
@@ -239,9 +225,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		
 
 		super.userDefinedExternalTransition(elapsedTime);
-		if (this.hasDebugLevel(2)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 5");
-		}
+
 	}
 
 
@@ -264,7 +248,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	@Override
 	public SimulationReportI	getFinalReport() throws Exception
 	{
-		return new HeatingReport(this.getURI());
+		return new WindSensorReport(this.getURI());
 	}
 
 	// ------------------------------------------------------------------------
@@ -284,7 +268,8 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 
 	public void					updateWind() {
 		//TODO will be changed 
-		currentWind.v += 3;
+		currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
+		xValue += 0.1;
 		
 	}
 }
