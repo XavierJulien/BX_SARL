@@ -1,4 +1,4 @@
-package simulation.models.battery;
+package simulation.models.charger;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -25,10 +25,8 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulation.events.battery.Charging;
-import simulation.events.battery.Discharging;
 
-public class BatteryCoupledModel  extends CoupledModel
+public class ChargerCoupledModel  extends CoupledModel
 {
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -36,13 +34,13 @@ public class BatteryCoupledModel  extends CoupledModel
 
 	private static final long serialVersionUID = 1L ;
 	/** URI of the unique instance of this class (in this example).			*/
-	public static final String	URI = "BatteryCoupledModel" ;
+	public static final String	URI = "ChargerCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public BatteryCoupledModel(
+	public ChargerCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine,
@@ -66,18 +64,18 @@ public class BatteryCoupledModel  extends CoupledModel
 				new HashMap<>() ;
 
 		atomicModelDescriptors.put(
-				BatteryModel.URI,
+				ChargerModel.URI,
 				AtomicHIOA_Descriptor.create(
-						BatteryModel.class,
-						BatteryModel.URI,
+						ChargerModel.class,
+						ChargerModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		atomicModelDescriptors.put(
-				BatteryUserModel.URI,
+				ChargerUserModel.URI,
 				AtomicModelDescriptor.create(
-						BatteryUserModel.class,
-						BatteryUserModel.URI,
+						ChargerUserModel.class,
+						ChargerUserModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
@@ -86,29 +84,29 @@ public class BatteryCoupledModel  extends CoupledModel
 				new HashMap<String,CoupledModelDescriptor>() ;
 
 		Set<String> submodels = new HashSet<String>() ;
-		submodels.add(BatteryModel.URI) ;
-		submodels.add(BatteryUserModel.URI) ;
+		submodels.add(ChargerModel.URI) ;
+		submodels.add(ChargerUserModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(BatteryUserModel.URI, Charging.class) ;
+				new EventSource(ChargerUserModel.URI, simulation.events.charger.Charging.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
-						new EventSink(BatteryModel.URI, Charging.class)} ;
+						new EventSink(ChargerModel.URI, simulation.events.charger.Charging.class)} ;
 		connections.put(from1, to1) ;
 		EventSource from2 =
-				new EventSource(BatteryUserModel.URI, Discharging.class) ;
+				new EventSource(ChargerUserModel.URI, simulation.events.charger.OffEvent.class) ;
 		EventSink[] to2 = new EventSink[] {
-				new EventSink(BatteryModel.URI, Discharging.class)} ;
+				new EventSink(ChargerModel.URI, simulation.events.charger.OffEvent.class)} ;
 		connections.put(from2, to2) ;
 		
 
 		coupledModelDescriptors.put(
-				BatteryCoupledModel.URI,
+				ChargerCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
-							BatteryCoupledModel.class,
-							BatteryCoupledModel.URI,
+							ChargerCoupledModel.class,
+							ChargerCoupledModel.URI,
 							submodels,
 							null,
 							null,
@@ -120,7 +118,7 @@ public class BatteryCoupledModel  extends CoupledModel
 							null)) ;
 
 		return new Architecture(
-						BatteryCoupledModel.URI,
+						ChargerCoupledModel.URI,
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);

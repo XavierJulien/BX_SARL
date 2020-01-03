@@ -14,12 +14,11 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import simulation.events.battery.Charging;
 import simulation.events.battery.Discharging;
-import simulation.models.heating.HeatingModel;
 
 @ModelExternalEvents(exported = { Charging.class,
 								  Discharging.class })
 
-public class BatteyUserModel extends AtomicES_Model{
+public class BatteryUserModel extends AtomicES_Model{
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
@@ -44,7 +43,7 @@ public class BatteyUserModel extends AtomicES_Model{
 	// Constructors
 	// -------------------------------------------------------------------------
 	
-	public BatteyUserModel(
+	public BatteryUserModel(
 			String uri,
 			TimeUnit simulatedTimeUnit,
 			SimulatorI simulationEngine

@@ -1,10 +1,10 @@
-package simulation.models.battery;
+package simulation.components.charger;
 
 import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
+import simulation.models.charger.ChargerModel;
 
-public class 		BatterySimulatorPlugin 
-extends				AtomicSimulatorPlugin
+public class ChargerSimulatorPlugin extends		AtomicSimulatorPlugin
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -15,12 +15,11 @@ extends				AtomicSimulatorPlugin
 		// Get a Java reference on the object representing the corresponding
 		// simulation model.
 		ModelDescriptionI m = this.simulator.getDescendentModel(modelURI) ;
-		assert	m instanceof BatteryModel ;
-		if (name.equals("battery")) {
-			return ((BatteryModel)m).getBattery() ;
-		}else {
-			assert name.equals("mode");
-			return ((BatteryModel)m).getMode() ;
-		}
+		
+		assert	m instanceof ChargerModel ;
+		
+		assert (name.equals("consumption"));
+		return ((ChargerModel)m).getConsumption() ;
+		
 	}
 }

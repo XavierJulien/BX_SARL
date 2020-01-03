@@ -1,4 +1,4 @@
-package simulation.models.battery;
+package simulation.models.charger;
 
 import java.util.Map;
 import java.util.Vector;
@@ -17,17 +17,15 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.battery.Charging;
-import simulation.events.battery.Discharging;
 
-@ModelExternalEvents(imported = { Charging.class, 
-								  Discharging.class })
+@ModelExternalEvents(imported = { simulation.events.charger.Charging.class, 
+								  simulation.events.charger.OffEvent.class })
 
-public class BatteryModel extends AtomicHIOAwithEquations {
+public class ChargerModel extends AtomicHIOAwithEquations {
 	
 	public static enum 		Mode {
 		CHARGING,
-		DISCHARGING
+		OFF
 	}
 	
 	// -------------------------------------------------------------------------
@@ -35,24 +33,24 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L;
-	private static final String SERIES = "battery";
+	private static final String SERIES = "consumption";
 	private static final String SERIES2 = "mode";
-	public static final String URI = "BatteryModel";
-	protected XYPlotter batteryRemainingPlotter;
-	protected XYPlotter batteryModePlotter;
+	public static final String URI = "ChargerModel";
+	protected XYPlotter consumptionPlotter;
+	protected XYPlotter chargerModePlotter;
 	protected EmbeddingComponentStateAccessI componentRef;
 	protected Duration delay;
 
 	//CURRENT
 	protected Mode 								currentMode;
-	protected final Value<Double> 				currentBattery = new Value<Double>(this, 0.0, 0) ;
+	protected final Value<Double> 				currentConsumption = new Value<Double>(this, 0.0, 0) ;
 
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public							BatteryModel(
+	public							ChargerModel(
 			String uri,
 			TimeUnit simulatedTimeUnit, 
 			SimulatorI simulationEngine
@@ -62,27 +60,27 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 		PlotterDescription pd = 
 				new PlotterDescription(
-						"Remaining Battery", 
+						"Consumption", 
 						"Time (sec)", 
 						"kw", 
 						100, 
 						0, 
 						600,
 						400);
-		this.batteryRemainingPlotter = new XYPlotter(pd);
-		this.batteryRemainingPlotter.createSeries(SERIES);
+		this.consumptionPlotter = new XYPlotter(pd);
+		this.consumptionPlotter.createSeries(SERIES);
 
 		PlotterDescription pd2 = 
 				new PlotterDescription(
-						"Battery Mode", 
+						"Charger Mode", 
 						"Time (sec)", 
-						"CHARGING = 1 / DISCHARGING = 0", 
+						"CHARGING = 1 / OFF = 0", 
 						700, 
 						100, 
 						600,
 						400);
-		this.batteryModePlotter = new XYPlotter(pd2);
-		this.batteryModePlotter.createSeries(SERIES2);
+		this.chargerModePlotter = new XYPlotter(pd2);
+		this.chargerModePlotter.createSeries(SERIES2);
 		
 
 		this.setLogger(new StandardLogger());
@@ -102,14 +100,14 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	@Override
 	public void initialiseState(Time initialTime) {
 		
-		this.currentMode = Mode.DISCHARGING;
+		this.currentMode = Mode.OFF;
 		
 		
-		this.batteryRemainingPlotter.initialise();
-		this.batteryRemainingPlotter.showPlotter();
+		this.consumptionPlotter.initialise();
+		this.consumptionPlotter.showPlotter();
 		
-		this.batteryModePlotter.initialise();
-		this.batteryModePlotter.showPlotter();
+		this.chargerModePlotter.initialise();
+		this.chargerModePlotter.showPlotter();
 
 		try {
 			this.setDebugLevel(0);
@@ -123,14 +121,14 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	@Override
 	protected void initialiseVariables(Time startTime) {
 
-		this.currentBattery.v = 0.0;
+		this.currentConsumption.v = 0.0;
 		
-		this.batteryRemainingPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
-				currentBattery.v);
+				currentConsumption.v);
 		
-		this.batteryModePlotter.addData(
+		this.chargerModePlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				0);
@@ -172,7 +170,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		
 		if (this.hasDebugLevel(2)) {
-		//	this.logMessage("BatteryModel::userDefinedExternalTransition 1");
+		//	this.logMessage("ChargerModel::userDefinedExternalTransition 1");
 		}
 
 
@@ -187,24 +185,24 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 //										ce.getClass().getCanonicalName());
 		}
 
-		this.batteryRemainingPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
-				currentBattery.v);
+				currentConsumption.v);
 		
-		this.batteryModePlotter.addData(
+		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
 		
 		ce.executeOn(this);
 
-		this.batteryRemainingPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
-				currentBattery.v);
+				currentConsumption.v);
 		
-		this.batteryModePlotter.addData(
+		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
@@ -219,19 +217,19 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	@Override
 	public void					endSimulation(Time endTime) throws Exception
 	{
-		this.batteryRemainingPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
-				currentBattery.v);
+				currentConsumption.v);
 		Thread.sleep(10000L);
-		this.batteryRemainingPlotter.dispose();
+		this.consumptionPlotter.dispose();
 		
-		this.batteryModePlotter.addData(
+		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
 		Thread.sleep(10000L);
-		this.batteryModePlotter.dispose();
+		this.chargerModePlotter.dispose();
 
 		super.endSimulation(endTime);
 	}
@@ -245,8 +243,8 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	}
 	
 	
-	public double getBattery() {
-		return currentBattery.v;
+	public double getConsumption() {
+		return currentConsumption.v;
 	}
 	
 	public double getModeDouble() {
@@ -262,25 +260,17 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 
 	
-	public void charge(double in_energy)
+	public void charging(double sending_energy) //se demerder pour envoyer un event
 	{
 		this.currentMode = Mode.CHARGING;
-		if(currentBattery.v < 100.0) {
-			this.currentBattery.v += in_energy;
-			if(this.currentBattery.v > 100) this.currentBattery.v = 100.0;
-		}else {
-			this.currentBattery.v = 100.0;
-		}
+		this.currentConsumption.v = 1200.0;
+		//sending event
 	}
 	
-	public void consume(double out_energy)
+	public void offCharging() // idem
 	{
-		this.currentMode = Mode.DISCHARGING;
-		if(currentBattery.v > 0) {
-			this.currentBattery.v -= out_energy;
-			if(this.currentBattery.v < 0) this.currentBattery.v = 0.0;
-		}else {
-			this.currentBattery.v = 0.0;
-		}
+		this.currentMode = Mode.OFF;
+		this.currentConsumption.v = 0.0;
+		//sending event
 	}
 }
