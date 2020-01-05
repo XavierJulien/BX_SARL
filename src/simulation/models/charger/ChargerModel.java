@@ -17,9 +17,11 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
+import simulation.events.charger.ChargerEvent;
+import simulation.events.charger.OffEvent;
 
-@ModelExternalEvents(imported = { simulation.events.charger.Charging.class, 
-								  simulation.events.charger.OffEvent.class })
+@ModelExternalEvents(imported = { ChargerEvent.class, 
+								  OffEvent.class })
 
 public class ChargerModel extends AtomicHIOAwithEquations {
 	

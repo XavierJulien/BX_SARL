@@ -6,12 +6,12 @@ import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
 import simulation.models.charger.ChargerModel;
 
-public class Charging extends AbstractEvent{
+public class ChargerEvent extends AbstractEvent{
 
 	private static final long serialVersionUID = 1L;
 	private double in_energy;
 	
-	public Charging(Time timeOfOccurrence, double in_energy)
+	public ChargerEvent(Time timeOfOccurrence, double in_energy)
 	{
 		super(timeOfOccurrence, null) ;
 		this.in_energy = in_energy;

@@ -25,6 +25,8 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
+import simulation.events.charger.ChargerEvent;
+import simulation.events.charger.OffEvent;
 
 public class ChargerCoupledModel  extends CoupledModel
 {
@@ -90,15 +92,15 @@ public class ChargerCoupledModel  extends CoupledModel
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(ChargerUserModel.URI, simulation.events.charger.Charging.class) ;
+				new EventSource(ChargerUserModel.URI, ChargerEvent.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
-						new EventSink(ChargerModel.URI, simulation.events.charger.Charging.class)} ;
+						new EventSink(ChargerModel.URI, ChargerEvent.class)} ;
 		connections.put(from1, to1) ;
 		EventSource from2 =
-				new EventSource(ChargerUserModel.URI, simulation.events.charger.OffEvent.class) ;
+				new EventSource(ChargerUserModel.URI, OffEvent.class) ;
 		EventSink[] to2 = new EventSink[] {
-				new EventSink(ChargerModel.URI, simulation.events.charger.OffEvent.class)} ;
+				new EventSink(ChargerModel.URI, OffEvent.class)} ;
 		connections.put(from2, to2) ;
 		
 

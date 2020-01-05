@@ -74,7 +74,7 @@ public class BatteryUserModel extends AtomicES_Model{
 		this.bm = BatteryModel.Mode.DISCHARGING;
 		
 		
-		this.chargingCapacity = 20.0;
+		this.chargingCapacity = 206.0;
 		this.dischargingOnUse = 5.0;
 		this.dischargingOffUse = 1.0;
 		
