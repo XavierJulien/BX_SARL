@@ -1,6 +1,7 @@
 package components;
 
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -12,11 +13,15 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.models.events.EventI;
+import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.kettle.KettleI;
 import ports.kettle.KettleInboundPort;
 import ports.kettle.KettleOutboundPort;
 import simulation.components.kettle.KettleSimulatorPlugin;
+import simulation.events.kettle.FillKettle;
+import simulation.events.kettle.KettleUpdater;
 import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
 
@@ -27,6 +32,7 @@ extends AbstractCyPhyComponent
 implements EmbeddingComponentStateAccessI{
 	
 	protected final String				uri ;
+	protected final String 				modelURI;
 	protected final String				kettleInboundPortURI ;	
 	protected final String				kettleOutboundPortURI ;
 	protected final String				kettleElectricMeterOutboundPortURI ;
@@ -53,7 +59,8 @@ implements EmbeddingComponentStateAccessI{
 						 String kettleOutboundPortURI,
 						 String kettleInboundPortURI,
 						 String kettleElectricMeterOutboundPortURI,
-						 String kettleElectricMeterInboundPortURI) throws Exception{
+						 String kettleElectricMeterInboundPortURI,
+						 String modelURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
@@ -65,6 +72,8 @@ implements EmbeddingComponentStateAccessI{
 		this.kettleOutboundPortURI = kettleOutboundPortURI;
 		this.kettleElectricMeterInboundPortURI = kettleElectricMeterInboundPortURI;
 		this.kettleElectricMeterOutboundPortURI = kettleElectricMeterOutboundPortURI;
+		
+		this.modelURI = modelURI;
 
 		//-------------------PUBLISH-------------------
 		kettleInboundPort = new KettleInboundPort(kettleInboundPortURI, this) ;
@@ -160,9 +169,10 @@ implements EmbeddingComponentStateAccessI{
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
 		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
+		
+		
 		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
-
 		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
 	}
@@ -176,7 +186,7 @@ implements EmbeddingComponentStateAccessI{
 		super.execute();
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef", this) ;
+		simParams.put(modelURI, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(
@@ -200,11 +210,14 @@ implements EmbeddingComponentStateAccessI{
 						try {
 							while(true) {
 								((Kettle)this.getTaskOwner()).updateState((KettleModel.State)asp.getModelStateValue(KettleModel.URI, "state"));
+								
 								if(isOn) {
 									((Kettle)this.getTaskOwner()).updateConsumption((KettleModel.Content)asp.getModelStateValue(KettleModel.URI, "content"));
 									((Kettle)this.getTaskOwner()).sendConsumption() ;
+									Vector<EventI> v = new Vector<EventI>();
+									v.add(new KettleUpdater(asp.getTimeOfNextEvent().add(new Duration(1, TimeUnit.SECONDS))));
+									asp.storeInput(KettleModel.URI, v);
 								}
-								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}
 					}
@@ -246,8 +259,11 @@ implements EmbeddingComponentStateAccessI{
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
-				   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
-				   this.asp.getModelStateValue(KettleModel.URI, "temperature");
+		if(Math.random()<0.10) {
+			return new FillKettle(asp.getTimeOfNextEvent().add(new Duration(1, TimeUnit.SECONDS)));
+		}else {
+			return new KettleUpdater(asp.getTimeOfNextEvent().add(new Duration(1, TimeUnit.SECONDS)));
+		}
+		
 	}
 }

@@ -9,7 +9,6 @@ import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.battery.BatteryCoupledModel;
 import simulation.models.battery.BatteryModel;
-import simulation.models.battery.BatterySimulatorPlugin;
 
 public class Battery 
 extends		AbstractCyPhyComponent

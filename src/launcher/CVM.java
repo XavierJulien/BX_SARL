@@ -59,6 +59,7 @@ public class CVM extends AbstractCVM {
 	//-------------------------KETTLE---------------------------
 	//--------------------------------------------------------------	
 	public static final String	KETTLE_COMPONENT_URI = "my-URI-kettle" ;
+	public static final String 	KETTLE_MODEL_URI = "kettle-model-uri";
 	protected static final String	URIKettleOutboundPortURI = "kettleOPort" ;
 	protected static final String	URIKettleInboundPortURI = "kettleIPort" ;
 	protected static final String	URIControllerKettleOutboundPortURI = "controllerKettleOPort" ;
@@ -190,7 +191,8 @@ public class CVM extends AbstractCVM {
 								URIKettleOutboundPortURI,
 								URIKettleInboundPortURI,
 								URIElectricMeterKettleOutboundPortURI,
-								URIElectricMeterKettleInboundPortURI}) ;
+								URIElectricMeterKettleInboundPortURI,
+								KETTLE_MODEL_URI}) ;
 		
 
 		assert	this.isDeployedComponent(this.uriKettleURI) ;

@@ -112,7 +112,6 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	public void					initialiseState(Time initialTime)
 	{
 		// the heating starts in mode OFF
-
 		// initialisation of the wind speed plotter 
 		this.windPlotter.initialise();
 		// show the plotter on the screen

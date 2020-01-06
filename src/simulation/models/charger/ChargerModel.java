@@ -131,7 +131,7 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 				currentConsumption.v);
 		
 		this.chargerModePlotter.addData(
-				SERIES, 
+				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				0);
 

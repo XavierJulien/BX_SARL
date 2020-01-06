@@ -7,6 +7,7 @@ import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
+import launcher.CVM;
 import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
 
@@ -82,7 +83,7 @@ implements	EmbeddingComponentStateAccessI
 		// following lines show how to set the reference to the embedding
 		// component or a proxy responding to the access calls.
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef", this) ;
+		simParams.put(CVM.KETTLE_MODEL_URI, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(

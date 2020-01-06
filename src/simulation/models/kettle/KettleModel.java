@@ -18,6 +18,7 @@ import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
+import launcher.CVM;
 import simulation.events.AbstractEvent;
 import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.FillKettle;
@@ -142,7 +143,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("componentRef");
+			(EmbeddingComponentStateAccessI) simParams.get(CVM.KETTLE_MODEL_URI);
 	}
 
 
@@ -227,8 +228,8 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			// that may access the state of the component object at the same
 			// time.
 			try {
-				this.logMessage("component state = " +
-						componentRef.getEmbeddingComponentStateValue("state"));
+//				this.logMessage("component state = " +
+//						componentRef.getEmbeddingComponentStateValue("state"));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -251,6 +252,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		assert	currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
+		
 		assert	ce instanceof AbstractEvent;
 		if (this.hasDebugLevel(2)) {
 //			this.logMessage("KettleModel::userDefinedExternalTransition 2 "
@@ -401,7 +403,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	}
 	
 	public void 		updateContent() {
-/*		if(currentContent == Content.EMPTY) {
+		if(currentContent == Content.EMPTY) {
 			Double stay_empty = Math.random();
 			if(stay_empty > 0.95) {
 				Double rand = Math.random();
@@ -419,7 +421,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			if(Math.random() < 0.25) {
 				currentContent = Content.EMPTY;
 			}
-		}*/
+		}
 	}
 	
 	public void			updateContent(Content c)

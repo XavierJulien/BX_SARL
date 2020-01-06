@@ -131,7 +131,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 				currentBattery.v);
 		
 		this.batteryModePlotter.addData(
-				SERIES, 
+				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				0);
 
