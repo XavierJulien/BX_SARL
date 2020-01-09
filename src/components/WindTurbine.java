@@ -16,7 +16,6 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.windturbine.WindTurbineI;
 import ports.windturbine.WindTurbineInboundPort;
 import ports.windturbine.WindTurbineOutboundPort;
-import simulation.components.windSensor.WindSensorSimulatorPlugin;
 import simulation.components.windturbine.WindTurbineSimulatorPlugin;
 import simulation.models.windturbine.WindTurbineCoupledModel;
 
@@ -45,7 +44,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 			String windTurbineOutboundPortURI,
 			String windTurbineSensorInboundPortURI,
 					   String windTurbineInboundPortURI) throws Exception{
-		super(uri, 1, 1);
+		super(uri, 2, 2);
 
 		assert uri != null;
 		assert windTurbineOutboundPortURI != null;
@@ -149,7 +148,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 					public void run() {
 						try {
 							Thread.sleep(1000);
-							asp.doStandAloneSimulation(0.0, 5000.0) ;
+							asp.doStandAloneSimulation(0.0, 50000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
@@ -215,11 +214,9 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		System.out.println("JE SUIS LA");
-		if(name == "windSpeed") {
+		if(name.equals("windSpeed")) {
 			return new Double(windSpeed);
 		}else {
-			System.out.println("JE SUIS LA ET JE DEVRAIS PAS");
 			return null;
 		}
 		
