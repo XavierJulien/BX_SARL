@@ -1,6 +1,5 @@
 package components;
 
-import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -12,7 +11,6 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.battery.BatteryChargerI;
 import interfaces.battery.BatteryI;
 import ports.battery.BatteryInboundPort;
