@@ -191,8 +191,7 @@ public class CVM extends AbstractCVM {
 								URIKettleOutboundPortURI,
 								URIKettleInboundPortURI,
 								URIElectricMeterKettleOutboundPortURI,
-								URIElectricMeterKettleInboundPortURI,
-								KETTLE_MODEL_URI}) ;
+								URIElectricMeterKettleInboundPortURI}) ;
 		
 
 		assert	this.isDeployedComponent(this.uriKettleURI) ;

@@ -1,7 +1,6 @@
 package components;
 
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -9,26 +8,26 @@ import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
-import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
-import fr.sorbonne_u.devs_simulation.examples.molene.pcm.PortableComputerModel;
-import fr.sorbonne_u.devs_simulation.examples.molene.pcsm.PortableComputerStateModel;
-import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
-import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
+import fr.sorbonne_u.devs_simulation.models.time.Duration;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.sensors.WindSensorI;
 import ports.sensors.WindSensorInboundPort;
 import ports.sensors.WindSensorOutboundPort;
-import simulation.models.sensors.WindSpeedModel;
+import simulation.components.windSensor.WindSensorSimulatorPlugin;
+import simulation.events.kettle.FillKettle;
+import simulation.events.kettle.KettleUpdater;
+import simulation.models.windSensor.WindSensorCoupledModel;
 
 @RequiredInterfaces(required = {WindSensorI.class})
 @OfferedInterfaces(offered = {WindSensorI.class})
-public class WindSensor extends AbstractCyPhyComponent {
+public class WindSensor extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI{
 
 	
-	protected SupervisorPlugin		sp ;
+	protected WindSensorSimulatorPlugin		asp ;
 	
 	protected final String				uri ;
 	/** The inbound port URI for the eolienne.*/
@@ -64,6 +63,8 @@ public class WindSensor extends AbstractCyPhyComponent {
 		} else {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}	
+		
+		this.initialise();
 
 		this.tracer.setTitle("WindSensor") ;
 		this.tracer.setRelativePosition(2, 0) ;
@@ -86,9 +87,52 @@ public class WindSensor extends AbstractCyPhyComponent {
 		this.logMessage("starting WindSensor component.") ;
 		
 	}
+	
+	
+	
+	protected void initialise() throws Exception {
+		// The coupled model has been made able to create the simulation
+		// architecture description.
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		// Create the appropriate DEVS simulation plug-in.
+		this.asp = new WindSensorSimulatorPlugin() ;
+		// Set the URI of the plug-in, using the URI of its associated
+		// simulation model.
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		// Set the simulation architecture.
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		
+		
+		// Install the plug-in on the component, starting its own life-cycle.
+		this.installPlugin(this.asp) ;
+		// Toggle logging on to get a log on the screen.
+		this.toggleLogging() ;
+	}
+	
+	
+	
 	@Override
 	public void execute() throws Exception {
-super.execute();
+		super.execute();
+
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put("windSensorRef", this) ;
+		this.asp.setSimulationRunParameters(simParams) ;
+		// Start the simulation.
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(1000);
+							asp.doStandAloneSimulation(0.0, 5000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				}) ;
+		Thread.sleep(10L) ;
 		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
@@ -121,36 +165,22 @@ super.execute();
 
 	
 	
-	protected Architecture	createLocalArchitecture(String architectureURI)
-	throws Exception
-	{
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
-
-		atomicModelDescriptors.put(
-				PortableComputerStateModel.URI,
-				AtomicHIOA_Descriptor.create(
-						WindSpeedModel.class,
-						WindSpeedModel.URI,
-						TimeUnit.SECONDS,
-						null,
-						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
-
-		
-		Architecture localArchitecture =
-				new Architecture(
-						PortableComputerModel.URI,
-						atomicModelDescriptors,
-						new HashMap<>(),
-						TimeUnit.SECONDS) ;
-
-		return localArchitecture ;
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return WindSensorCoupledModel.build() ;
 	}
 
 	
 	
-	
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		if(name == "power") {
+			return new Double(power);
+		}else {
+			return null;
+		}
+		
+	}
 	
 	
 	

@@ -1,5 +1,8 @@
 package simulation.models.windturbine;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 //Copyright Jacques Malenfant, Sorbonne Universite.
 //Jacques.Malenfant@lip6.fr
 //
@@ -36,10 +39,7 @@ package simulation.models.windturbine;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetHigh;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SetLow;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOff;
-import fr.sorbonne_u.cyphy.examples.sg.equipments.hairdryer.models.events.SwitchOn;
+
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.architectures.SimulationEngineCreationMode;
 import fr.sorbonne_u.devs_simulation.hioa.architectures.AtomicHIOA_Descriptor;
@@ -59,8 +59,9 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import java.util.HashMap;
-import java.util.HashSet;
+import simulation.events.windturbine.SwitchOff;
+import simulation.events.windturbine.SwitchOn;
+import simulation.events.windturbine.WTProductionUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -186,15 +187,11 @@ extends		CoupledModel
 				new EventSink(WindTurbineModel.URI, SwitchOff.class)} ;
 		connections.put(from2, to2) ;
 		EventSource from3 =
-				new EventSource(WindTurbineUserModel.URI, SetLow.class) ;
+				new EventSource(WindTurbineUserModel.URI, WTProductionUpdater.class) ;
 		EventSink[] to3 = new EventSink[] {
-				new EventSink(WindTurbineModel.URI, SetLow.class)} ;
+				new EventSink(WindTurbineModel.URI, WTProductionUpdater.class)} ;
 		connections.put(from3, to3) ;
-		EventSource from4 =
-				new EventSource(WindTurbineUserModel.URI, SetHigh.class) ;
-		EventSink[] to4 = new EventSink[] {
-				new EventSink(WindTurbineModel.URI, SetHigh.class)} ;
-		connections.put(from4, to4) ;
+		
 
 		coupledModelDescriptors.put(
 					WindTurbineCoupledModel.URI,

@@ -147,10 +147,10 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		
+		/*
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef2", this) ;
+		simParams.put("batteryRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(
@@ -165,7 +165,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 						}
 					}
 				}) ;
-		Thread.sleep(10L) ;
+		Thread.sleep(10L) ;*/
 		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {

@@ -48,10 +48,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.windturbine.SetHigh;
-import simulation.events.windturbine.SetLow;
 import simulation.events.windturbine.SwitchOff;
 import simulation.events.windturbine.SwitchOn;
+import simulation.events.windturbine.WTProductionUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -78,8 +77,7 @@ import simulation.events.windturbine.SwitchOn;
 //-----------------------------------------------------------------------------
 @ModelExternalEvents(exported = {SwitchOn.class,
 								 SwitchOff.class,
-								 SetLow.class,
-								 SetHigh.class})
+								 WTProductionUpdater.class})
 //-----------------------------------------------------------------------------
 public class			WindTurbineUserModel
 extends		AtomicES_Model
@@ -107,7 +105,7 @@ extends		AtomicES_Model
 	/**	a random number generator from common math library.					*/
 	protected final RandomDataGenerator		rg ;
 	/** the current state of the windturbine simulation model.				*/
-	protected WindTurbineModel.State hds ;
+	protected WindTurbineModel.State wts ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
@@ -163,7 +161,7 @@ extends		AtomicES_Model
 		this.meanTimeBetweenUsages = 10.0 ;
 		this.meanTimeAtHigh = 4.0 ;
 		this.meanTimeAtLow = 3.0 ;
-		this.hds = WindTurbineModel.State.OFF ;
+		this.wts = WindTurbineModel.State.OFF ;
 
 		this.rg.reSeedSecure() ;
 
@@ -257,36 +255,42 @@ extends		AtomicES_Model
 		// complete the drying.
 
 		Duration d ;
-		// See what is the type of event to be executed
 		if (this.nextEvent.equals(SwitchOn.class)) {
-			// when a switch on event has been issued, plan the next event as
-			// a set high (the windturbine is switched on in low mode
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
 							 this.getSimulatedTimeUnit()) ;
-			// compute the time of occurrence (in the future)
 			Time t = this.getCurrentStateTime().add(d) ;
-			// schedule the event
-			this.scheduleEvent(new SetHigh(t)) ;
-			// also, plan the next switch on for the next day
+			this.scheduleEvent(new WTProductionUpdater(t)) ;
 			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(
-						new SwitchOn(this.getCurrentStateTime().add(d))) ;
-		} else if (this.nextEvent.equals(SetHigh.class)) {
-			// when a set high event has been issued, plan the next set low
-			// after some time of usage
+		} else if (this.nextEvent.equals(WTProductionUpdater.class)) {
 			d =	new Duration(
 					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
 					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new SetLow(this.getCurrentStateTime().add(d))) ;
-		} else if (this.nextEvent.equals(SetLow.class)) {
-			// when a set high event has been issued, plan the next switch off
-			// after some time of usage
+			this.scheduleEvent(new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
+		} else {
+			d =	new Duration(
+					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
+		}
+		// See what is the type of event to be executed
+		/*if (this.nextEvent.equals(SwitchOn.class)) {
+			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
+							 this.getSimulatedTimeUnit()) ;
+			Time t = this.getCurrentStateTime().add(d) ;
+			this.scheduleEvent(new WTProductionUpdater(t)) ;
+			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
+		} else if (this.nextEvent.equals(WTProductionUpdater.class)) {
+			d =	new Duration(
+					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
+					this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
+		} else if (this.nextEvent.equals(SwitchOff.class)) {
 			d =	new Duration(
 					2.0 * this.meanTimeAtLow * this.rg.nextBeta(1.75, 1.75),
 					this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(
-					new SwitchOff(this.getCurrentStateTime().add(d))) ;
-		}
+					new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
+		}*/
 	}
 }
 //-----------------------------------------------------------------------------

@@ -95,7 +95,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("componentRef");
+		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("batteryRef");
 		this.delay = new Duration(1.0, this.getSimulatedTimeUnit());
 	}
 

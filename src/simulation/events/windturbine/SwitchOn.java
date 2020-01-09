@@ -116,7 +116,7 @@ extends		AbstractEvent
 	{
 		assert	model instanceof WindTurbineModel ;
 
-		((WindTurbineModel)model).setState(WindTurbineModel.State.LOW) ;
+		((WindTurbineModel)model).setState(WindTurbineModel.State.ON) ;
 	}
 }
 //-----------------------------------------------------------------------------

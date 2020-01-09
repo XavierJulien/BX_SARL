@@ -83,8 +83,8 @@ extends		AtomicSimulatorPlugin
 		if (name.equals("state")) {
 			return ((WindTurbineModel)m).getState() ;
 		} else {
-			assert	name.equals("intensity") ;
-			return ((WindTurbineModel)m).getIntensity() ;
+			assert	name.equals("production") ;
+			return ((WindTurbineModel)m).getProduction() ;
 		}
 	}
 }

@@ -82,10 +82,10 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 						"Wind Speed",
 						"Time (sec)",
 						"Wind (m/s)",
-						100,
+						300,
 						0,
-						600,
-						400);
+						300,
+						200);
 		this.windPlotter = new XYPlotter(pd);
 		this.windPlotter.createSeries(SERIES);
 		// create a standard logger (logging on the terminal)
@@ -104,7 +104,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("componentRef");
+			(EmbeddingComponentStateAccessI) simParams.get("windSensorRef");
 	}
 
 

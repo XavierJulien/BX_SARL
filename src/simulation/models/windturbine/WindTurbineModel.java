@@ -38,7 +38,6 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
-import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
@@ -53,10 +52,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.windturbine.SetHigh;
-import simulation.events.windturbine.SetLow;
 import simulation.events.windturbine.SwitchOff;
 import simulation.events.windturbine.SwitchOn;
+import simulation.events.windturbine.WTProductionUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -93,8 +91,7 @@ import simulation.events.windturbine.SwitchOn;
 //-----------------------------------------------------------------------------
 @ModelExternalEvents(imported = {SwitchOn.class,
 								 SwitchOff.class,
-								 SetLow.class,
-								 SetHigh.class})
+								 WTProductionUpdater.class})
 //-----------------------------------------------------------------------------
 public class			WindTurbineModel
 extends		AtomicHIOAwithEquations
@@ -120,9 +117,7 @@ extends		AtomicHIOAwithEquations
 	public static enum State {
 		OFF,
 		/** low mode is when wind is weak.						*/
-		LOW,			
-		/** high mode is when wind is strong.							*/
-		HIGH
+		ON
 	}
 
 	/**
@@ -170,19 +165,14 @@ extends		AtomicHIOAwithEquations
 	 *  otherwise a different URI must be given to each instance.			*/
 	public static final String		URI = "WindTurbineModel" ;
 
-	private static final String		SERIES = "intensity" ;
+	private static final String		SERIES = "production" ;
 
-	/** energy consumption (in Watts) of the windturbine in LOW mode.		*/
-	protected static final double	LOW_MODE_CONSUMPTION = 800.0 ; // Watts
-	/** energy consumption (in Watts) of the windturbine in HIGH mode.		*/
-	protected static final double	HIGH_MODE_CONSUMPTION = 1200.0 ; // Watts
-	/** nominal tension (in Volts) of the windturbine.						*/
+	
 	protected static final double	TENSION = 220.0 ; // Volts
 
 	/** current intensity in Amperes; intensity is power/tension.			*/
-	@ExportedVariable(type = Double.class)
-	protected final Value<Double>	currentIntensity =
-											new Value<Double>(this, 0.0, 0) ;
+	
+	protected final Value<Double>				currentProd = new Value<Double>(this, 0.0, 0);
 	/** current state (OFF, LOW, HIGH) of the windturbine.					*/
 	protected State					currentState ;
 
@@ -230,8 +220,8 @@ extends		AtomicHIOAwithEquations
 						"Intensity (Amp)",
 						100,
 						0,
-						600,
-						400) ;
+						300,
+						200) ;
 		this.intensityPlotter = new XYPlotter(pd) ;
 		this.intensityPlotter.createSeries(SERIES) ;
 
@@ -253,7 +243,7 @@ extends		AtomicHIOAwithEquations
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("componentRef") ;
+			(EmbeddingComponentStateAccessI) simParams.get("windTurbineRef") ;
 	}
 
 	/**
@@ -287,13 +277,13 @@ extends		AtomicHIOAwithEquations
 	protected void		initialiseVariables(Time startTime)
 	{
 		// as the windturbine starts in mode OFF, its power consumption is 0
-		this.currentIntensity.v = 0.0 ;
+		this.currentProd.v = 0.0 ;
 
 		// first data in the plotter to start the plot.
 		this.intensityPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getIntensity());
+				this.getProduction());
 
 		super.initialiseVariables(startTime);
 	}
@@ -374,7 +364,7 @@ extends		AtomicHIOAwithEquations
 		this.intensityPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getIntensity());
+				this.getProduction());
 
 		if (this.hasDebugLevel(2)) {
 			this.logMessage("WindTurbineModel::userDefinedExternalTransition 3 "
@@ -394,7 +384,7 @@ extends		AtomicHIOAwithEquations
 		this.intensityPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getIntensity());
+				this.getProduction());
 
 		super.userDefinedExternalTransition(elapsedTime) ;
 		if (this.hasDebugLevel(2)) {
@@ -411,7 +401,7 @@ extends		AtomicHIOAwithEquations
 		this.intensityPlotter.addData(
 				SERIES,
 				endTime.getSimulatedTime(),
-				this.getIntensity()) ;
+				this.getProduction()) ;
 		Thread.sleep(10000L) ;
 		this.intensityPlotter.dispose() ;
 
@@ -448,12 +438,15 @@ extends		AtomicHIOAwithEquations
 		this.currentState = s ;
 		switch (s)
 		{
-			case OFF : this.currentIntensity.v = 0.0 ; break ;
-			case LOW :
-				this.currentIntensity.v = LOW_MODE_CONSUMPTION/TENSION ;
+			case OFF : this.currentProd.v = 0.0 ; break ;
+			case ON :
+			try {
+				this.currentProd.v = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue() ;
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 				break ;
-			case HIGH :
-				this.currentIntensity.v = HIGH_MODE_CONSUMPTION/TENSION ;
 		}
 	}
 
@@ -486,9 +479,28 @@ extends		AtomicHIOAwithEquations
 	 *
 	 * @return	the current intensity of electricity consumption in amperes.
 	 */
-	public double		getIntensity()
-	{
-		return this.currentIntensity.v ;
+	public double getProduction() {
+		return currentProd.v;
+	}
+	
+	public void updateProduction() {
+		
+		double wind=0;
+		try {System.out.println(componentRef);
+			Double d = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed"));
+			System.out.println(d);
+			wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+
+		
+		if(currentState == State.ON &&  wind < 8 ) {
+			currentProd.v = 3*wind;
+		}else {
+			currentProd.v = 0.0;
+		}
+		
 	}
 }
 //------------------------------------------------------------------------------

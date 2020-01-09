@@ -133,7 +133,7 @@ implements	EmbeddingComponentStateAccessI
 		// following lines show how to set the reference to the embedding
 		// component or a proxy responding to the access calls.
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef", this) ;
+		simParams.put("windTurbineRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(
@@ -153,7 +153,7 @@ implements	EmbeddingComponentStateAccessI
 		for (int i = 0 ; i < 100 ; i++) {
 			this.logMessage("WindTurbine " +
 				this.asp.getModelStateValue(WindTurbineModel.URI, "state") + " " +
-				this.asp.getModelStateValue(WindTurbineModel.URI, "intensity")) ;
+				this.asp.getModelStateValue(WindTurbineModel.URI, "production")) ;
 			Thread.sleep(5L) ;
 		}
 	}
@@ -167,8 +167,6 @@ implements	EmbeddingComponentStateAccessI
 	{
 		Random r = new Random();
 		switch(r.nextInt(3)) {
-		case 0 : return WindTurbineModel.State.LOW;
-		case 1 : return WindTurbineModel.State.HIGH;
 		case 2 : return WindTurbineModel.State.OFF;
 		}
 		return WindTurbineModel.State.OFF;
