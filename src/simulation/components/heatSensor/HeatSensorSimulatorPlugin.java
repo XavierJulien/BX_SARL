@@ -1,11 +1,11 @@
-package simulation.components.heating;
+package simulation.components.heatSensor;
 
 
 import fr.sorbonne_u.components.cyphy.plugins.devs.AtomicSimulatorPlugin;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import simulation.models.heating.HeatingModel;
+import simulation.models.heatSensor.HeatSensorModel;
 
-public class			HeatingSimulatorPlugin
+public class			HeatSensorSimulatorPlugin
 extends		AtomicSimulatorPlugin
 {
 	private static final long serialVersionUID = 1L;
@@ -17,14 +17,10 @@ extends		AtomicSimulatorPlugin
 		// Get a Java reference on the object representing the corresponding
 		// simulation model.
 		ModelDescriptionI m = this.simulator.getDescendentModel(modelURI) ;
-		assert	m instanceof HeatingModel ;
-		if (name.equals("power")) {
-			return ((HeatingModel)m).getPower() ;
-		}
-		else{
-			assert name.equals("temperature");
-			return ((HeatingModel)m).getTemperature() ;
-		}
+		assert	m instanceof HeatSensorModel ;
+		//if (name.equals("wind")) {
+			return ((HeatSensorModel)m).getTemperature() ;
+		//}
 	}
 }
 //------------------------------------------------------------------------------

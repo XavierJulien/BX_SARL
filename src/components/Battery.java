@@ -1,5 +1,6 @@
 package components;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
@@ -11,6 +12,7 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.battery.BatteryChargerI;
 import interfaces.battery.BatteryI;
 import ports.battery.BatteryInboundPort;
@@ -145,7 +147,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	@Override
 	public void execute() throws Exception {
 		super.execute();
-		/*
+		
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("batteryRef", this) ;
@@ -163,7 +165,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 						}
 					}
 				}) ;
-		Thread.sleep(10L) ;*/
+		Thread.sleep(10L) ;
 		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {

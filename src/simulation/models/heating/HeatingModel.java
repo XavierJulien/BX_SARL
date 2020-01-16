@@ -19,17 +19,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.heating.HeatingMode;
 import simulation.events.heating.HeatingUpdater;
-import simulation.events.heating.RestMode;
-import simulation.events.heating.SwitchOff;
-import simulation.events.heating.SwitchOn;
 
-@ModelExternalEvents(imported = {SwitchOn.class,
-								 SwitchOff.class,
-								 RestMode.class,
-								 HeatingMode.class,
-								 HeatingUpdater.class})
+@ModelExternalEvents(imported = { HeatingUpdater.class})
 
 public class HeatingModel extends AtomicHIOAwithEquations {
 	
@@ -42,11 +34,6 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		ON
 	}
 	
-	public static enum 		Mode {
-		OFF,
-		REST,
-		HEATING
-	}
 
 	public static class		HeatingReport
 	extends		AbstractSimulationReport
@@ -72,16 +59,16 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 	private static final long					serialVersionUID = 1L;
 	protected static final double				CONSUMPTION = 1200.0; // Watts
-	private static final String					SERIES = "temperature";
-	private static final String					SERIESONOFF = "OnOff";
+	private static final String					SERIESPOWER = "power";
 	public static final String					URI = "HeatingModel";
 	protected XYPlotter							temperaturePlotter;
-	protected XYPlotter							onOffPlotter; 
+	protected XYPlotter							powerPlotter; 
 	
 	//CURRENT
-	protected State								currentState;
-	protected Mode 								currentMode;
+	protected int							currentPower;
 	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
+	protected boolean 							on= false;					
+	
 	
 	protected EmbeddingComponentStateAccessI 	componentRef;
 
@@ -99,31 +86,19 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 		// creation of a plotter to show the evolution of the temperature over
 		// time during the simulation.
-		PlotterDescription pd =
-				new PlotterDescription(
-						"Heating temperature",
-						"Time (sec)",
-						"Temperature (C)",
-						100,
-						0,
-						600,
-						400);
-		this.temperaturePlotter = new XYPlotter(pd);
-		this.temperaturePlotter.createSeries(SERIES);
-
-		
+				
 		PlotterDescription pdOnOff =
 				new PlotterDescription(
-						"Heating State",
+						"Heating power",
 						"Time (sec)",
 						"State (ON = 1/OFF = 0)",
-						700,
-						0,
-						600,
+						300,
+						750,
+						300,
 						200);
 		
-		this.onOffPlotter = new XYPlotter(pdOnOff);
-		this.onOffPlotter.createSeries(SERIESONOFF);
+		this.powerPlotter = new XYPlotter(pdOnOff);
+		this.powerPlotter.createSeries(SERIESPOWER);
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger());
 	}
@@ -140,7 +115,7 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("componentRef");
+			(EmbeddingComponentStateAccessI) simParams.get("heatingRef");
 	}
 
 
@@ -148,18 +123,11 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	public void					initialiseState(Time initialTime)
 	{
 		// the heating starts in mode OFF
-		this.currentState = State.OFF;
-		this.currentMode = Mode.OFF;
+		this.currentPower = 0;
 
-		// initialisation of the temperature plotter 
-		this.temperaturePlotter.initialise();
-		// show the plotter on the screen
-		this.temperaturePlotter.showPlotter();
-
-		
 		//initialise the plotter for the state
-		this.onOffPlotter.initialise();
-		this.onOffPlotter.showPlotter();
+		this.powerPlotter.initialise();
+		this.powerPlotter.showPlotter();
 		
 		
 		try {
@@ -180,13 +148,8 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		this.currentTemperature.v = 0.0;
 
 		// first data in the plotter to start the plot.
-		this.temperaturePlotter.addData(
-				SERIES,
-				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
-
-		this.onOffPlotter.addData(
-				SERIESONOFF,
+		this.powerPlotter.addData(
+				SERIESPOWER,
 				this.getCurrentStateTime().getSimulatedTime(),
 				0);
 		
@@ -256,17 +219,11 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 //										+ ce.getClass().getCanonicalName());
 		}
 
-		// the plot is piecewise constant; this data will close the currently
-		// open piece
-		this.temperaturePlotter.addData(
-				SERIES,
-				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
+		this.powerPlotter.addData(
+				SERIESPOWER,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getStateDouble());
+				this.getPower());
 
 		if (this.hasDebugLevel(2)) {
 			//this.logMessage("HeatingModel::userDefinedExternalTransition 3 "+ this.getState());
@@ -280,16 +237,11 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 			//this.logMessage("HeatingModel::userDefinedExternalTransition 4 " + this.getState());
 		}
 
-		// add a new data on the plotter; this data will open a new piece
-		this.temperaturePlotter.addData(
-				SERIES,
-				this.getCurrentStateTime().getSimulatedTime(),
-				this.getTemperature());
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
+		this.powerPlotter.addData(
+				SERIESPOWER,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getStateDouble());
+				this.getPower());
 
 		super.userDefinedExternalTransition(elapsedTime);
 		if (this.hasDebugLevel(2)) {
@@ -301,19 +253,13 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	@Override
 	public void					endSimulation(Time endTime) throws Exception
 	{
-		this.temperaturePlotter.addData(
-				SERIES,
-				endTime.getSimulatedTime(),
-				this.getTemperature());
-		Thread.sleep(10000L);
-		this.temperaturePlotter.dispose();
 		
-		this.onOffPlotter.addData(
-				SERIESONOFF,
+		this.powerPlotter.addData(
+				SERIESPOWER,
 				endTime.getSimulatedTime(),
-				this.getStateDouble());
+				this.getPower());
 		Thread.sleep(10000L);
-		this.onOffPlotter.dispose();
+		this.powerPlotter.dispose();
 
 		super.endSimulation(endTime);
 	}
@@ -329,76 +275,29 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 	
-	public State				getState()
+	public int				getPower()
 	{
-		return this.currentState;
-	}
-	public Mode					getMode() {
-		return this.currentMode;
+		return this.currentPower;
 	}
 	public double				getTemperature()
 	{
 		return this.currentTemperature.v;
 	}
 	
-	public double getStateDouble() {
-		if(this.getState() == State.ON) {
-			return 1;
-		}else {
-			return 0;
-		}
-	}
+
 	
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
 
-	public void					updateTemperature() {
-		if(currentState == State.ON) {
-			if(currentMode == Mode.REST) {
-				currentTemperature.v -= 1;
-				//System.out.println("ON/FULL Temperature : "+currentTemperature.v);
-			}
-			if(currentMode == Mode.HEATING) {
-				currentTemperature.v += 4;
-				//System.out.println("ON/HALF Temperature : "+currentTemperature.v);
-			}
+
+	public void					updatePower(){
+		try {
+			this.currentPower= (Integer)componentRef.getEmbeddingComponentStateValue("power");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(currentState == State.OFF) {
-			if(currentTemperature.v > 0.2) {
-				currentTemperature.v -= 0.2;
-			}else {
-				currentTemperature.v = 0.;
-			}
-					//System.out.println("OFF/FULL or HALF  Temperature : "+currentTemperature);
-		}
-	}
-	
-	public void					updateState(State s){
-		this.currentState = s;
-	}
-	
-	public void 				updateMode() {
-		System.out.println(currentMode);
-		if(currentState == State.ON) {
-			if(this.currentMode == Mode.REST){
-				if(currentTemperature.v < 15){
-					updateMode(Mode.HEATING);
-				}
-			}
-			if(this.currentMode == Mode.HEATING){
-				if(currentTemperature.v > 20){
-					updateMode(Mode.REST);
-				}
-			}
-		}else {
-			updateMode(Mode.OFF);
-		}
-	}
-	
-	public void					updateMode(Mode c)
-	{
-		this.currentMode = c;
 	}
 }
 //------------------------------------------------------------------------------

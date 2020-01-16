@@ -1,4 +1,4 @@
-package simulation.models.windSensor;
+package simulation.models.heatSensor;
 
 import java.util.Map;
 import java.util.Vector;
@@ -19,24 +19,27 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.windSensor.WindSensorUpdater;
-import simulation.events.windturbine.WindOk;
+import simulation.events.heatSensor.HeatSensorUpdater;
+import simulation.events.heatSensor.HeatSensorWindowOpen;
+import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 
-@ModelExternalEvents(imported = {WindSensorUpdater.class})
+@ModelExternalEvents(imported = {HeatSensorUpdater.class,
+								HeatSensorWindowOpen.class,
+								HeatSensorWindowStillOpen.class})
 
-public class WindSensorModel extends AtomicHIOAwithEquations {
+public class HeatSensorModel extends AtomicHIOAwithEquations {
 	
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
 
 
-	public static class		WindSensorReport
+	public static class		HeatSensorReport
 	extends		AbstractSimulationReport
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public			WindSensorReport(String modelURI)
+		public			HeatSensorReport(String modelURI)
 		{
 			super(modelURI);
 		}
@@ -45,7 +48,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		@Override
 		public String	toString()
 		{
-			return "WindSensorReport(" + this.getModelURI() + ")";
+			return "HeatSensorReport(" + this.getModelURI() + ")";
 		}
 	}
 
@@ -54,13 +57,13 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 
 	private static final long					serialVersionUID = 1L;
-	private static final String					SERIES = "wind";
+	private static final String					SERIES = "temperature";
 	private static double 						xValue = 0;
-	public static final String					URI = "WindSensorModel";
-	protected XYPlotter							windPlotter;
+	public static final String					URI = "HeatSensorModel";
+	protected XYPlotter							temperaturePlotter;
 	
 	//CURRENT
-	protected final Value<Double>				currentWind = new Value<Double>(this, 0.0, 0);
+	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
 	
 	protected EmbeddingComponentStateAccessI 	componentRef;
 
@@ -68,7 +71,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public						WindSensorModel(
+	public						HeatSensorModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
@@ -80,15 +83,15 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
-						"Wind Speed",
+						"Temperature",
 						"Time (sec)",
-						"Wind (m/s)",
+						"Temp (°C)",
+						350,
 						0,
-						250,
 						300,
 						200);
-		this.windPlotter = new XYPlotter(pd);
-		this.windPlotter.createSeries(SERIES);
+		this.temperaturePlotter = new XYPlotter(pd);
+		this.temperaturePlotter.createSeries(SERIES);
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger());
 	}
@@ -105,7 +108,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("windSensorRef");
+			(EmbeddingComponentStateAccessI) simParams.get("heatSensorRef");
 	}
 
 
@@ -114,9 +117,9 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	{
 		// the heating starts in mode OFF
 		// initialisation of the wind speed plotter 
-		this.windPlotter.initialise();
+		this.temperaturePlotter.initialise();
 		// show the plotter on the screen
-		this.windPlotter.showPlotter();
+		this.temperaturePlotter.showPlotter();
 		
 		
 		try {
@@ -134,13 +137,13 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	protected void				initialiseVariables(Time startTime)
 	{
 		// the wind sensor starts to emit the wind speed
-		this.currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
+		this.currentTemperature.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
 
 		// first data in the plotter to start the plot.
-		this.windPlotter.addData(
+		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getWind());
+				this.getTemperature());
 
 		
 		super.initialiseVariables(startTime);
@@ -203,10 +206,10 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 
 		// the plot is piecewise constant; this data will close the currently
 		// open piece
-		this.windPlotter.addData(
+		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getWind());
+				this.getTemperature());
 		
 		
 
@@ -218,10 +221,10 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 
 
 		// add a new data on the plotter; this data will open a new piece
-		this.windPlotter.addData(
+		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getWind());
+				this.getTemperature());
 		
 
 		super.userDefinedExternalTransition(elapsedTime);
@@ -232,12 +235,12 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	@Override
 	public void					endSimulation(Time endTime) throws Exception
 	{
-		this.windPlotter.addData(
+		this.temperaturePlotter.addData(
 				SERIES,
 				endTime.getSimulatedTime(),
-				this.getWind());
+				this.getTemperature());
 		Thread.sleep(10000L);
-		this.windPlotter.dispose();
+		this.temperaturePlotter.dispose();
 		
 		
 
@@ -248,7 +251,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	@Override
 	public SimulationReportI	getFinalReport() throws Exception
 	{
-		return new WindSensorReport(this.getURI());
+		return new HeatSensorReport(this.getURI());
 	}
 
 	// ------------------------------------------------------------------------
@@ -256,9 +259,9 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	
 	
-	public double				getWind()
+	public double				getTemperature()
 	{
-		return this.currentWind.v;
+		return this.currentTemperature.v;
 	}
 	
 	
@@ -266,11 +269,25 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// Utils
 	// ------------------------------------------------------------------------
 
-	public void					updateWind() {
-		//TODO will be changed 
-		currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
-		xValue += 0.1;
+	public void					updateTemperature() {
+		try {
+			this.currentTemperature.v = ((Double)componentRef.getEmbeddingComponentStateValue("temperature"));
+			this.currentTemperature.v *= 0.90;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		
+		
+	}
+	
+	public void 				openWindow() {
+		this.currentTemperature.v -= 5;
+	}
+	
+	public void keepTemperature() {
+		this.currentTemperature.v -=0.5;
 	}
 }
 //------------------------------------------------------------------------------

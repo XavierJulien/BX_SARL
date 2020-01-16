@@ -222,10 +222,10 @@ extends		AtomicHIOAwithEquations
 						"WindTurbine intensity",
 						"Time (sec)",
 						"Intensity (Amp)",
-						800,
-						0,
-						400,
-						300) ;
+						300,
+						250,
+						300,
+						200) ;
 		this.intensityPlotter = new XYPlotter(pd) ;
 		this.intensityPlotter.createSeries(SERIES) ;
 		this.wind = 0;

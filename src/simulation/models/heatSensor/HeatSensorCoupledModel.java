@@ -1,4 +1,4 @@
-package simulation.models.heating;
+package simulation.models.heatSensor;
 
 
 import java.util.HashMap;
@@ -26,22 +26,24 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulation.events.heating.HeatingUpdater;
+import simulation.events.heatSensor.HeatSensorUpdater;
+import simulation.events.heatSensor.HeatSensorWindowOpen;
+import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 
-public class HeatingCoupledModel extends CoupledModel {
+public class HeatSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
 	/** URI of the unique instance of this class (in this example).			*/
-	public static final String	URI = "HeatingCoupledModel" ;
+	public static final String	URI = "HeatingSensorCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				HeatingCoupledModel(
+	public				HeatSensorCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine,
@@ -68,27 +70,20 @@ public class HeatingCoupledModel extends CoupledModel {
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
 
 		atomicModelDescriptors.put(
-				HeatingModel.URI,
+				HeatSensorModel.URI,
 				AtomicHIOA_Descriptor.create(
-						HeatingModel.class,
-						HeatingModel.URI,
-						TimeUnit.SECONDS,
-						null,
-						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-		atomicModelDescriptors.put(
-				HeatingUserModel.URI,
-				AtomicModelDescriptor.create(
-						HeatingUserModel.class,
-						HeatingUserModel.URI,
+						HeatSensorModel.class,
+						HeatSensorModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		
+		
 		atomicModelDescriptors.put(
-				HeatingUpdaterModel.URI,
+				HeatSensorUpdaterModel.URI,
 				AtomicModelDescriptor.create(
-						HeatingUpdaterModel.class,
-						HeatingUpdaterModel.URI,
+						HeatSensorUpdaterModel.class,
+						HeatSensorUpdaterModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
@@ -98,29 +93,34 @@ public class HeatingCoupledModel extends CoupledModel {
 				new HashMap<String,CoupledModelDescriptor>() ;
 
 		Set<String> submodels = new HashSet<String>() ;
-		submodels.add(HeatingModel.URI) ;
-		submodels.add(HeatingUserModel.URI) ;
-		submodels.add(HeatingUpdaterModel.URI) ;
+		submodels.add(HeatSensorModel.URI) ;
+		submodels.add(HeatSensorUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
 		
-		EventSource from5 =
-				new EventSource(HeatingUserModel.URI, HeatingUpdater.class) ;
-		EventSink[] to5 = new EventSink[] {
-				new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
-		connections.put(from5, to5) ;
+		EventSource from1 =
+				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowOpen.class) ;
+		EventSink[] to1 = new EventSink[] {
+				new EventSink(HeatSensorModel.URI, HeatSensorWindowOpen.class)} ;
+		connections.put(from1, to1) ;
 		
-		EventSource from6 =
-				new EventSource(HeatingUpdaterModel.URI, HeatingUpdater.class) ;
-		EventSink[] to6 = new EventSink[] {
-				new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
-		connections.put(from6, to6) ;
+		EventSource from2 =
+				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorUpdater.class) ;
+		EventSink[] to2 = new EventSink[] {
+				new EventSink(HeatSensorModel.URI, HeatSensorUpdater.class)} ;
+		connections.put(from2, to2) ;
+		
+		EventSource from3 =
+				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowStillOpen.class) ;
+		EventSink[] to3 = new EventSink[] {
+				new EventSink(HeatSensorModel.URI, HeatSensorWindowStillOpen.class)} ;
+		connections.put(from3, to3) ;
 		
 		coupledModelDescriptors.put(
-					HeatingCoupledModel.URI,
+					HeatSensorCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
-							HeatingCoupledModel.class,
-							HeatingCoupledModel.URI,
+							HeatSensorCoupledModel.class,
+							HeatSensorCoupledModel.URI,
 							submodels,
 							null,
 							null,
@@ -132,7 +132,7 @@ public class HeatingCoupledModel extends CoupledModel {
 							null)) ;
 
 		return new Architecture(
-						HeatingCoupledModel.URI,
+						HeatSensorCoupledModel.URI,
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);

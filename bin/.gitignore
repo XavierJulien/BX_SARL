@@ -1,3 +1,7 @@
-/components/
-/simulation/
 /.DS_Store
+/components/
+/connectors/
+/interfaces/
+/launcher/
+/ports/
+/simulation/

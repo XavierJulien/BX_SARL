@@ -9,6 +9,7 @@ public class TemperatureSensorHeatingConnector extends AbstractConnector impleme
 	@Override
 	public double getHeating() throws Exception {
 		return ((HeatingTemperatureSensorI)this.offering).sendHeating() ;
+		
 	}
 
 }

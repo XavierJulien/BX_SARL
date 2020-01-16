@@ -65,10 +65,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 						"Remaining Battery", 
 						"Time (sec)", 
 						"kw", 
-						100, 
 						0, 
-						600,
-						400);
+						500, 
+						300,
+						200);
 		this.batteryRemainingPlotter = new XYPlotter(pd);
 		this.batteryRemainingPlotter.createSeries(SERIES);
 
@@ -77,10 +77,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 						"Battery Mode", 
 						"Time (sec)", 
 						"CHARGING = 1 / DISCHARGING = 0", 
-						700, 
-						100, 
-						600,
-						400);
+						300, 
+						500, 
+						300,
+						200);
 		this.batteryModePlotter = new XYPlotter(pd2);
 		this.batteryModePlotter.createSeries(SERIES2);
 		

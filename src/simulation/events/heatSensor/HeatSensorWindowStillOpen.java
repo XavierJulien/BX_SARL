@@ -1,12 +1,12 @@
-package simulation.events.heating;
+package simulation.events.heatSensor;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
-import simulation.models.heating.HeatingModel;
+import simulation.models.heatSensor.HeatSensorModel;
 
-public class HeatingUpdater extends AbstractEvent {
+public class HeatSensorWindowStillOpen extends AbstractEvent {
 	
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -17,7 +17,7 @@ public class HeatingUpdater extends AbstractEvent {
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public HeatingUpdater(Time timeOfOccurrence)
+	public HeatSensorWindowStillOpen(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
@@ -29,7 +29,7 @@ public class HeatingUpdater extends AbstractEvent {
 	@Override
 	public String eventAsString()
 	{
-		return "Heating::Updater" ;
+		return "HeatSensor::Updater" ;
 	}
 	
 	@Override
@@ -41,9 +41,8 @@ public class HeatingUpdater extends AbstractEvent {
 	@Override
 	public void executeOn(AtomicModel model)
 	{
-		assert	model instanceof HeatingModel ;
+		assert	model instanceof HeatSensorModel ;
 
-		((HeatingModel)model).updatePower();
-		
+		((HeatSensorModel)model).keepTemperature() ;
 	}
 }

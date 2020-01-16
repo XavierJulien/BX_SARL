@@ -2,6 +2,7 @@ package simulation.models.heating;
 
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.math3.random.RandomDataGenerator;
 
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
@@ -11,20 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.heating.HeatingMode;
 import simulation.events.heating.HeatingUpdater;
-import simulation.events.heating.RestMode;
-import simulation.events.heating.OffMode;
-import simulation.events.heating.SwitchOff;
-import simulation.events.heating.SwitchOn;
-import simulation.events.kettle.EmptyKettle;
 
-@ModelExternalEvents(exported = {SwitchOn.class,
-								 SwitchOff.class,
-								 RestMode.class,
-								 HeatingMode.class,
-								 OffMode.class,
-								 HeatingUpdater.class})
+@ModelExternalEvents(exported = { HeatingUpdater.class})
 
 public class HeatingUserModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
@@ -99,7 +89,7 @@ public class HeatingUserModel extends AtomicES_Model {
 											this.rg.nextBeta(1.75, 1.75),
 					this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new SwitchOn(t)) ;
+		this.scheduleEvent(new HeatingUpdater(t)) ;
 
 		
 		
@@ -152,46 +142,11 @@ public class HeatingUserModel extends AtomicES_Model {
 	public void				userDefinedInternalTransition(Duration elapsedTime){
 		Duration d ;
 		
-		if (this.nextEvent.equals(SwitchOn.class)) {
-			System.out.println("SWITCH ON");
-			//first event
-			this.hs = HeatingModel.State.ON;
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
-							 this.getSimulatedTimeUnit()) ;
-			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new HeatingMode(t));
-			
-			//everyday event
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
-			
-			
-		}else if (this.nextEvent.equals(SwitchOff.class)) {
-			System.out.println("SWITCH OFF");
-			this.hs = HeatingModel.State.OFF;
-			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
-			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new OffMode(t)) ;
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new SwitchOn(this.getCurrentStateTime().add(d))) ;
-			
-		}else if (this.nextEvent.equals(RestMode.class)) {
-			System.out.println("REST MODE");
-			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
-			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new HeatingUpdater(t)) ;
-		
-		}else if (this.nextEvent.equals(OffMode.class)) {
-			System.out.println("OFF MODE");
-			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
-			Time t = this.getCurrentStateTime().add(d) ;
-		
-		}else if (this.nextEvent.equals(HeatingMode.class)) {
+		if (this.nextEvent.equals(HeatingUpdater.class)) {
 			System.out.println("HEATING MODE");
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d);
-			if(Math.random() < 0.75)
-				this.scheduleEvent(new HeatingUpdater(t)) ;
+			this.scheduleEvent(new HeatingUpdater(t)) ;
 		}else {
 			System.out.println("UPDATER");
 		}

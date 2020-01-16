@@ -12,10 +12,7 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.heating.HeatingMode;
 import simulation.events.heating.HeatingUpdater;
-import simulation.events.heating.SwitchOff;
-import simulation.events.heating.SwitchOn;
 
 @ModelExternalEvents(exported = { HeatingUpdater.class})
 

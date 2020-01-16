@@ -1,23 +1,35 @@
 package components;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.cyphy.plugins.devs.SupervisorPlugin;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.sensors.TemperatureSensorHeatingI;
 import interfaces.sensors.TemperatureSensorI;
 import ports.sensors.TemperatureSensorHeatingOutboundPort;
 import ports.sensors.TemperatureSensorInboundPort;
 import ports.sensors.TemperatureSensorOutboundPort;
+import simulation.components.heatSensor.HeatSensorSimulatorPlugin;
+import simulation.models.heatSensor.HeatSensorCoupledModel;
+import simulation.models.heatSensor.HeatSensorModel;
+import simulation.models.windturbine.WindTurbineModel;
 
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
-public class TemperatureSensor extends AbstractComponent {
+public class TemperatureSensor 
+extends		AbstractCyPhyComponent
+implements	EmbeddingComponentStateAccessI
+{
 
 	protected SupervisorPlugin		sp ;
 	
@@ -63,6 +75,8 @@ public class TemperatureSensor extends AbstractComponent {
 
 		this.tracer.setTitle("TemperatureSensor") ;
 		this.tracer.setRelativePosition(3, 0) ;
+		
+		this.initialise();
 	}
 
 	public void sendTemperature() throws Exception {
@@ -94,68 +108,60 @@ public class TemperatureSensor extends AbstractComponent {
 		this.logMessage("starting Heat Sensor component.") ;
 	}
 	
+	protected void initialise() throws Exception {
+		// The coupled model has been made able to create the simulation
+		// architecture description.
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		// Create the appropriate DEVS simulation plug-in.
+		this.asp = new HeatSensorSimulatorPlugin() ;
+		
+		// Set the URI of the plug-in, using the URI of its associated
+		// simulation model.
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		
+		// Set the simulation architecture.
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		// Install the plug-in on the component, starting its own life-cycle.
+		this.installPlugin(this.asp) ;
+		
+
+		// Toggle logging on to get a log on the screen.
+		this.toggleLogging() ;
+	}
+	
 	@Override
 	public void execute() throws Exception {
 		super.execute();
 		
-		/*Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
-
-		System.out.println("AVANT PUT");
-		atomicModelDescriptors.put(
-			WindSpeedModel.URI,
-			AtomicModelDescriptor.create(
-				WindSpeedModel.class,
-				WindSpeedModel.URI,
-				TimeUnit.SECONDS,
-				null,
-				SimulationEngineCreationMode.ATOMIC_ENGINE)
-		) ;
-		
-		System.out.println("AVANT ARCHI");
-		
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<>() ;
-		
-		ArchitectureI architecture =
-				new Architecture(
-						WindSpeedModel.URI,
-						atomicModelDescriptors,
-						coupledModelDescriptors,
-						TimeUnit.SECONDS) ;
-		System.out.println("ICI");
-		SimulationEngine se = architecture.constructSimulator() ;
-		se.setDebugLevel(0);
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put("heatSensorRef", this) ;
+		this.asp.setSimulationRunParameters(simParams) ;
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							asp.doStandAloneSimulation(0.0, 5000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				}) ;
+		Thread.sleep(10L) ;
 		
 		
-		System.out.println("APRES CONSTRUCT");
-		
-		Map<String, Object> simParams = new HashMap<String, Object>() ;
-
-		String modelURI = WindSpeedModel.URI;
-		simParams.put(
-				modelURI + ":" + PlotterDescription.PLOTTING_PARAM_NAME,
-				new PlotterDescription(
-						"Wind sensor Model",
-						"Time (sec)",
-						"Connected/Interrupted",
-						SimulationMain.ORIGIN_X,
-						SimulationMain.ORIGIN_Y,
-						SimulationMain.getPlotterWidth(),
-						SimulationMain.getPlotterHeight())) ;
-		se.setSimulationRunParameters(simParams) ;
-		this.logMessage("supervisor component begins simulation.") ;
-		*/
-		// Schedule the first service method invocation in one second.
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
 					public void run() {
 						try {
 							while(true) {
+								temperature = (Double)(((TemperatureSensor)this.getTaskOwner()).asp.getModelStateValue(HeatSensorModel.URI, "currentTemperature"));
 								((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
+								
 								((TemperatureSensor)this.getTaskOwner()).getHeating() ;
-								((TemperatureSensor)this.getTaskOwner()).temperatureNaturalDecrease();
+//								((TemperatureSensor)this.getTaskOwner()).temperatureNaturalDecrease();
 								Thread.sleep(1000);
 							}
 							
@@ -172,6 +178,20 @@ public class TemperatureSensor extends AbstractComponent {
 		long end = System.currentTimeMillis() ;
 		System.out.println(se.getFinalReport()) ;
 		System.out.println("Simulation ends. " + (end - start)) ;*/
+	}
+	
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return HeatSensorCoupledModel.build() ;
+	}
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception{
+		if(name.equals("temperature")) {
+			return ((Double)temperature);
+		}else {
+			return null;
+		}
 	}
 	
 	

@@ -104,7 +104,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 						"Kettle temperature",
 						"Time (sec)",
 						"Temperature (C)",
-						100,
+						0,
 						0,
 						300,
 						200);
@@ -114,7 +114,7 @@ public class KettleModel extends AtomicHIOAwithEquations {
 						"Kettle State",
 						"Time (sec)",
 						"State (ON = 1/OFF = 0)",
-						400,
+						300,
 						0,
 						300,
 						200);
