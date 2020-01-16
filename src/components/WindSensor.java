@@ -12,15 +12,13 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
-import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.sensors.WindSensorI;
 import ports.sensors.WindSensorInboundPort;
 import ports.sensors.WindSensorOutboundPort;
 import simulation.components.windSensor.WindSensorSimulatorPlugin;
-import simulation.events.kettle.FillKettle;
-import simulation.events.kettle.KettleUpdater;
 import simulation.models.windSensor.WindSensorCoupledModel;
+import simulation.models.windSensor.WindSensorModel;
 
 @RequiredInterfaces(required = {WindSensorI.class})
 @OfferedInterfaces(offered = {WindSensorI.class})
@@ -37,9 +35,6 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	protected final WindSensorInboundPort windSensorInboundPort;
 	protected final WindSensorOutboundPort windSensorOutboundPort;
 
-	private static double x = 0;
-	
-	
 	
 	protected double power = 0;
 
@@ -73,12 +68,8 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	public void sendWindSpeed() throws Exception {
 		this.logMessage("Sending wind power....") ;
 		//Waiting for simulation, here's a little function to replace it for the moment
-		x+=0.1;
-		power = (Double)this.asp.getModelStateValue("WindSensorModel", "currentWind")
-				/*(((Math.sin(x+8)+1.0/10*Math.cos((x+2)*5)+ Math.cos((x*7)/2.0))*3)+6)*/;
+		power = (Double)this.asp.getModelStateValue(WindSensorModel.URI, "currentWind" );
 		this.windSensorOutboundPort.sendWindSpeed(power) ;
-		//		return 0.3;
-
 	}
 
 	@Override
@@ -116,7 +107,7 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	public void execute() throws Exception {
 		super.execute();
 
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("windSensorRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
@@ -141,10 +132,8 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 					public void run() {
 						try {
 							while(true) {
-								
 									
 									((WindSensor)this.getTaskOwner()).sendWindSpeed();
-								
 								
 								Thread.sleep(1000);
 							}

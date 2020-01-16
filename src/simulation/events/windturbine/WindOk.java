@@ -1,6 +1,5 @@
 package simulation.events.windturbine;
 
-
 //Copyright Jacques Malenfant, Sorbonne Universite.
 //Jacques.Malenfant@lip6.fr
 //
@@ -42,36 +41,36 @@ import simulation.models.windturbine.WindTurbineModel;
 
 //-----------------------------------------------------------------------------
 /**
-* The class <code>SwitchOff</code> defines the event of the windturbine being
-* switched off.
-*
-* <p><strong>Description</strong></p>
-* 
-* <p><strong>Invariant</strong></p>
-* 
-* <pre>
-* invariant		true
-* </pre>
-* 
-* <p>Created on : 2019-10-10</p>
-* 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-*/
-public class			SwitchOff
+ * The class <code>SwitchOn</code> defines the event of the windturbine being
+ * switched on.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * <p>Created on : 2019-10-10</p>
+ * 
+ * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+ */
+public class			WindOk
 extends		AbstractEvent
 {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
 	/**
-	 * create a SwitchOff event.
+	 * create a SwitchOn event.
 	 * 
 	 * <p><strong>Contract</strong></p>
 	 * 
@@ -82,22 +81,22 @@ extends		AbstractEvent
 	 *
 	 * @param timeOfOccurrence	time of occurrence of the event.
 	 */
-	public				SwitchOff(Time timeOfOccurrence)
+	public				WindOk(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
 	}
 
-	// ------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 	// Methods
-	// ------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 	/**
 	 * @see fr.sorbonne_u.devs_simulation.models.events.Event#eventAsString()
 	 */
 	@Override
-	public String		eventAsString()
+	public String			eventAsString()
 	{
-		return "WindTurbine::SwitchOff" ;
+		return "WindTurbine::WindOk" ;
 	}
 
 	/**
@@ -106,7 +105,7 @@ extends		AbstractEvent
 	@Override
 	public boolean			hasPriorityOver(EventI e)
 	{
-		return false ;
+		return true ;
 	}
 
 	/**
@@ -117,7 +116,7 @@ extends		AbstractEvent
 	{
 		assert	model instanceof WindTurbineModel ;
 
-		((WindTurbineModel)model).setState(WindTurbineModel.State.OFF) ;
+		((WindTurbineModel)model).setState(WindTurbineModel.State.ON) ;
 	}
 }
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------

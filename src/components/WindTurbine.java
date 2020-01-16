@@ -18,6 +18,7 @@ import ports.windturbine.WindTurbineInboundPort;
 import ports.windturbine.WindTurbineOutboundPort;
 import simulation.components.windturbine.WindTurbineSimulatorPlugin;
 import simulation.models.windturbine.WindTurbineCoupledModel;
+import simulation.models.windturbine.WindTurbineModel;
 
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})
@@ -96,7 +97,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	
 	public void sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
-		prod = 2*windSpeed;
+		prod = (Double)this.asp.getModelStateValue(WindTurbineModel.URI, "currentProd");
 		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
 	
@@ -135,9 +136,10 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	
 	@Override
 	public void execute() throws Exception {
+		
 		super.execute();
 		
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("windTurbineRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;

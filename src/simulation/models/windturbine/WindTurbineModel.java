@@ -38,6 +38,7 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
+import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
 import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
@@ -52,9 +53,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.windturbine.SwitchOff;
-import simulation.events.windturbine.SwitchOn;
 import simulation.events.windturbine.WTProductionUpdater;
+import simulation.events.windturbine.WindOk;
+import simulation.events.windturbine.WindTooStrong;
 
 //-----------------------------------------------------------------------------
 /**
@@ -89,9 +90,10 @@ import simulation.events.windturbine.WTProductionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(imported = {SwitchOn.class,
-								 SwitchOff.class,
-								 WTProductionUpdater.class})
+@ModelExternalEvents(imported = {WTProductionUpdater.class,
+								 WindOk.class,
+								 WindTooStrong.class})
+
 //-----------------------------------------------------------------------------
 public class			WindTurbineModel
 extends		AtomicHIOAwithEquations
@@ -171,9 +173,11 @@ extends		AtomicHIOAwithEquations
 	protected static final double	TENSION = 220.0 ; // Volts
 
 	/** current intensity in Amperes; intensity is power/tension.			*/
-	
+	@ExportedVariable(type = Double.class)
 	protected final Value<Double>				currentProd = new Value<Double>(this, 0.0, 0);
-	/** current state (OFF, LOW, HIGH) of the windturbine.					*/
+
+	protected  double wind;
+	
 	protected State					currentState ;
 
 	/** plotter for the intensity level over time.							*/
@@ -218,12 +222,13 @@ extends		AtomicHIOAwithEquations
 						"WindTurbine intensity",
 						"Time (sec)",
 						"Intensity (Amp)",
-						100,
+						800,
 						0,
-						300,
-						200) ;
+						400,
+						300) ;
 		this.intensityPlotter = new XYPlotter(pd) ;
 		this.intensityPlotter.createSeries(SERIES) ;
+		this.wind = 0;
 
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger()) ;
@@ -253,7 +258,7 @@ extends		AtomicHIOAwithEquations
 	public void			initialiseState(Time initialTime)
 	{
 		// the windturbine starts in mode OFF
-		this.currentState = State.OFF ;
+		this.currentState = State.ON ;
 
 		// initialisation of the intensity plotter 
 		this.intensityPlotter.initialise() ;
@@ -321,17 +326,7 @@ extends		AtomicHIOAwithEquations
 	public void			userDefinedInternalTransition(Duration elapsedTime)
 	{
 		if (this.componentRef != null) {
-			// This is an example showing how to access the component state
-			// from a simulation model; this must be done with care and here
-			// we are not synchronising with other potential component threads
-			// that may access the state of the component object at the same
-			// time.
-			try {
-				this.logMessage("component state = " +
-						componentRef.getEmbeddingComponentStateValue("state")) ;
-			} catch (Exception e) {
-				throw new RuntimeException(e) ;
-			}
+
 		}
 	}
 
@@ -436,18 +431,18 @@ extends		AtomicHIOAwithEquations
 	public void			setState(State s)
 	{
 		this.currentState = s ;
-		switch (s)
-		{
-			case OFF : this.currentProd.v = 0.0 ; break ;
-			case ON :
-			try {
-				this.currentProd.v = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue() ;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-				break ;
-		}
+//		switch (s)
+//		{
+//			case OFF : this.currentProd.v = 0.0 ; break ;
+//			case ON :
+//			try {
+//				this.currentProd.v = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue() ;
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//				break ;
+//		}
 	}
 
 	/**
@@ -485,21 +480,27 @@ extends		AtomicHIOAwithEquations
 	
 	public void updateProduction() {
 		
-		double wind=0;
-		try {System.out.println(componentRef);
-			Double d = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed"));
-			System.out.println(d);
-			wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();
+		try {
+			this.wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-
 		
-		if(currentState == State.ON &&  wind < 8 ) {
-			currentProd.v = 3*wind;
+		if(currentState == State.OFF) {
+			if(this.wind < 8) {
+				setState(State.ON);
+				currentProd.v = 3*wind;
+			}else {
+				currentProd.v = Math.max(0, currentProd.v-6);
+			}
 		}else {
-			currentProd.v = 0.0;
-		}
+			if(this.wind < 8) {
+				currentProd.v = 3*wind;
+			}else {
+				setState(State.OFF);
+				currentProd.v = Math.max(0, currentProd.v-6);
+			}
+		}		
 		
 	}
 }

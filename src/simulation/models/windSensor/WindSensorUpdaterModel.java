@@ -68,8 +68,7 @@ public class WindSensorUpdaterModel extends AtomicES_Model
 							this.getSimulatedTimeUnit()) ;
 		Duration d2 =
 			new Duration(
-					2.0 * this.meanTimeBetweenWindUpdate *
-											this.rg.nextBeta(1.75, 1.75),
+					1,
 					this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
 		this.scheduleEvent(new WindSensorUpdater(t)) ;
@@ -143,7 +142,7 @@ public class WindSensorUpdaterModel extends AtomicES_Model
 		// See what is the type of event to be executed
 		if (this.nextEvent.equals(WindSensorUpdater.class)) {
 			//System.out.println("In HeatingUpdaterModef");
-			d = new Duration(this.meanTimeBetweenWindUpdate, this.getSimulatedTimeUnit()) ;
+			d = new Duration(1, this.getSimulatedTimeUnit()) ;
 			// compute the time of occurrence (in the future)
 			Time t = this.getCurrentStateTime().add(d) ;
 			// schedule the event

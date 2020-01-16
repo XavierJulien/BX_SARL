@@ -20,6 +20,7 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.windSensor.WindSensorUpdater;
+import simulation.events.windturbine.WindOk;
 
 @ModelExternalEvents(imported = {WindSensorUpdater.class})
 
@@ -44,7 +45,7 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		@Override
 		public String	toString()
 		{
-			return "HeatingReport(" + this.getModelURI() + ")";
+			return "WindSensorReport(" + this.getModelURI() + ")";
 		}
 	}
 
@@ -82,10 +83,10 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 						"Wind Speed",
 						"Time (sec)",
 						"Wind (m/s)",
-						300,
-						0,
-						300,
-						200);
+						800,
+						320,
+						400,
+						300);
 		this.windPlotter = new XYPlotter(pd);
 		this.windPlotter.createSeries(SERIES);
 		// create a standard logger (logging on the terminal)

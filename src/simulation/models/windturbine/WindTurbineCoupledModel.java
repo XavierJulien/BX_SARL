@@ -59,9 +59,9 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulation.events.windturbine.SwitchOff;
-import simulation.events.windturbine.SwitchOn;
 import simulation.events.windturbine.WTProductionUpdater;
+import simulation.events.windturbine.WindOk;
+import simulation.events.windturbine.WindTooStrong;
 
 //-----------------------------------------------------------------------------
 /**
@@ -176,15 +176,15 @@ extends		CoupledModel
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(WindTurbineUserModel.URI, SwitchOn.class) ;
+				new EventSource(WindTurbineUserModel.URI, WindOk.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
-						new EventSink(WindTurbineModel.URI, SwitchOn.class)} ;
+						new EventSink(WindTurbineModel.URI, WindOk.class)} ;
 		connections.put(from1, to1) ;
 		EventSource from2 =
-				new EventSource(WindTurbineUserModel.URI, SwitchOff.class) ;
+				new EventSource(WindTurbineUserModel.URI, WindTooStrong.class) ;
 		EventSink[] to2 = new EventSink[] {
-				new EventSink(WindTurbineModel.URI, SwitchOff.class)} ;
+				new EventSink(WindTurbineModel.URI, WindTooStrong.class)} ;
 		connections.put(from2, to2) ;
 		EventSource from3 =
 				new EventSource(WindTurbineUserModel.URI, WTProductionUpdater.class) ;
@@ -192,7 +192,6 @@ extends		CoupledModel
 				new EventSink(WindTurbineModel.URI, WTProductionUpdater.class)} ;
 		connections.put(from3, to3) ;
 		
-
 		coupledModelDescriptors.put(
 					WindTurbineCoupledModel.URI,
 					new CoupledHIOA_Descriptor(

@@ -48,8 +48,8 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.windturbine.SwitchOff;
-import simulation.events.windturbine.SwitchOn;
+import simulation.events.windturbine.WindOk;
+import simulation.events.windturbine.WindTooStrong;
 import simulation.events.windturbine.WTProductionUpdater;
 
 //-----------------------------------------------------------------------------
@@ -75,8 +75,9 @@ import simulation.events.windturbine.WTProductionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(exported = {SwitchOn.class,
-								 SwitchOff.class,
+@ModelExternalEvents(/*exported = {WTProductionUpdater.class},*/
+					 exported = {WindTooStrong.class,
+								 WindOk.class,
 								 WTProductionUpdater.class})
 //-----------------------------------------------------------------------------
 public class			WindTurbineUserModel
@@ -158,10 +159,7 @@ extends		AtomicES_Model
 	{
 		this.initialDelay = 10.0 ;
 		this.interdayDelay = 100.0 ;
-		this.meanTimeBetweenUsages = 10.0 ;
-		this.meanTimeAtHigh = 4.0 ;
-		this.meanTimeAtLow = 3.0 ;
-		this.wts = WindTurbineModel.State.OFF ;
+		this.wts = WindTurbineModel.State.ON ;
 
 		this.rg.reSeedSecure() ;
 
@@ -173,12 +171,11 @@ extends		AtomicES_Model
 							this.initialDelay,
 							this.getSimulatedTimeUnit()) ;
 		Duration d2 =
-			new Duration(
-					2.0 * this.meanTimeBetweenUsages *
-											this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
+				new Duration(1, TimeUnit.SECONDS) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new SwitchOn(t)) ;
+		
+		this.scheduleEvent(new WindOk(t)) ;
+		System.out.println("//////////////////////////////////////////////////////////");
 
 		// Redo the initialisation to take into account the initial event
 		// just scheduled.
@@ -244,53 +241,26 @@ extends		AtomicES_Model
 	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
 	 */
 	@Override
-	public void				userDefinedInternalTransition(
-		Duration elapsedTime
-		)
-	{
-		// This method implements a usage scenario for the windturbine.
-		// Here, we assume that the windturbine is used once each cycle (day)
-		// and then it starts in low mode, is set in high mode shortly after,
-		// used for a while in high mode and then set back in low mode to
-		// complete the drying.
-
+	public void				userDefinedInternalTransition(Duration elapsedTime)
+	{	
 		Duration d ;
-		if (this.nextEvent.equals(SwitchOn.class)) {
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
+
+		if (this.nextEvent.equals(WindOk.class)) {
+			d = new Duration(1,
 							 this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
 			this.scheduleEvent(new WTProductionUpdater(t)) ;
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-		} else if (this.nextEvent.equals(WTProductionUpdater.class)) {
-			d =	new Duration(
-					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
-		} else {
-			d =	new Duration(
-					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
+			
+		}else {
+			if (this.nextEvent.equals(WTProductionUpdater.class)) {
+				d = new Duration(1,
+						 this.getSimulatedTimeUnit()) ;
+				Time t = this.getCurrentStateTime().add(d) ;
+				this.scheduleEvent(new WTProductionUpdater(t)) ;
+			}
 		}
-		// See what is the type of event to be executed
-		/*if (this.nextEvent.equals(SwitchOn.class)) {
-			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),
-							 this.getSimulatedTimeUnit()) ;
-			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new WTProductionUpdater(t)) ;
-			d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-		} else if (this.nextEvent.equals(WTProductionUpdater.class)) {
-			d =	new Duration(
-					2.0 * this.meanTimeAtHigh * this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
-		} else if (this.nextEvent.equals(SwitchOff.class)) {
-			d =	new Duration(
-					2.0 * this.meanTimeAtLow * this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(
-					new WTProductionUpdater(this.getCurrentStateTime().add(d))) ;
-		}*/
 	}
+	
+	
 }
 //-----------------------------------------------------------------------------
