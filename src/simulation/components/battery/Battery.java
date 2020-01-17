@@ -78,7 +78,7 @@ implements	EmbeddingComponentStateAccessI{
 	@Override
 	public void			execute() throws Exception
 	{
-		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 10L ;
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		// To give an example of the embedding component access facility, the
 		// following lines show how to set the reference to the embedding
 		// component or a proxy responding to the access calls.
@@ -91,6 +91,7 @@ implements	EmbeddingComponentStateAccessI{
 					@Override
 					public void run() {
 						try {
+							Thread.sleep(1000);
 							asp.doStandAloneSimulation(0.0, 1000000L) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;

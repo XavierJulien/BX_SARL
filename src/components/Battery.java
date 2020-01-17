@@ -45,7 +45,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected Battery(String uri,
 					   String batteryOutboundPortURI,
 					   String batteryInboundPortURI) throws Exception{
-		super(uri, 1, 1);
+		super(uri, 2, 2);
 
 		assert uri != null;
 		assert batteryOutboundPortURI != null;

@@ -86,8 +86,8 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 						"Temperature",
 						"Time (sec)",
 						"Temp (°C)",
-						350,
 						0,
+						750,
 						300,
 						200);
 		this.temperaturePlotter = new XYPlotter(pd);
