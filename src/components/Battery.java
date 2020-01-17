@@ -28,8 +28,10 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected final String				uri ;
 	protected final String				batteryInboundPortURI ;	
 	protected final String				batteryOutboundPortURI ;
+	protected final String				batteryChargerInboundPortURI ;
 	protected BatteryOutboundPort		batteryOutboundPort ;
 	protected BatteryInboundPort		batteryInboundPort ;
+	protected BatteryInboundPort 		batteryChargerInboundPort;
 	
 	protected BatterySimulatorPlugin		asp ;
 	
@@ -44,16 +46,19 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 //------------------------------------------------------------------------
 	protected Battery(String uri,
 					   String batteryOutboundPortURI,
-					   String batteryInboundPortURI) throws Exception{
+					   String batteryInboundPortURI,
+					   String batteryChargerInboundPortURI) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
 		assert batteryOutboundPortURI != null;
 		assert batteryInboundPortURI != null;
+		assert batteryChargerInboundPortURI != null;
 
 		this.uri = uri;
 		this.batteryInboundPortURI = batteryInboundPortURI;
 		this.batteryOutboundPortURI = batteryOutboundPortURI;
+		this.batteryChargerInboundPortURI = batteryChargerInboundPortURI;
 		this.prod = 0;
 
 		//-------------------PUBLISH-------------------
@@ -61,6 +66,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		batteryInboundPort.publishPort() ;
 		batteryOutboundPort = new BatteryOutboundPort(batteryOutboundPortURI, this) ;
 		batteryOutboundPort.localPublishPort() ;
+		batteryChargerInboundPort = new BatteryInboundPort(batteryChargerInboundPortURI, this) ;
+		batteryChargerInboundPort.publishPort() ;
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -75,7 +82,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		//----------------Variables----------------
 		
 		this.maxCharge = 500;
-		this.chargePercentage = 100;
+		this.chargePercentage = 0;
 		this.prod = 10;
 		
 		//----------------Modelisation-------------
@@ -109,6 +116,11 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	public void sendEnergy() throws Exception {
 		this.logMessage("Sending energy....") ;
 		this.batteryOutboundPort.sendEnergy(prod) ;
+	}
+	
+	public void receivePower(double power) {
+		this.chargePercentage = chargePercentage + power;
+		this.logMessage("receiving "+power+"kw from charger");
 	}
 
 	public void	start() throws ComponentStartException{
@@ -172,16 +184,14 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 					@Override
 					public void run() {
 						try {
+							((Battery)this.getTaskOwner()).startBattery();
 							while(true) {
 								if(isOn) {
 									((Battery)this.getTaskOwner()).sendEnergy();
 									((Battery)this.getTaskOwner()).sendChargePercentage();
 								}
-								
 								Thread.sleep(1000);
 							}
-							
-
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
 						}
@@ -208,6 +218,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		try {
 			batteryInboundPort.unpublishPort();
 			batteryOutboundPort.unpublishPort();
+			batteryChargerInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}
@@ -220,7 +231,6 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		return this.asp.getModelStateValue(BatteryModel.URI, "mode") + " " + 
-			   this.asp.getModelStateValue(BatteryModel.URI, "temperature");
+		return this.asp.getModelStateValue(BatteryModel.URI, "battery");
 	}
 }

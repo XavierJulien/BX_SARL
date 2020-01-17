@@ -9,5 +9,6 @@ public interface BatteryI extends DataOfferedI,DataRequiredI{
 	public void stopBattery() throws Exception;
 	public void sendChargePercentage(double percentage) throws Exception;
 	public void sendEnergy(double energy) throws Exception;
+	public void receivePower(double power) throws Exception;
 
 }

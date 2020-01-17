@@ -56,4 +56,16 @@ public class BatteryInboundPort extends AbstractInboundPort implements BatteryI{
 	public void sendEnergy(double energy) throws Exception {
 		//unused
 	}
+
+	@Override
+	public void receivePower(double power) throws Exception {
+		this.owner.handleRequestAsync(
+				new AbstractComponent.AbstractService<Void>() {
+					@Override
+					public Void call() throws Exception {
+						((Battery)this.getServiceOwner()).receivePower(power);
+						return null;
+					}
+				}) ;
+	}
 }

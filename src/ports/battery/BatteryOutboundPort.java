@@ -41,4 +41,10 @@ public class BatteryOutboundPort extends AbstractOutboundPort implements Battery
 	public void sendEnergy(double energy) throws Exception {
 		((BatteryI)this.connector).sendEnergy(energy) ;
 	}
+
+	@Override
+	public void receivePower(double power) throws Exception {
+		//unused
+		
+	}
 }

@@ -20,4 +20,9 @@ public class ChargerControllerConnector extends AbstractConnector implements Cha
 		//unused		
 	}
 
+	@Override
+	public void sendPower(double power) throws Exception {
+		//unused
+	}
+
 }

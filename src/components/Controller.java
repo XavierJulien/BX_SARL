@@ -299,6 +299,7 @@ public class Controller extends AbstractComponent {
 						try {
 							((Controller)this.getTaskOwner()).startElectricMeter() ;
 							boolean isOnHeating = false;
+							boolean isOnCharging = false;
 							while(true) {
 								((Controller)this.getTaskOwner()).logMessage("The temperature is "+temperature+" degrees");
 								if(temperature < 10) {
@@ -323,6 +324,20 @@ public class Controller extends AbstractComponent {
 								if(prod<0) {
 									//TODO s'occuper de ca
 									((Controller)this.getTaskOwner()).logMessage("TOO MUCH CONSUMPTION");
+								}
+								
+								if(batteryPercentage < 10) {
+									if(!isOnCharging) {
+										((Controller)this.getTaskOwner()).startCharger();
+									}
+									isOnCharging=true;
+								}else {
+									if(batteryPercentage >= 100) {
+										if(isOnCharging) {
+											((Controller)this.getTaskOwner()).stopCharger();
+											isOnCharging = false;
+										}
+									}
 								}
 								
 								Thread.sleep(1000);

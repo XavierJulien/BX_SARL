@@ -18,17 +18,19 @@ import ports.charger.ChargerOutboundPort;
 @OfferedInterfaces(offered = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
 public class Charger extends AbstractComponent{
 	
-	protected final String				uri ;
-	protected final String				chargerInboundPortURI ;	
-	protected final String				chargerOutboundPortURI ;
-	protected final String				chargerElectricMeterOutboundPortURI ;
-	protected final String				chargerElectricMeterInboundPortURI ;
-	protected ChargerOutboundPort		chargerOutboundPort ;
-	protected ChargerInboundPort		chargerInboundPort ;
-	protected ChargerOutboundPort		chargerElectricMeterOutboundPort ;
-	protected ChargerInboundPort		chargerElectricMeterInboundPort ;
-	protected boolean 					isOn=false;
-	protected final double 				conso = 10;
+	protected final String					uri ;
+	protected final String					chargerInboundPortURI ;	
+	protected final String					chargerOutboundPortURI ;
+	protected final String					chargerBatteryOutboundPortURI ;	
+	protected final String					chargerElectricMeterOutboundPortURI ;
+	protected final String					chargerElectricMeterInboundPortURI ;
+	protected ChargerOutboundPort			chargerOutboundPort ;
+	protected ChargerInboundPort			chargerInboundPort ;
+	protected ChargerOutboundPort			chargerBatteryOutboundPort ;
+	protected ChargerOutboundPort			chargerElectricMeterOutboundPort ;
+	protected ChargerInboundPort			chargerElectricMeterInboundPort ;
+	protected boolean 						isOn=false;
+	protected final double 					conso = 10;
 	
 	
 //------------------------------------------------------------------------
@@ -38,28 +40,36 @@ public class Charger extends AbstractComponent{
 					   String chargerOutboundPortURI,
 					   String chargerInboundPortURI,
 					   String chargerElectricMeterOutboundPortURI,
-					   String chargerElectricMeterInboundPortURI) throws Exception{
+					   String chargerElectricMeterInboundPortURI,
+					   String chargerBatteryOutboundPortURI) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
 		assert chargerOutboundPortURI != null;
 		assert chargerInboundPortURI != null;
+		assert chargerBatteryOutboundPortURI != null;
 
 		this.uri = uri;
 		this.chargerInboundPortURI = chargerInboundPortURI;
 		this.chargerOutboundPortURI = chargerOutboundPortURI;
+		this.chargerBatteryOutboundPortURI = chargerBatteryOutboundPortURI;
 		this.chargerElectricMeterOutboundPortURI = chargerElectricMeterOutboundPortURI;
 		this.chargerElectricMeterInboundPortURI = chargerElectricMeterInboundPortURI;
 
 		//-------------------PUBLISH-------------------
 		chargerInboundPort = new ChargerInboundPort(chargerInboundPortURI, this);
 		chargerInboundPort.publishPort();
-		this.chargerOutboundPort =	new ChargerOutboundPort(chargerOutboundPortURI, this);
-		this.chargerOutboundPort.localPublishPort();
 		chargerElectricMeterInboundPort = new ChargerInboundPort(chargerElectricMeterInboundPortURI, this);
 		chargerElectricMeterInboundPort.publishPort();
+		chargerBatteryOutboundPort = new ChargerOutboundPort(chargerBatteryOutboundPortURI, this);
+		chargerBatteryOutboundPort.publishPort();
+		
+		this.chargerOutboundPort =	new ChargerOutboundPort(chargerOutboundPortURI, this);
+		this.chargerOutboundPort.localPublishPort();
 		this.chargerElectricMeterOutboundPort =	new ChargerOutboundPort(chargerElectricMeterOutboundPortURI, this);
 		this.chargerElectricMeterOutboundPort.localPublishPort();
+
+		
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -94,6 +104,11 @@ public class Charger extends AbstractComponent{
 		this.chargerElectricMeterOutboundPort.sendConsumption(conso) ;
 	}
 	
+	public void sendPower(double power) throws Exception {
+		this.logMessage("Sending power to battery "+power+"....") ;
+		this.chargerBatteryOutboundPort.sendPower(power) ;
+	}
+	
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Charger component.") ;
@@ -108,7 +123,8 @@ public class Charger extends AbstractComponent{
 						try {
 							while(true) {
 								if(isOn) {
-									((Charger)this.getTaskOwner()).sendConsumption() ;
+									((Charger)this.getTaskOwner()).sendConsumption();
+									((Charger)this.getTaskOwner()).sendPower(conso);
 								}
 								Thread.sleep(1000);
 							}
@@ -124,6 +140,7 @@ public class Charger extends AbstractComponent{
 	@Override
 	public void finalise() throws Exception {
 		chargerOutboundPort.doDisconnection();
+		chargerBatteryOutboundPort.doDisconnection();
 		chargerElectricMeterOutboundPort.doDisconnection();
 		super.finalise();
 	}
@@ -136,6 +153,7 @@ public class Charger extends AbstractComponent{
 		try {
 			chargerInboundPort.unpublishPort();
 			chargerOutboundPort.unpublishPort();
+			chargerBatteryOutboundPort.unpublishPort();
 			chargerElectricMeterInboundPort.unpublishPort();
 			chargerElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}

@@ -3,7 +3,7 @@ package simulation;
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
-import simulation.components.windSensor.WindSensor;
+import simulation.components.battery.Battery;
 
 public class			CVM
 extends		AbstractCVM
@@ -17,21 +17,11 @@ extends		AbstractCVM
 	@Override
 	public void			deploy() throws Exception
 	{
-		/*@SuppressWarnings("unused")
-		String kettleURI =
-				AbstractComponent.createComponent(
-						Kettle.class.getCanonicalName(),
-						new Object[]{}) ;*/
-//		@SuppressWarnings("unused")
-//		String heatingURI =
-//				AbstractComponent.createComponent(
-//						Heating.class.getCanonicalName(),
-//						new Object[]{}) ;
 		
 		@SuppressWarnings("unused")
 		String windTurbineURI =
 				AbstractComponent.createComponent(
-						WindSensor.class.getCanonicalName(),
+						Battery.class.getCanonicalName(),
 						new Object[]{}) ;
 
 		super.deploy();

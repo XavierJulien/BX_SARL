@@ -8,4 +8,5 @@ public interface ChargerI extends DataOfferedI,DataRequiredI{
 	public void startCharger() throws Exception;
 	public void stopCharger() throws Exception;
 	public void sendConsumption(double consumption) throws Exception;
+	public void sendPower(double power) throws Exception;
 }

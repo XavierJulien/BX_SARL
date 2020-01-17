@@ -11,6 +11,7 @@ import components.TemperatureSensor;
 import components.WindSensor;
 import components.WindTurbine;
 import connectors.battery.BatteryControllerConnector;
+import connectors.charger.ChargerBatteryConnector;
 import connectors.charger.ChargerControllerConnector;
 import connectors.charger.ChargerElectricMeterConnector;
 import connectors.controller.ControllerConnector;
@@ -104,6 +105,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControllerChargerInboundPortURI = "controllerChargerIPort" ;
 	protected static final String	URIChargerElectricMeterOutboundPortURI = "chargerElectricMeterOPort" ;
 	protected static final String	URIChargerElectricMeterInboundPortURI = "chargerElectricMeterIPort" ;
+	protected static final String	URIChargerBatteryOutboundPortURI = "chargerBatteryOPort" ;
+
 	
 	//--------------------------------------------------------------
 	//-------------------------BATTERY-----------------------------
@@ -111,6 +114,7 @@ public class CVM extends AbstractCVM {
 	public static final String	BATTERY_COMPONENT_URI = "my-URI-battery" ;
 	protected static final String	URIBatteryOutboundPortURI = "batteryOPort" ;
 	protected static final String	URIBatteryInboundPortURI = "batteryIPort" ;	
+	protected static final String	URIBatteryChargerInboundPortURI = "batteryChargerIPort" ;	
 	protected static final String	URIControllerBatteryOutboundPortURI = "controllerBatteryOPort" ;
 	protected static final String	URIControllerBatteryInboundPortURI = "controllerBatteryIPort" ;
 	
@@ -272,7 +276,8 @@ public class CVM extends AbstractCVM {
 								URIChargerOutboundPortURI,
 								URIChargerInboundPortURI,
 								URIElectricMeterChargerOutboundPortURI,
-								URIElectricMeterChargerInboundPortURI});
+								URIElectricMeterChargerInboundPortURI,
+								URIChargerBatteryOutboundPortURI});
 		assert	this.isDeployedComponent(this.uriChargerURI) ;
 		this.toggleTracing(this.uriChargerURI) ;
 		this.toggleLogging(this.uriChargerURI) ;
@@ -286,7 +291,8 @@ public class CVM extends AbstractCVM {
 						Battery.class.getCanonicalName(),
 						new Object[]{BATTERY_COMPONENT_URI,
 								URIBatteryOutboundPortURI,
-								URIBatteryInboundPortURI}) ;
+								URIBatteryInboundPortURI,
+								URIBatteryChargerInboundPortURI}) ;
 		assert	this.isDeployedComponent(this.uriBatteryURI) ;
 		this.toggleTracing(this.uriBatteryURI) ;
 		this.toggleLogging(this.uriBatteryURI) ;
@@ -437,6 +443,15 @@ public class CVM extends AbstractCVM {
 				URIControllerWindSensorOutboundPortURI,
 				URIWindSensorInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;
+		
+		//CHARGER <=> BATTERY
+		
+		this.doPortConnection(
+				this.uriChargerURI,
+				URIChargerBatteryOutboundPortURI,
+				URIBatteryChargerInboundPortURI,
+				ChargerBatteryConnector.class.getCanonicalName()) ;
+		
 		
 		//TEMPERATURE SENSOR <=> CONTROLLER
 		this.doPortConnection(

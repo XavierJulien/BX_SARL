@@ -55,4 +55,9 @@ public class ChargerInboundPort extends AbstractInboundPort implements ChargerI,
 		//unused
 	}
 
+	@Override
+	public void sendPower(double power) throws Exception {
+		//unused
+	}
+
 }

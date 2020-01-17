@@ -6,6 +6,7 @@ import interfaces.controller.ControllerI;
 
 public class BatteryControllerConnector extends AbstractConnector implements BatteryI {
 
+	
 	@Override
 	public void startBattery() throws Exception {
 		((ControllerI)this.offering).startBattery();
@@ -24,5 +25,10 @@ public class BatteryControllerConnector extends AbstractConnector implements Bat
 	@Override
 	public void sendEnergy(double energy) throws Exception {
 		((ControllerI)this.offering).getBatteryProduction(energy);		
+	}
+
+	@Override
+	public void receivePower(double power) throws Exception {
+		//unused
 	}
 }
