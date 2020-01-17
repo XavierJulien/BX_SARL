@@ -20,7 +20,6 @@ import ports.heating.HeatingOutboundPort;
 import ports.heating.HeatingTemperatureSensorInboundPort;
 import simulation.components.heating.HeatingSimulatorPlugin;
 import simulation.models.heating.HeatingCoupledModel;
-import simulation.models.heating.HeatingModel;
 
 @RequiredInterfaces(required = {HeatingI.class, HeatingTemperatureSensorI.class})
 @OfferedInterfaces(offered = {HeatingI.class, HeatingTemperatureSensorI.class})

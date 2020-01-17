@@ -22,7 +22,6 @@ import ports.sensors.TemperatureSensorOutboundPort;
 import simulation.components.heatSensor.HeatSensorSimulatorPlugin;
 import simulation.models.heatSensor.HeatSensorCoupledModel;
 import simulation.models.heatSensor.HeatSensorModel;
-import simulation.models.windturbine.WindTurbineModel;
 
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
@@ -32,21 +31,13 @@ implements	EmbeddingComponentStateAccessI
 {
 
 	protected SupervisorPlugin		sp ;
-	
 	protected final String				uri ;
-
 	protected final String				temperatureSensorInboundPortURI ;
-	
 	protected final String				temperatureSensorOutboundPortURI ;
-	
 	protected final String				linkWithHeatingOutboundPortURI ;
-
 	protected final TemperatureSensorInboundPort temperatureSensorInboundPort;
-	
 	protected final TemperatureSensorHeatingOutboundPort temperatureSensorHeatingOutboundPort;
-	
 	protected final TemperatureSensorOutboundPort temperatureSensorOutboundPort;
-
 	protected double temperature = 5;
 
 
@@ -83,24 +74,20 @@ implements	EmbeddingComponentStateAccessI
 		this.logMessage("The temperature is "+temperature+" degrees") ;
 		//return Math.abs(Math.sin(power));
 		this.temperatureSensorOutboundPort.sendTemperature(temperature) ;
-
 	}
-	/**
-	 * This method gets the temperature update from the heating
-	 * @throws Exception
-	 */
 	public void getHeating() throws Exception {
 		double heat = this.temperatureSensorHeatingOutboundPort.getHeating();
 		temperature += heat;
 		//this.logMessage("The TemperatureSensor sees that the heating increase the temperature of "+heat+" degrees") ;
 	}
-	
-	
 	public void temperatureNaturalDecrease() {
 		temperature -= temperature *(5.0/100);
 	}
 	
-	
+	//------------------------------------------------------------------------
+	//----------------------------MODEL METHODS-------------------------------
+	//------------------------------------------------------------------------
+		
 
 	@Override
 	public void	start() throws ComponentStartException{
