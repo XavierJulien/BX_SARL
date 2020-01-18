@@ -267,7 +267,12 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 		this.currentMode = Mode.CHARGING;
 		if(currentBattery.v < 100.0) {
 			this.currentBattery.v += in_energy;
-			if(this.currentBattery.v > 100) this.currentBattery.v = 100.0;
+			if(this.currentBattery.v > 100)
+				try {
+					this.currentBattery.v =  (double)componentRef.getEmbeddingComponentStateValue("charge");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		}else {
 			this.currentBattery.v = 100.0;
 		}

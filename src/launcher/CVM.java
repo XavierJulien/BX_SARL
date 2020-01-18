@@ -328,7 +328,40 @@ public class CVM extends AbstractCVM {
 //-------------------------CONNECTION PHASE---------------------
 //--------------------------------------------------------------
 
-		//KETTLE <=> CONTROLLER
+		
+		//--------------------------------------------------------------
+		//  HEATING <=> CONTROLLER
+		//--------------------------------------------------------------
+		this.doPortConnection(
+				this.uriHeatingURI,
+				URIHeatingOutboundPortURI,
+				URIControllerHeatingInboundPortURI,
+				HeatingControllerConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriControllerURI,
+				URIControllerHeatingOutboundPortURI,
+				URIHeatingInboundPortURI,
+				ControllerConnector.class.getCanonicalName()) ;	
+		
+		
+		//--------------------------------------------------------------
+		//  HEATING <=> ELECTRICMETER
+		//--------------------------------------------------------------
+		this.doPortConnection(
+				this.uriHeatingURI,
+				URIElectricMeterHeatingOutboundPortURI,
+				URIHeatingElectricMeterInboundPortURI,
+				HeatingElectricMeterConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriElectricMeterURI,
+				URIHeatingElectricMeterOutboundPortURI,
+				URIElectricMeterHeatingInboundPortURI,
+				ElectricMeterConnector.class.getCanonicalName()) ;	
+		
+		
+		//--------------------------------------------------------------
+		//  KETLLE <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriKettleURI,
 				URIKettleOutboundPortURI,
@@ -341,31 +374,9 @@ public class CVM extends AbstractCVM {
 				ControllerConnector.class.getCanonicalName()) ;	
 
 		
-		//HEATING <=> CONTROLLER
-		this.doPortConnection(
-				this.uriHeatingURI,
-				URIHeatingOutboundPortURI,
-				URIControllerHeatingInboundPortURI,
-				HeatingControllerConnector.class.getCanonicalName()) ;
-		this.doPortConnection(
-				this.uriControllerURI,
-				URIControllerHeatingOutboundPortURI,
-				URIHeatingInboundPortURI,
-				ControllerConnector.class.getCanonicalName()) ;	
-		
-		//HEATING <=> ELECTRICMETER
-		this.doPortConnection(
-				this.uriHeatingURI,
-				URIElectricMeterHeatingOutboundPortURI,
-				URIHeatingElectricMeterInboundPortURI,
-				HeatingElectricMeterConnector.class.getCanonicalName()) ;
-		this.doPortConnection(
-				this.uriElectricMeterURI,
-				URIHeatingElectricMeterOutboundPortURI,
-				URIElectricMeterHeatingInboundPortURI,
-				ElectricMeterConnector.class.getCanonicalName()) ;	
-		
-		//KETTLE <=> ELECTRICMETER
+		//--------------------------------------------------------------
+		//  KETTLE <=> ELECTRICMETER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriKettleURI,
 				URIElectricMeterKettleOutboundPortURI,
@@ -376,8 +387,11 @@ public class CVM extends AbstractCVM {
 				URIKettleElectricMeterOutboundPortURI,
 				URIElectricMeterKettleInboundPortURI,
 				ElectricMeterConnector.class.getCanonicalName()) ;	
-			
-		//CHARGER <=> CONTROLLER
+		
+		
+		//--------------------------------------------------------------
+		//  CHARGER <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriChargerURI,
 				URIChargerOutboundPortURI,
@@ -388,8 +402,11 @@ public class CVM extends AbstractCVM {
 				URIControllerChargerOutboundPortURI,
 				URIChargerInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;	
-				
-		//CHARGER <=> ELECTRICMETER
+			
+		
+		//--------------------------------------------------------------
+		//  CHARGER <=> ELECTRICMETER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriChargerURI,
 				URIElectricMeterChargerOutboundPortURI,
@@ -402,7 +419,33 @@ public class CVM extends AbstractCVM {
 				ElectricMeterConnector.class.getCanonicalName()) ;	
 
 		
-		//ELECTRICMETER <=> CONTROLLER
+		//--------------------------------------------------------------
+		//  CHARGER <=> BATTERY
+		//--------------------------------------------------------------
+		this.doPortConnection(
+				this.uriChargerURI,
+				URIChargerBatteryOutboundPortURI,
+				URIBatteryChargerInboundPortURI,
+				ChargerBatteryConnector.class.getCanonicalName()) ;		
+		
+		//--------------------------------------------------------------
+		//  BATTERY <=> CONTROLLER
+		//--------------------------------------------------------------
+		this.doPortConnection(
+				this.uriBatteryURI,
+				URIBatteryOutboundPortURI,
+				URIControllerBatteryInboundPortURI,
+				BatteryControllerConnector.class.getCanonicalName()) ;
+		this.doPortConnection(
+				this.uriControllerURI,
+				URIControllerBatteryOutboundPortURI,
+				URIBatteryInboundPortURI,
+				ControllerConnector.class.getCanonicalName()) ;	
+		
+		
+		//--------------------------------------------------------------
+		//  ELECTRICMETER <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriElectricMeterURI,
 				URIElectricMeterOutboundPortURI,
@@ -413,9 +456,11 @@ public class CVM extends AbstractCVM {
 				URIControllerElectricMeterOutboundPortURI,
 				URIElectricMeterInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;	
-				
+			
 		
-		//WINDTURBINE <=> CONTROLLER
+		//--------------------------------------------------------------
+		//  WINDTURBINE <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriWindTurbineURI,
 				URIWindTurbineOutboundPortURI,
@@ -428,32 +473,28 @@ public class CVM extends AbstractCVM {
 				ControllerConnector.class.getCanonicalName()) ;	
 
 		
-		//WIND TURBINE <=> WIND SENSOR
-
+		//--------------------------------------------------------------
+		//  WIND TURBINE <=> WIND SENSOR
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriWindSensorURI,
 				URIWindSensorWindTurbineOutboundPortURI,
 				URIWindTurbineSensorInboundPortURI,
 				WindSensorWindTurbineConnector.class.getCanonicalName()) ;	
 		
-		
-		//WIND SENSOR <=> CONTROLLER
+		//--------------------------------------------------------------
+		//  WIND SENSOR <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriControllerURI,
 				URIControllerWindSensorOutboundPortURI,
 				URIWindSensorInboundPortURI,
 				ControllerConnector.class.getCanonicalName()) ;
 		
-		//CHARGER <=> BATTERY
 		
-		this.doPortConnection(
-				this.uriChargerURI,
-				URIChargerBatteryOutboundPortURI,
-				URIBatteryChargerInboundPortURI,
-				ChargerBatteryConnector.class.getCanonicalName()) ;
-		
-		
-		//TEMPERATURE SENSOR <=> CONTROLLER
+		//--------------------------------------------------------------
+		//  TEMPERATURE SENSOR <=> CONTROLLER
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriControllerURI,
 				URIControllerHeatSensorOutboundPortURI,
@@ -467,22 +508,9 @@ public class CVM extends AbstractCVM {
 				TemperatureSensorControllerConnector.class.getCanonicalName()) ;
 		
 		
-		
-				
-		
-		//BATTERY <=> CONTROLLER
-		this.doPortConnection(
-				this.uriBatteryURI,
-				URIBatteryOutboundPortURI,
-				URIControllerBatteryInboundPortURI,
-				BatteryControllerConnector.class.getCanonicalName()) ;
-		this.doPortConnection(
-				this.uriControllerURI,
-				URIControllerBatteryOutboundPortURI,
-				URIBatteryInboundPortURI,
-				ControllerConnector.class.getCanonicalName()) ;	
-		
-		//HEAT SENSOR => HEATING
+		//--------------------------------------------------------------
+		// HEAT SENSOR => HEATING
+		//--------------------------------------------------------------
 		this.doPortConnection(
 				this.uriHeatSensorURI,
 				URIHeatSensorToHeatingOutboundPortURI,

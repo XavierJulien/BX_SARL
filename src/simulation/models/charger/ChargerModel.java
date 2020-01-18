@@ -65,10 +65,10 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 						"Consumption", 
 						"Time (sec)", 
 						"kw", 
-						100, 
-						0, 
-						600,
-						400);
+						600, 
+						500, 
+						300,
+						200);
 		this.consumptionPlotter = new XYPlotter(pd);
 		this.consumptionPlotter.createSeries(SERIES);
 
@@ -77,10 +77,10 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 						"Charger Mode", 
 						"Time (sec)", 
 						"CHARGING = 1 / OFF = 0", 
-						700, 
-						100, 
-						600,
-						400);
+						600, 
+						750, 
+						300,
+						200);
 		this.chargerModePlotter = new XYPlotter(pd2);
 		this.chargerModePlotter.createSeries(SERIES2);
 		
@@ -95,7 +95,7 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("componentRef");
+		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("chargerRef");
 		this.delay = new Duration(1.0, this.getSimulatedTimeUnit());
 	}
 
@@ -162,7 +162,7 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 
 			try {
 				this.logMessage("component state = " + 
-						componentRef.getEmbeddingComponentStateValue("mode"));
+						componentRef.getEmbeddingComponentStateValue("consumption"));
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -265,7 +265,17 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	public void charging(double sending_energy) //se demerder pour envoyer un event
 	{
 		this.currentMode = Mode.CHARGING;
-		this.currentConsumption.v = 1200.0;
+		try {
+			boolean on =  (Boolean)componentRef.getEmbeddingComponentStateValue("consumption");
+			if(on) {
+				this.currentConsumption.v = 1200.0;
+			}else {
+				this.currentConsumption.v = 0.0;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//sending event
 	}
 	

@@ -19,7 +19,6 @@ import ports.battery.BatteryInboundPort;
 import ports.battery.BatteryOutboundPort;
 import simulation.components.battery.BatterySimulatorPlugin;
 import simulation.models.battery.BatteryCoupledModel;
-import simulation.models.battery.BatteryModel;
 
 @RequiredInterfaces(required = {BatteryI.class, BatteryChargerI.class})
 @OfferedInterfaces(offered = {BatteryI.class, BatteryChargerI.class})
@@ -200,6 +199,21 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 				1000, TimeUnit.MILLISECONDS);
 	}
 
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return BatteryCoupledModel.build() ;
+	}
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception{
+		if(name.equals("isOn")) {
+			return (Boolean)isOn;
+		}else if(name.equals("charge")) {
+			return chargePercentage;
+		}else {
+			return null;
+		}
+	}
 
 //------------------------------------------------------------------------
 //----------------------------FINALISE------------------------------------
@@ -221,16 +235,5 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 			batteryChargerInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
-	}
-
-
-	@Override
-	protected Architecture createLocalArchitecture(String architectureURI) throws Exception {
-		return BatteryCoupledModel.build() ;
-	}
-	
-	@Override
-	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		return this.asp.getModelStateValue(BatteryModel.URI, "battery");
 	}
 }

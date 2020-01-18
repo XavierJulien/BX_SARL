@@ -20,9 +20,8 @@ import interfaces.charger.ChargerI;
 import ports.charger.ChargerInboundPort;
 import ports.charger.ChargerOutboundPort;
 import simulation.components.charger.ChargerSimulatorPlugin;
-import simulation.components.heatSensor.HeatSensorSimulatorPlugin;
+import simulation.models.battery.BatteryModel.Mode;
 import simulation.models.charger.ChargerCoupledModel;
-import simulation.models.heating.HeatingCoupledModel;
 
 @RequiredInterfaces(required = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
 @OfferedInterfaces(offered = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
@@ -37,6 +36,8 @@ implements	EmbeddingComponentStateAccessI{
 	protected final String					chargerBatteryOutboundPortURI ;	
 	protected final String					chargerElectricMeterOutboundPortURI ;
 	protected final String					chargerElectricMeterInboundPortURI ;
+	
+	protected ChargerSimulatorPlugin		asp ;
 	
 	protected ChargerOutboundPort			chargerOutboundPort ;
 	protected ChargerInboundPort			chargerInboundPort ;
@@ -57,7 +58,7 @@ implements	EmbeddingComponentStateAccessI{
 					   String chargerElectricMeterOutboundPortURI,
 					   String chargerElectricMeterInboundPortURI,
 					   String chargerBatteryOutboundPortURI) throws Exception{
-		super(uri, 1, 1);
+		super(uri, 2, 2);
 
 		assert uri != null;
 		assert chargerOutboundPortURI != null;
@@ -96,7 +97,9 @@ implements	EmbeddingComponentStateAccessI{
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 3) ;
 		
+		//----------------Modelisation-------------
 		
+		this.initialise();
 		
 	}
 
@@ -157,6 +160,7 @@ implements	EmbeddingComponentStateAccessI{
 					@Override
 					public void run() {
 						try {
+							Thread.sleep(1000);
 							asp.doStandAloneSimulation(0.0, 5000.0) ;
 						} catch (Exception e) {
 							throw new RuntimeException(e) ;
@@ -189,7 +193,7 @@ implements	EmbeddingComponentStateAccessI{
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception{
-		if(name.equals("isOn")) {
+		if(name.equals("consumption")) {
 			return (Boolean)isOn;
 		}else {
 			return null;
