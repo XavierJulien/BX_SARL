@@ -54,8 +54,6 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.windturbine.WTProductionUpdater;
-import simulation.events.windturbine.WindOk;
-import simulation.events.windturbine.WindTooStrong;
 
 //-----------------------------------------------------------------------------
 /**
@@ -90,9 +88,7 @@ import simulation.events.windturbine.WindTooStrong;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(imported = {WTProductionUpdater.class,
-								 WindOk.class,
-								 WindTooStrong.class})
+@ModelExternalEvents(imported = {WTProductionUpdater.class})
 
 //-----------------------------------------------------------------------------
 public class			WindTurbineModel
@@ -102,42 +98,14 @@ extends		AtomicHIOAwithEquations
 	// Inner classes and types
 	// -------------------------------------------------------------------------
 
-	/**
-	 * The enumeration <code>State</code> describes the discrete states or
-	 * modes of the windturbine.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * The windturbine can be <code>OFF</code> or on, and then it is either in
-	 * <code>LOW</code> mode (wind is weak) or in
-	 * <code>HIGH</code> mode (wind is strong).
-	 * 
-	 * <p>Created on : 2019-10-10</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
+
 	public static enum State {
 		OFF,
 		/** low mode is when wind is weak.						*/
 		ON
 	}
 
-	/**
-	 * The class <code>WindTurbineReport</code> implements the simulation
-	 * report of the windturbine model.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * <p><strong>Invariant</strong></p>
-	 * 
-	 * <pre>
-	 * invariant		true
-	 * </pre>
-	 * 
-	 * <p>Created on : 2019-10-10</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
+
 	public static class		WindTurbineReport
 	extends		AbstractSimulationReport
 	{
@@ -265,13 +233,6 @@ extends		AtomicHIOAwithEquations
 		// show the plotter on the screen
 		this.intensityPlotter.showPlotter() ;
 
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e) ;
-		}
-
 		super.initialiseState(initialTime) ;
 	}
 
@@ -319,16 +280,7 @@ extends		AtomicHIOAwithEquations
 		}
 	}
 
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
-	 */
-	@Override
-	public void			userDefinedInternalTransition(Duration elapsedTime)
-	{
-		if (this.componentRef != null) {
 
-		}
-	}
 
 	/**
 	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
@@ -361,20 +313,10 @@ extends		AtomicHIOAwithEquations
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getProduction());
 
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 3 "
-															+ this.getState()) ;
-		}
-
-		// execute the current external event on this model, changing its state
-		// and intensity level
+		
 		ce.executeOn(this) ;
 
-		if (this.hasDebugLevel(1)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 4 "
-															+ this.getState()) ;
-		}
-
+		
 		// add a new data on the plotter; this data will open a new piece
 		this.intensityPlotter.addData(
 				SERIES,
@@ -382,9 +324,7 @@ extends		AtomicHIOAwithEquations
 				this.getProduction());
 
 		super.userDefinedExternalTransition(elapsedTime) ;
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 5") ;
-		}
+		
 	}
 
 	/**
@@ -431,18 +371,7 @@ extends		AtomicHIOAwithEquations
 	public void			setState(State s)
 	{
 		this.currentState = s ;
-//		switch (s)
-//		{
-//			case OFF : this.currentProd.v = 0.0 ; break ;
-//			case ON :
-//			try {
-//				this.currentProd.v = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue() ;
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//				break ;
-//		}
+
 	}
 
 	/**
@@ -482,6 +411,11 @@ extends		AtomicHIOAwithEquations
 		
 		try {
 			this.wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();
+			if((Boolean)componentRef.getEmbeddingComponentStateValue("state")) {
+				this.currentState = State.ON;
+			}else {
+				this.currentState = State.OFF;
+			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

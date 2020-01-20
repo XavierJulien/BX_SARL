@@ -113,7 +113,12 @@ implements	EmbeddingComponentStateAccessI{
 
 	public void sendConsumption() throws Exception {
 		this.logMessage("Sending comsumption....") ;
-		this.heatingElectricMeterOutboundPort.sendConsumption((1.0/powerPercentage)*maxConsumption) ;
+		if(isOn) {
+			this.heatingElectricMeterOutboundPort.sendConsumption((powerPercentage/100.0)*maxConsumption) ;
+		}else {
+			this.heatingElectricMeterOutboundPort.sendConsumption(0);
+		}
+		
 	}
 	
 	public void putExtraPowerInHeating(double power) throws Exception {

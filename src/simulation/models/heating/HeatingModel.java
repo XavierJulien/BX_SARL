@@ -128,14 +128,6 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		//initialise the plotter for the state
 		this.powerPlotter.initialise();
 		this.powerPlotter.showPlotter();
-		
-		
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 
 		super.initialiseState(initialTime);
 	}
@@ -180,30 +172,9 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void					userDefinedInternalTransition(Duration elapsedTime)
-	{
-		if (this.componentRef != null) {
-			// This is an example showing how to access the component state
-			// from a simulation model; this must be done with care and here
-			// we are not synchronising with other potential component threads
-			// that may access the state of the component object at the same
-			// time.
-			try {
-				this.logMessage("component state = " +
-						componentRef.getEmbeddingComponentStateValue("state"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
-
-	@Override
 	public void					userDefinedExternalTransition(Duration elapsedTime)
-	{
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("HeatingModel::userDefinedExternalTransition 1");
-		}
+	{ 
+
 
 		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
@@ -214,10 +185,6 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("HeatingModel::userDefinedExternalTransition 2 "
-//										+ ce.getClass().getCanonicalName());
-		}
 
 		
 		this.powerPlotter.addData(
@@ -225,28 +192,15 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getPower());
 
-		if (this.hasDebugLevel(2)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 3 "+ this.getState());
-		}
 
-		// execute the current external event on this model, changing its state
-		// and temperature level
 		ce.executeOn(this);
 
-		if (this.hasDebugLevel(1)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 4 " + this.getState());
-		}
-
-		
 		this.powerPlotter.addData(
 				SERIESPOWER,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getPower());
 
 		super.userDefinedExternalTransition(elapsedTime);
-		if (this.hasDebugLevel(2)) {
-			//this.logMessage("HeatingModel::userDefinedExternalTransition 5");
-		}
 	}
 
 

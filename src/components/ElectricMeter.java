@@ -1,21 +1,29 @@
 package components;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.annotations.OfferedInterfaces;
 import fr.sorbonne_u.components.annotations.RequiredInterfaces;
 import fr.sorbonne_u.components.cvm.AbstractCVM;
+import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;
+import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
+import fr.sorbonne_u.devs_simulation.architectures.Architecture;
+import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import interfaces.electricmeter.ElectricMeterControllerI;
 import interfaces.electricmeter.ElectricMeterI;
 import ports.electricmeter.ElectricMeterInboundPort;
 import ports.electricmeter.ElectricMeterOutboundPort;
+import simulation.components.electricMeter.ElectricMeterSimulatorPlugin;
+import simulation.models.electricMeter.ElectricMeterCoupledModel;
+import simulation.models.windturbine.WindTurbineCoupledModel;
 
 @RequiredInterfaces(required = {ElectricMeterI.class, ElectricMeterControllerI.class})
 @OfferedInterfaces(offered = {ElectricMeterI.class, ElectricMeterControllerI.class})
-public class ElectricMeter extends AbstractComponent {
+public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI {
 	
 	protected final String				uri ;
 	protected final String				electricMeterInboundPortURI ;	
@@ -41,6 +49,8 @@ public class ElectricMeter extends AbstractComponent {
 	protected double					consumptionHeating = 0;
 	protected double					consumptionCharger = 0;
 	protected double					consumptionKettle = 0;
+	
+	protected ElectricMeterSimulatorPlugin		asp ;
 
 
 	
@@ -56,7 +66,7 @@ public class ElectricMeter extends AbstractComponent {
 					   String electricMeterKettleInboundPortURI,
 					   String electricMeterChargerOutboundPortURI,
 					   String electricMeterChargerInboundPortURI) throws Exception{
-		super(uri, 1, 1);
+		super(uri, 2, 1);
 
 		assert uri != null;
 		assert electricMeterOutboundPortURI != null;
@@ -102,6 +112,9 @@ public class ElectricMeter extends AbstractComponent {
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(3, 3) ;
+		
+		
+		this.initialise();
 	}
 
 
@@ -143,9 +156,42 @@ public class ElectricMeter extends AbstractComponent {
 		this.logMessage("starting Electric Meter component.") ;
 	}
 	
+	
+	protected void initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new ElectricMeterSimulatorPlugin() ;
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		this.installPlugin(this.asp) ;
+		this.toggleLogging() ;
+	}
+	
+	
 	@Override
 	public void execute() throws Exception{
 		super.execute();
+		
+		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
+		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
+		simParams.put("electricMeterRef", this) ;
+		this.asp.setSimulationRunParameters(simParams) ;
+		// Start the simulation.
+		this.runTask(
+				new AbstractComponent.AbstractTask() {
+					@Override
+					public void run() {
+						try {
+							Thread.sleep(1000);
+							asp.doStandAloneSimulation(0.0, 50000.0) ;
+						} catch (Exception e) {
+							throw new RuntimeException(e) ;
+						}
+					}
+				}) ;
+		Thread.sleep(10L) ;
+		
+		
+		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -159,6 +205,24 @@ public class ElectricMeter extends AbstractComponent {
 					}
 				},
 				1000, TimeUnit.MILLISECONDS);
+	}
+	
+
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return ElectricMeterCoupledModel.build() ;
+	}
+
+	
+	
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		if(name.equals("total")) {
+			return new Double(consumptionCharger+consumptionHeating+consumptionKettle);
+		}else {
+			return null;
+		}
+		
 	}
 
 	

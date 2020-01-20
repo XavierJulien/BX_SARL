@@ -143,12 +143,9 @@ public class HeatingUserModel extends AtomicES_Model {
 		Duration d ;
 		
 		if (this.nextEvent.equals(HeatingUpdater.class)) {
-			System.out.println("HEATING MODE");
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d);
 			this.scheduleEvent(new HeatingUpdater(t)) ;
-		}else {
-			System.out.println("UPDATER");
 		}
 	}
 	

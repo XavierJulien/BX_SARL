@@ -19,6 +19,7 @@ import ports.kettle.KettleOutboundPort;
 import simulation.components.kettle.KettleSimulatorPlugin;
 import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
+import simulation.models.kettle.KettleModel.State;
 
 @RequiredInterfaces(required = {KettleI.class})
 @OfferedInterfaces(offered = {KettleI.class})
@@ -109,8 +110,8 @@ implements EmbeddingComponentStateAccessI{
 	}
 	
 	public void sendConsumption() throws Exception {
-		this.logMessage("Sending consumption.... " +currentConsumption ) ;
-		this.kettleElectricMeterOutboundPort.sendConsumption(currentConsumption) ;
+			this.logMessage("Sending consumption.... "+currentConsumption ) ;
+			this.kettleElectricMeterOutboundPort.sendConsumption(currentConsumption) ;
 	}
 
 	public void	start() throws ComponentStartException{
@@ -125,13 +126,18 @@ implements EmbeddingComponentStateAccessI{
 	//------------------------------------------------------------------------
 	
 	protected void updateConsumption(KettleModel.Content content) {
-		if(content == KettleModel.Content.HALF) {
-			currentConsumption = consumption*0.5;
+		if(!isOn) {
+			currentConsumption = 0;
 		}else {
-			if(content == KettleModel.Content.FULL) {
-				currentConsumption = consumption;
+			if(content == KettleModel.Content.HALF) {
+				currentConsumption = consumption*0.5;
+			}else {
+				if(content == KettleModel.Content.FULL) {
+					currentConsumption = consumption;
+				}
 			}
 		}
+		
 	}
 	
 	protected void updateState(KettleModel.State state) {
@@ -200,10 +206,9 @@ implements EmbeddingComponentStateAccessI{
 						try {
 							while(true) {
 								((Kettle)this.getTaskOwner()).updateState((KettleModel.State)asp.getModelStateValue(KettleModel.URI, "state"));
-								if(isOn) {
-									((Kettle)this.getTaskOwner()).updateConsumption((KettleModel.Content)asp.getModelStateValue(KettleModel.URI, "content"));
-									((Kettle)this.getTaskOwner()).sendConsumption() ;
-								}
+								((Kettle)this.getTaskOwner()).updateConsumption((KettleModel.Content)asp.getModelStateValue(KettleModel.URI, "content"));
+								((Kettle)this.getTaskOwner()).sendConsumption() ;
+								
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

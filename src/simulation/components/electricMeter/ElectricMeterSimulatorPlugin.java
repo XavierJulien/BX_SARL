@@ -72,8 +72,8 @@ extends		AtomicSimulatorPlugin
 	{
 		ModelDescriptionI m = this.simulator.getDescendentModel(modelURI) ;
 		assert	m instanceof ElectricMeterModel ;
-		assert	name.equals("consommationTotale") ;
-		return ((ElectricMeterModel)m).getProduction() ;
+		assert	name.equals("total") ;
+		return ((ElectricMeterModel)m).getConsumption() ;
 		
 	}
 }

@@ -36,24 +36,6 @@ package simulation.models.electricMeter;
 import fr.sorbonne_u.devs_simulation.architectures.Architecture;
 import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 
-//-----------------------------------------------------------------------------
-/**
-* The class <code>MIL_WindTurbine</code> simply tests the simulation architecture
-* defined by <code>WindTurbineCoupledModel</code> before attaching it to a
-* component.
-*
-* <p><strong>Description</strong></p>
-* 
-* <p><strong>Invariant</strong></p>
-* 
-* <pre>
-* invariant		true
-* </pre>
-* 
-* <p>Created on : 2019-10-14</p>
-* 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-*/
 public class			MIL_ElectricMeter
 {
 	public static void	main(String[] args)

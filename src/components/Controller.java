@@ -62,6 +62,7 @@ public class Controller extends AbstractComponent {
 	protected double windSpeed = 0;
 	protected double temperature = 0;
 	public boolean isWindTurbineOn = false;
+	public boolean isBatteryOn = false;
 	public double batteryPercentage = 0;
 	protected double prod = 0;
 
@@ -264,11 +265,12 @@ public class Controller extends AbstractComponent {
 	}
 	public void getBatteryChargePercentage(double percentage) throws Exception {
 		this.batteryPercentage = percentage;
+		System.out.println(batteryPercentage);
 		this.logMessage("The battery is "+percentage+"% loaded");
 	}
 	public void getBatteryProduction(double energy) throws Exception {
 		this.prod += energy;
-		this.logMessage("The controller is getting "+prod+" units of energy from the Battery");
+		this.logMessage("The controller is getting "+energy+" units of energy from the Battery");
 	}
 
 	//--------------------------------------------------------------
@@ -309,25 +311,48 @@ public class Controller extends AbstractComponent {
 									isOnHeating=true;
 									((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
 								}else {
-									if(temperature < 20) {
+									if(temperature < 15) {
 										if(isOnHeating) {
-											((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
+											((Controller)this.getTaskOwner()).putExtraPowerInHeating(5);
 										}
 									}else {
-										if(isOnHeating) {
-											((Controller)this.getTaskOwner()).stopHeating();
-											isOnHeating = false;
+										if(temperature < 20) {
+											if(isOnHeating) {
+												((Controller)this.getTaskOwner()).slowHeating(5);
+											}
+										}else {
+											if(isOnHeating) {
+												((Controller)this.getTaskOwner()).stopHeating();
+												isOnHeating = false;
+											}
 										}
+										
 										
 									}
 								}
-								if(prod<0) {
-									//TODO s'occuper de ca
-									((Controller)this.getTaskOwner()).logMessage("TOO MUCH CONSUMPTION");
+								if(prod<15) {
+									if(!isBatteryOn) {
+										if(batteryPercentage > 40) {
+											((Controller)this.getTaskOwner()).startBattery();
+											isBatteryOn = true;
+										}
+										
+									}else {
+										if(batteryPercentage <10) {
+											((Controller)this.getTaskOwner()).stopBattery();	
+										}
+									}
+								}else {
+									if(isBatteryOn) {
+										((Controller)this.getTaskOwner()).stopBattery();	
+										isBatteryOn = false;;
+									}
 								}
 								
-								if(batteryPercentage < 10) {
+								if(batteryPercentage < 90) {
 									if(!isOnCharging) {
+										((Controller)this.getTaskOwner()).stopBattery();
+										
 										((Controller)this.getTaskOwner()).startCharger();
 									}
 									isOnCharging=true;

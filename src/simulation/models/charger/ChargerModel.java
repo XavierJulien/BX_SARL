@@ -17,11 +17,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.charger.ChargerEvent;
-import simulation.events.charger.OffEvent;
+import simulation.events.charger.UpdateCharger;
 
-@ModelExternalEvents(imported = { ChargerEvent.class, 
-								  OffEvent.class })
+@ModelExternalEvents(imported = { UpdateCharger.class})
 
 public class ChargerModel extends AtomicHIOAwithEquations {
 	
@@ -262,15 +260,15 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 
 	
-	public void charging(double sending_energy) //se demerder pour envoyer un event
+	public void update() //se demerder pour envoyer un event
 	{
-		this.currentMode = Mode.CHARGING;
+		
 		try {
-			boolean on =  (Boolean)componentRef.getEmbeddingComponentStateValue("consumption");
+			boolean on =  (Boolean)componentRef.getEmbeddingComponentStateValue("state");
 			if(on) {
-				this.currentConsumption.v = 1200.0;
+				this.currentMode = Mode.CHARGING;
 			}else {
-				this.currentConsumption.v = 0.0;
+				this.currentMode = Mode.OFF;
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -279,10 +277,5 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 		//sending event
 	}
 	
-	public void offCharging() // idem
-	{
-		this.currentMode = Mode.OFF;
-		this.currentConsumption.v = 0.0;
-		//sending event
-	}
+
 }

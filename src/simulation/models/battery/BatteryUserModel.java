@@ -12,11 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.battery.Charging;
-import simulation.events.battery.Discharging;
+import simulation.events.battery.UpdateBatteryCharge;
 
-@ModelExternalEvents(exported = { Charging.class,
-								  Discharging.class })
+@ModelExternalEvents(exported = { UpdateBatteryCharge.class})
 
 public class BatteryUserModel extends AtomicES_Model{
 	// -------------------------------------------------------------------------
@@ -82,11 +80,11 @@ public class BatteryUserModel extends AtomicES_Model{
 		super.initialiseState(initialTime) ;
 
 		Duration d1 = new Duration(
-							this.initialDelay,
+							this.meanTimeBetweenBatteryUpdate,
 							this.getSimulatedTimeUnit()) ;
 		
 		Time t = this.getCurrentStateTime().add(d1);
-		this.scheduleEvent(new Charging(t, this.chargingCapacity)) ;
+		this.scheduleEvent(new UpdateBatteryCharge(t)) ;
 		
 
 		this.nextTimeAdvance = this.timeAdvance() ;
@@ -136,23 +134,9 @@ public class BatteryUserModel extends AtomicES_Model{
 		Duration d;
 
 		
-		if (this.nextEvent.equals(Charging.class)) {
-			if(Math.random() <= 0.75) { //keep charging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new Charging(this.getCurrentStateTime().add(d), this.chargingCapacity)) ;
-			}else { // discharging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new Discharging(this.getCurrentStateTime().add(d), this.dischargingOffUse)) ;
-			}
-			
-		}else {
-			if(Math.random() <= 0.65) { //keep discharging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new Discharging(this.getCurrentStateTime().add(d), this.dischargingOffUse)) ;
-			}else { // charging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new Charging(this.getCurrentStateTime().add(d), this.chargingCapacity)) ;
-			}
+		if (this.nextEvent.equals(UpdateBatteryCharge.class)) {
+			d = new Duration(this.meanTimeBetweenBatteryUpdate, this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(new UpdateBatteryCharge(this.getCurrentStateTime().add(d))) ;
 		}
 	}
 	

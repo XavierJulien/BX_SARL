@@ -54,9 +54,6 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.electricMeter.TotalConsumptionUpdater;
-import simulation.events.windturbine.WTProductionUpdater;
-import simulation.events.windturbine.WindOk;
-import simulation.events.windturbine.WindTooStrong;
 
 //-----------------------------------------------------------------------------
 /**
@@ -100,49 +97,12 @@ extends		AtomicHIOAwithEquations
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
-
-	/**
-	 * The enumeration <code>State</code> describes the discrete states or
-	 * modes of the windturbine.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * The windturbine can be <code>OFF</code> or on, and then it is either in
-	 * <code>LOW</code> mode (wind is weak) or in
-	 * <code>HIGH</code> mode (wind is strong).
-	 * 
-	 * <p>Created on : 2019-10-10</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
-	public static enum State {
-		OFF,
-		/** low mode is when wind is weak.						*/
-		ON
-	}
-
-	/**
-	 * The class <code>WindTurbineReport</code> implements the simulation
-	 * report of the windturbine model.
-	 *
-	 * <p><strong>Description</strong></p>
-	 * 
-	 * <p><strong>Invariant</strong></p>
-	 * 
-	 * <pre>
-	 * invariant		true
-	 * </pre>
-	 * 
-	 * <p>Created on : 2019-10-10</p>
-	 * 
-	 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-	 */
-	public static class		WindTurbineReport
+	public static class		ElectricMeterReport
 	extends		AbstractSimulationReport
 	{
 		private static final long serialVersionUID = 1L;
 		
-		public			WindTurbineReport(String modelURI)
+		public			ElectricMeterReport(String modelURI)
 		{
 			super(modelURI);
 		}
@@ -153,7 +113,7 @@ extends		AtomicHIOAwithEquations
 		@Override
 		public String	toString()
 		{
-			return "WindTurbineReport(" + this.getModelURI() + ")" ;
+			return "ElectricMeterReport(" + this.getModelURI() + ")" ;
 		}
 	}
 
@@ -164,23 +124,22 @@ extends		AtomicHIOAwithEquations
 	private static final long		serialVersionUID = 1L ;
 	/** URI used to create instances of the model; assumes a singleton,
 	 *  otherwise a different URI must be given to each instance.			*/
-	public static final String		URI = "WindTurbineModel" ;
+	public static final String		URI = "ElectricMeterModel" ;
 
-	private static final String		SERIES = "production" ;
+	private static final String		SERIES = "consumption" ;
 
 	
 	protected static final double	TENSION = 220.0 ; // Volts
 
 	/** current intensity in Amperes; intensity is power/tension.			*/
 	@ExportedVariable(type = Double.class)
-	protected final Value<Double>				currentProd = new Value<Double>(this, 0.0, 0);
+	protected final Value<Double>				currentConsumption = new Value<Double>(this, 0.0, 0);
 
 	protected  double wind;
 	
-	protected State					currentState ;
 
 	/** plotter for the intensity level over time.							*/
-	protected XYPlotter				intensityPlotter ;
+	protected XYPlotter				consumptionPlotter ;
 
 	/** reference on the object representing the component that holds the
 	 *  model; enables the model to access the state of this component.		*/
@@ -190,22 +149,6 @@ extends		AtomicHIOAwithEquations
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	/**
-	 * create a windturbine model instance.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	uri != null
-	 * pre	simulatedTimeUnit != null
-	 * post	true			// no postcondition.
-	 * </pre>
-	 *
-	 * @param uri				URI of the model.
-	 * @param simulatedTimeUnit	time unit used for the simulation time.
-	 * @param simulationEngine	simulation engine to which the model is attached.
-	 * @throws Exception		<i>to do.</i>
-	 */
 	public				ElectricMeterModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -218,15 +161,15 @@ extends		AtomicHIOAwithEquations
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
-						"WindTurbine intensity",
+						"Total house consumption",
 						"Time (sec)",
-						"Intensity (Amp)",
+						"Consumption (Amp)",
 						300,
 						250,
 						300,
 						200) ;
-		this.intensityPlotter = new XYPlotter(pd) ;
-		this.intensityPlotter.createSeries(SERIES) ;
+		this.consumptionPlotter = new XYPlotter(pd) ;
+		this.consumptionPlotter.createSeries(SERIES) ;
 		this.wind = 0;
 
 		// create a standard logger (logging on the terminal)
@@ -247,7 +190,7 @@ extends		AtomicHIOAwithEquations
 	{
 		// The reference to the embedding component
 		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("windTurbineRef") ;
+			(EmbeddingComponentStateAccessI) simParams.get("electricMeterRef") ;
 	}
 
 	/**
@@ -257,12 +200,11 @@ extends		AtomicHIOAwithEquations
 	public void			initialiseState(Time initialTime)
 	{
 		// the windturbine starts in mode OFF
-		this.currentState = State.ON ;
 
 		// initialisation of the intensity plotter 
-		this.intensityPlotter.initialise() ;
+		this.consumptionPlotter.initialise() ;
 		// show the plotter on the screen
-		this.intensityPlotter.showPlotter() ;
+		this.consumptionPlotter.showPlotter() ;
 
 		try {
 			// set the debug level triggering the production of log messages.
@@ -281,13 +223,13 @@ extends		AtomicHIOAwithEquations
 	protected void		initialiseVariables(Time startTime)
 	{
 		// as the windturbine starts in mode OFF, its power consumption is 0
-		this.currentProd.v = 0.0 ;
+		this.currentConsumption.v = 0.0 ;
 
 		// first data in the plotter to start the plot.
-		this.intensityPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getProduction());
+				this.getConsumption());
 
 		super.initialiseVariables(startTime);
 	}
@@ -336,7 +278,7 @@ extends		AtomicHIOAwithEquations
 	public void			userDefinedExternalTransition(Duration elapsedTime)
 	{
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 1") ;
+			this.logMessage("ElectricMeterModel::userDefinedExternalTransition 1") ;
 		}
 
 		// get the vector of current external events
@@ -349,40 +291,32 @@ extends		AtomicHIOAwithEquations
 		Event ce = (Event) currentEvents.get(0) ;
 		assert	ce instanceof AbstractEvent ;
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 2 "
+			this.logMessage("ElectricMeterModel::userDefinedExternalTransition 2 "
 										+ ce.getClass().getCanonicalName()) ;
 		}
 
 		// the plot is piecewise constant; this data will close the currently
 		// open piece
-		this.intensityPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getProduction());
+				this.getConsumption());
 
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 3 "
-															+ this.getState()) ;
-		}
-
+		
 		// execute the current external event on this model, changing its state
 		// and intensity level
 		ce.executeOn(this) ;
 
-		if (this.hasDebugLevel(1)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 4 "
-															+ this.getState()) ;
-		}
 
 		// add a new data on the plotter; this data will open a new piece
-		this.intensityPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
-				this.getProduction());
+				this.getConsumption());
 
 		super.userDefinedExternalTransition(elapsedTime) ;
 		if (this.hasDebugLevel(2)) {
-			this.logMessage("WindTurbineModel::userDefinedExternalTransition 5") ;
+			this.logMessage("ElectricMeterModel::userDefinedExternalTransition 5") ;
 		}
 	}
 
@@ -392,12 +326,12 @@ extends		AtomicHIOAwithEquations
 	@Override
 	public void			endSimulation(Time endTime) throws Exception
 	{
-		this.intensityPlotter.addData(
+		this.consumptionPlotter.addData(
 				SERIES,
 				endTime.getSimulatedTime(),
-				this.getProduction()) ;
+				this.getConsumption()) ;
 		Thread.sleep(10000L) ;
-		this.intensityPlotter.dispose() ;
+		this.consumptionPlotter.dispose() ;
 
 		super.endSimulation(endTime) ;
 	}
@@ -408,98 +342,26 @@ extends		AtomicHIOAwithEquations
 	@Override
 	public SimulationReportI	getFinalReport() throws Exception
 	{
-		return new WindTurbineReport(this.getURI()) ;
+		return new ElectricMeterReport(this.getURI()) ;
 	}
 
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 
-	/**
-	 * set the state of the windturbine.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	s != null
-	 * post	true			// no postcondition.
-	 * </pre>
-	 *
-	 * @param s		the new state.
-	 */
-	public void			setState(State s)
-	{
-		this.currentState = s ;
-//		switch (s)
-//		{
-//			case OFF : this.currentProd.v = 0.0 ; break ;
-//			case ON :
-//			try {
-//				this.currentProd.v = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue() ;
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//				break ;
-//		}
-	}
-
-	/**
-	 * return the state of the windturbine.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true			// no precondition.
-	 * post	ret != null
-	 * </pre>
-	 *
-	 * @return	the state of the windturbine.
-	 */
-	public State		getState()
-	{
-		return this.currentState ;
-	}
-
-	/**
-	 * return the current intensity of electricity consumption in amperes.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true			// no precondition.
-	 * post	{@code ret >= 0.0 and ret <= 1200.0/220.0}
-	 * </pre>
-	 *
-	 * @return	the current intensity of electricity consumption in amperes.
-	 */
-	public double getProduction() {
-		return currentProd.v;
+	
+	public double getConsumption() {
+		return currentConsumption.v;
 	}
 	
 	public void updateConsumption() {
 		
 		try {
-			this.wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();
-		} catch (Exception e1) {
-			e1.printStackTrace();
+			this.currentConsumption.v = (Double)componentRef.getEmbeddingComponentStateValue("total");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		if(currentState == State.OFF) {
-			if(this.wind < 8) {
-				setState(State.ON);
-				currentProd.v = 3*wind;
-			}else {
-				currentProd.v = Math.max(0, currentProd.v-6);
-			}
-		}else {
-			if(this.wind < 8) {
-				currentProd.v = 3*wind;
-			}else {
-				setState(State.OFF);
-				currentProd.v = Math.max(0, currentProd.v-6);
-			}
-		}		
 		
 	}
 }

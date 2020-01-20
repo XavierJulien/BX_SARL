@@ -151,7 +151,6 @@ public class KettleUserModel extends AtomicES_Model {
 	{
 		Duration d ;
 		if (this.nextEvent.equals(FillKettle.class)) {
-			System.out.println("FILLING KETTLE");
 			d = new Duration(2.0 * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
 			this.scheduleEvent(new SwitchOn(t)) ;
@@ -160,19 +159,16 @@ public class KettleUserModel extends AtomicES_Model {
 		
 		
 		} else if (this.nextEvent.equals(SwitchOn.class)) {
-			System.out.println("SWITCH ON KETTLE");
 			d =	new Duration(2.0 * this.interdayDelay * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d)));
 		
 		
 		} else if (this.nextEvent.equals(KettleUpdater.class)) {
-			System.out.println("UPDATING...");
 			d =	new Duration(2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d))) ;
 		
 		
 		}else if(this.nextEvent.equals(EmptyKettle.class)) {
-			System.out.println("EMPTY KETTLE");
 			d =	new Duration(this.meanTimeBetweenUsages * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
 			d =	new Duration(2.0 * this.interdayDelay * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;

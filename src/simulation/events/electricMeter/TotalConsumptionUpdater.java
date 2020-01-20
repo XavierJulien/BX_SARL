@@ -5,7 +5,6 @@ import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
 import simulation.models.electricMeter.ElectricMeterModel;
-import simulation.models.windturbine.WindTurbineModel;
 
 public class TotalConsumptionUpdater extends AbstractEvent {
 	

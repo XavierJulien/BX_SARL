@@ -120,14 +120,6 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 		this.temperaturePlotter.initialise();
 		// show the plotter on the screen
 		this.temperaturePlotter.showPlotter();
-		
-		
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 
 		super.initialiseState(initialTime);
 	}
@@ -172,27 +164,10 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	}
 
 
-	@Override
-	public void					userDefinedInternalTransition(Duration elapsedTime)
-	{
-		if (this.componentRef != null) {
-			
-			try {
-				this.logMessage("component state = " +
-						componentRef.getEmbeddingComponentStateValue("state"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
 
 	@Override
 	public void					userDefinedExternalTransition(Duration elapsedTime)
 	{
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("WindSensorModel::userDefinedExternalTransition 1");
-		}
 
 		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();

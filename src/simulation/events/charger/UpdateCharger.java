@@ -1,26 +1,24 @@
-package simulation.events.battery;
+package simulation.events.charger;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
-import simulation.models.battery.BatteryModel;
+import simulation.models.charger.ChargerModel;
 
-public class Charging extends AbstractEvent{
+public class UpdateCharger extends AbstractEvent{
 
 	private static final long serialVersionUID = 1L;
-	private double in_energy;
 	
-	public Charging(Time timeOfOccurrence, double in_energy)
+	public UpdateCharger(Time timeOfOccurrence)
 	{
 		super(timeOfOccurrence, null) ;
-		this.in_energy = in_energy;
 	}
 	
 	@Override
 	public String eventAsString()
 	{
-		return "Battery::Charging" ;
+		return "Charger::Charging" ;
 	}
 	
 	@Override
@@ -32,8 +30,8 @@ public class Charging extends AbstractEvent{
 	@Override
 	public void executeOn(AtomicModel model)
 	{
-		assert	model instanceof BatteryModel ;
+		assert	model instanceof ChargerModel ;
 
-		((BatteryModel)model).charge(in_energy) ;
+		((ChargerModel)model).update() ;
 	}
 }

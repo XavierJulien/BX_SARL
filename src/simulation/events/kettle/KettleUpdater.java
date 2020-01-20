@@ -45,6 +45,5 @@ public class KettleUpdater extends AbstractEvent {
 
 		((KettleModel)model).updateTemperature() ;
 		((KettleModel)model).updateState();
-		((KettleModel)model).updateContent();
 	}
 }

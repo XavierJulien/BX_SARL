@@ -38,7 +38,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected double 					maxCharge;
 	protected double					chargePercentage;
 	protected boolean 					isOn=false;
-
+	protected boolean 					isCharging = false;
+	protected double 					currentCharge;
 	
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
@@ -82,6 +83,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		
 		this.maxCharge = 500;
 		this.chargePercentage = 0;
+		this.currentCharge = 500;
+		
 		this.prod = 10;
 		
 		//----------------Modelisation-------------
@@ -113,12 +116,17 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	}
 	
 	public void sendEnergy() throws Exception {
+		isCharging = false;
 		this.logMessage("Sending energy....") ;
+		currentCharge -= prod;
+		chargePercentage = currentCharge*100.0/ maxCharge;
 		this.batteryOutboundPort.sendEnergy(prod) ;
 	}
 	
 	public void receivePower(double power) {
-		this.chargePercentage = chargePercentage + power;
+		isCharging = true;
+		this.currentCharge = currentCharge + power;
+		this.chargePercentage = currentCharge*100.0/maxCharge;
 		this.logMessage("receiving "+power+"kw from charger");
 	}
 
@@ -209,9 +217,12 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		if(name.equals("isOn")) {
 			return (Boolean)isOn;
 		}else if(name.equals("charge")) {
-			return chargePercentage;
+			return currentCharge;
+		}else if(name.equals("charging")) {
+			return isCharging;
 		}else {
 			return null;
+			
 		}
 	}
 

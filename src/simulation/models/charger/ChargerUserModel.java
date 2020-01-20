@@ -12,11 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.charger.ChargerEvent;
-import simulation.events.charger.OffEvent;
+import simulation.events.charger.UpdateCharger;
 
-@ModelExternalEvents(exported = { ChargerEvent.class,
-								  OffEvent.class })
+@ModelExternalEvents(exported = { UpdateCharger.class})
 
 public class ChargerUserModel extends AtomicES_Model{
 	// -------------------------------------------------------------------------
@@ -82,7 +80,7 @@ public class ChargerUserModel extends AtomicES_Model{
 							this.getSimulatedTimeUnit()) ;
 		
 		Time t = this.getCurrentStateTime().add(d1);
-		this.scheduleEvent(new ChargerEvent(t, this.chargingCapacity)) ;
+		this.scheduleEvent(new UpdateCharger(t)) ;
 		
 
 		this.nextTimeAdvance = this.timeAdvance() ;
@@ -132,23 +130,9 @@ public class ChargerUserModel extends AtomicES_Model{
 		Duration d;
 
 		
-		if (this.nextEvent.equals(ChargerEvent.class)) {
-			if(Math.random() <= 0.75) { //keep charging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new ChargerEvent(this.getCurrentStateTime().add(d), this.chargingCapacity)) ;
-			}else { // discharging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new OffEvent(this.getCurrentStateTime().add(d))) ;
-			}
-			
-		}else {
-			if(Math.random() <= 0.65) { //keep discharging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new OffEvent(this.getCurrentStateTime().add(d))) ;
-			}else { // charging
-				d = new Duration(this.interdayDelay, this.getSimulatedTimeUnit()) ;
-				this.scheduleEvent(new ChargerEvent(this.getCurrentStateTime().add(d), this.chargingCapacity)) ;
-			}
+		if (this.nextEvent.equals(UpdateCharger.class)) {
+			d = new Duration(this.meanTimeBetweenChargerUpdate, this.getSimulatedTimeUnit()) ;
+			this.scheduleEvent(new UpdateCharger(this.getCurrentStateTime().add(d))) ;
 		}
 	}
 	

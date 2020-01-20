@@ -17,11 +17,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.battery.Charging;
-import simulation.events.battery.Discharging;
+import simulation.events.battery.UpdateBatteryCharge;
 
-@ModelExternalEvents(imported = { Charging.class, 
-								  Discharging.class })
+@ModelExternalEvents(imported = { UpdateBatteryCharge.class})
 
 public class BatteryModel extends AtomicHIOAwithEquations {
 	
@@ -262,30 +260,23 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 
 	
-	public void charge(double in_energy)
+	public void update()
 	{
-		this.currentMode = Mode.CHARGING;
-		if(currentBattery.v < 100.0) {
-			this.currentBattery.v += in_energy;
-			if(this.currentBattery.v > 100)
-				try {
-					this.currentBattery.v =  (double)componentRef.getEmbeddingComponentStateValue("charge");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-		}else {
-			this.currentBattery.v = 100.0;
+		
+		try {
+			this.currentBattery.v = (Double)componentRef.getEmbeddingComponentStateValue("charge");
+			boolean b = (Boolean)componentRef.getEmbeddingComponentStateValue("charging");
+			if(b) {
+				this.currentMode = Mode.CHARGING;
+			}else {
+				this.currentMode = Mode.DISCHARGING;
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 	}
 	
-	public void consume(double out_energy)
-	{
-		this.currentMode = Mode.DISCHARGING;
-		if(currentBattery.v > 0) {
-			this.currentBattery.v -= out_energy;
-			if(this.currentBattery.v < 0) this.currentBattery.v = 0.0;
-		}else {
-			this.currentBattery.v = 0.0;
-		}
-	}
+	
 }

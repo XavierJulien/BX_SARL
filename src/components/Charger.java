@@ -46,7 +46,7 @@ implements	EmbeddingComponentStateAccessI{
 	protected ChargerInboundPort			chargerElectricMeterInboundPort ;
 	
 	protected boolean 						isOn=false;
-	protected final double 					conso = 10;
+	protected final double 					conso = 15;
 	
 	
 //------------------------------------------------------------------------
@@ -176,7 +176,7 @@ implements	EmbeddingComponentStateAccessI{
 							while(true) {
 								if(isOn) {
 									((Charger)this.getTaskOwner()).sendConsumption();
-									((Charger)this.getTaskOwner()).sendPower(conso);
+									((Charger)this.getTaskOwner()).sendPower((conso*2)/3.0);
 								}
 								Thread.sleep(1000);
 							}
@@ -193,7 +193,7 @@ implements	EmbeddingComponentStateAccessI{
 
 	@Override
 	public Object getEmbeddingComponentStateValue(String name) throws Exception{
-		if(name.equals("consumption")) {
+		if(name.equals("state")) {
 			return (Boolean)isOn;
 		}else {
 			return null;

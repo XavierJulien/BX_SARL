@@ -60,27 +60,8 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.electricMeter.TotalConsumptionUpdater;
-import simulation.events.windturbine.WTProductionUpdater;
-import simulation.events.windturbine.WindOk;
-import simulation.events.windturbine.WindTooStrong;
 
 //-----------------------------------------------------------------------------
-/**
-* The class <code>WindTurbineCoupledModel</code> implements the DEVS simulation
-* coupled model for the windturbine example.
-*
-* <p><strong>Description</strong></p>
-* 
-* <p><strong>Invariant</strong></p>
-* 
-* <pre>
-* invariant		true
-* </pre>
-* 
-* <p>Created on : 2019-10-11</p>
-* 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-*/
 public class			ElectricMeterCoupledModel
 extends		CoupledModel
 {

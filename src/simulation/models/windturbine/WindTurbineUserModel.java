@@ -48,8 +48,6 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.windturbine.WindOk;
-import simulation.events.windturbine.WindTooStrong;
 import simulation.events.windturbine.WTProductionUpdater;
 
 //-----------------------------------------------------------------------------
@@ -75,10 +73,7 @@ import simulation.events.windturbine.WTProductionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(/*exported = {WTProductionUpdater.class},*/
-					 exported = {WindTooStrong.class,
-								 WindOk.class,
-								 WTProductionUpdater.class})
+@ModelExternalEvents(exported = {WTProductionUpdater.class})
 //-----------------------------------------------------------------------------
 public class			WindTurbineUserModel
 extends		AtomicES_Model
@@ -174,8 +169,7 @@ extends		AtomicES_Model
 				new Duration(1, TimeUnit.SECONDS) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
 		
-		this.scheduleEvent(new WindOk(t)) ;
-		System.out.println("//////////////////////////////////////////////////////////");
+		this.scheduleEvent(new WTProductionUpdater(t)) ;
 
 		// Redo the initialisation to take into account the initial event
 		// just scheduled.
@@ -245,20 +239,14 @@ extends		AtomicES_Model
 	{	
 		Duration d ;
 
-		if (this.nextEvent.equals(WindOk.class)) {
+
+		if (this.nextEvent.equals(WTProductionUpdater.class)) {
 			d = new Duration(1,
-							 this.getSimulatedTimeUnit()) ;
+					 this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
 			this.scheduleEvent(new WTProductionUpdater(t)) ;
-			
-		}else {
-			if (this.nextEvent.equals(WTProductionUpdater.class)) {
-				d = new Duration(1,
-						 this.getSimulatedTimeUnit()) ;
-				Time t = this.getCurrentStateTime().add(d) ;
-				this.scheduleEvent(new WTProductionUpdater(t)) ;
-			}
 		}
+		
 	}
 	
 	

@@ -20,7 +20,6 @@ import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.windSensor.WindSensorUpdater;
-import simulation.events.windturbine.WindOk;
 
 @ModelExternalEvents(imported = {WindSensorUpdater.class})
 
@@ -117,14 +116,6 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		this.windPlotter.initialise();
 		// show the plotter on the screen
 		this.windPlotter.showPlotter();
-		
-		
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 
 		super.initialiseState(initialTime);
 	}
@@ -170,49 +161,18 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 
 
 	@Override
-	public void					userDefinedInternalTransition(Duration elapsedTime)
-	{
-		if (this.componentRef != null) {
-			
-			try {
-				this.logMessage("component state = " +
-						componentRef.getEmbeddingComponentStateValue("state"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
-
-	@Override
 	public void					userDefinedExternalTransition(Duration elapsedTime)
 	{
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("WindSensorModel::userDefinedExternalTransition 1");
-		}
 
-		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-		// when this method is called, there is at least one external event,
-		// and for the wind sensor model, there will be exactly one by
-		// construction.
 		assert	currentEvents != null && currentEvents.size() == 1;
 
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
-
-		// the plot is piecewise constant; this data will close the currently
-		// open piece
 		this.windPlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getWind());
-		
-		
-
-
-		// execute the current external event on this model, changing its state
-		// and Wind speed
 		ce.executeOn(this);
 
 

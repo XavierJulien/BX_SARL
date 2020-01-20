@@ -19,6 +19,7 @@ import ports.windturbine.WindTurbineOutboundPort;
 import simulation.components.windturbine.WindTurbineSimulatorPlugin;
 import simulation.models.windturbine.WindTurbineCoupledModel;
 import simulation.models.windturbine.WindTurbineModel;
+import simulation.models.windturbine.WindTurbineModel.State;
 
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})
@@ -57,7 +58,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 		this.windTurbineOutboundPortURI = windTurbineOutboundPortURI;
 		this.windTurbineSensorInboundPortURI = windTurbineSensorInboundPortURI;
 		this.prod = 0;
-		this.windSpeed = 0;
+		this.windSpeed =0;
 
 		//-------------------PUBLISH-------------------
 		windTurbineInboundPort = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
@@ -97,7 +98,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	
 	public void sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
-		prod = (Double)this.asp.getModelStateValue(WindTurbineModel.URI, "currentProd");
+		prod = (Double)this.asp.getModelStateValue(WindTurbineModel.URI, "production");
 		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
 	
@@ -156,7 +157,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 						}
 					}
 				}) ;
-		Thread.sleep(10L) ;
+		Thread.sleep(2000L) ;
 		
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
@@ -165,12 +166,11 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 						try {
 							
 							while(true) {
-								if(windSpeed > 7.5 && isOn) {
-									stopWindTurbine();
+								State s = (State) ((WindTurbine)this.getTaskOwner()).asp.getModelStateValue(WindTurbineModel.URI, "state");
+								if(s == State.ON) {
+									((WindTurbine)this.getTaskOwner()).startWindTurbine();
 								}else {
-									if(!isOn && windSpeed <=7.5) {
-										startWindTurbine();
-									}
+									((WindTurbine)this.getTaskOwner()).stopWindTurbine();
 								}
 								if(isOn) {
 									((WindTurbine)this.getTaskOwner()).sendProduction();
@@ -219,7 +219,12 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 		if(name.equals("windSpeed")) {
 			return new Double(windSpeed);
 		}else {
-			return null;
+			if(name.equals("state")) {
+				return new Boolean(isOn);
+			}else{
+				return null;
+			}
+			
 		}
 		
 	}
