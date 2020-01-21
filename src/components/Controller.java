@@ -63,7 +63,7 @@ public class Controller extends AbstractComponent {
 	protected double temperature = 0;
 	public boolean isWindTurbineOn = false;
 	public boolean isBatteryOn = false;
-	public double batteryPercentage = 0;
+	public double batteryPercentage = 100;
 	protected double prod = 0;
 
 //------------------------------------------------------------------------
@@ -248,6 +248,7 @@ public class Controller extends AbstractComponent {
 		this.controllerElectricMeterOutboundPort.stopElectricMeter();
 	}
 	public void getAllConsumption(double total) throws Exception {
+		System.out.println("total = "+ total);
 		this.prod -= total;
 		this.logMessage("All the consumers consume "+total);
 	}
@@ -265,7 +266,6 @@ public class Controller extends AbstractComponent {
 	}
 	public void getBatteryChargePercentage(double percentage) throws Exception {
 		this.batteryPercentage = percentage;
-		System.out.println(batteryPercentage);
 		this.logMessage("The battery is "+percentage+"% loaded");
 	}
 	public void getBatteryProduction(double energy) throws Exception {
@@ -304,32 +304,38 @@ public class Controller extends AbstractComponent {
 							boolean isOnCharging = false;
 							while(true) {
 								((Controller)this.getTaskOwner()).logMessage("The temperature is "+temperature+" degrees");
-								if(temperature < 10) {
-									if(!isOnHeating) {
-										((Controller)this.getTaskOwner()).startHeating();
-									}
-									isOnHeating=true;
-									((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
-								}else {
-									if(temperature < 15) {
-										if(isOnHeating) {
-											((Controller)this.getTaskOwner()).putExtraPowerInHeating(5);
+								if(prod > 10) {
+									if(temperature < 10) {
+										if(!isOnHeating) {
+											((Controller)this.getTaskOwner()).startHeating();
 										}
+										isOnHeating=true;
+										((Controller)this.getTaskOwner()).putExtraPowerInHeating(10);
 									}else {
-										if(temperature < 20) {
+										if(temperature < 15) {
 											if(isOnHeating) {
-												((Controller)this.getTaskOwner()).slowHeating(5);
+												((Controller)this.getTaskOwner()).putExtraPowerInHeating(5);
 											}
 										}else {
-											if(isOnHeating) {
-												((Controller)this.getTaskOwner()).stopHeating();
-												isOnHeating = false;
+											if(temperature < 20) {
+												if(isOnHeating) {
+													((Controller)this.getTaskOwner()).slowHeating(5);
+												}
+											}else {
+												if(isOnHeating) {
+													((Controller)this.getTaskOwner()).stopHeating();
+													isOnHeating = false;
+												}
 											}
+											
+											
 										}
-										
-										
 									}
+								}else {
+									((Controller)this.getTaskOwner()).stopHeating();
+									isOnHeating = false;
 								}
+								System.out.println(prod);
 								if(prod<15) {
 									if(!isBatteryOn) {
 										if(batteryPercentage > 40) {
@@ -349,13 +355,13 @@ public class Controller extends AbstractComponent {
 									}
 								}
 								
-								if(batteryPercentage < 90) {
+								if(batteryPercentage < 90 || prod > 50 ) {
 									if(!isOnCharging) {
 										((Controller)this.getTaskOwner()).stopBattery();
-										
 										((Controller)this.getTaskOwner()).startCharger();
+										isOnCharging=true;
 									}
-									isOnCharging=true;
+									
 								}else {
 									if(batteryPercentage >= 100) {
 										if(isOnCharging) {
@@ -364,6 +370,8 @@ public class Controller extends AbstractComponent {
 										}
 									}
 								}
+								
+								
 								
 								Thread.sleep(1000);
 							}

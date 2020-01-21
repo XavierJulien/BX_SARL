@@ -208,9 +208,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 				this.getModeDouble());
 
 		super.userDefinedExternalTransition(elapsedTime);
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("ChargerModel::userDefinedExternalTransition 5");
-		}
+
 	}
 
 	

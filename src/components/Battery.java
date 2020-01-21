@@ -119,7 +119,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		isCharging = false;
 		this.logMessage("Sending energy....") ;
 		currentCharge -= prod;
-		chargePercentage = currentCharge*100.0/ maxCharge;
+		chargePercentage = Math.min(100,currentCharge*100.0/ maxCharge);
 		this.batteryOutboundPort.sendEnergy(prod) ;
 	}
 	
@@ -195,8 +195,9 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 							while(true) {
 								if(isOn) {
 									((Battery)this.getTaskOwner()).sendEnergy();
-									((Battery)this.getTaskOwner()).sendChargePercentage();
+									
 								}
+								((Battery)this.getTaskOwner()).sendChargePercentage();
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {
