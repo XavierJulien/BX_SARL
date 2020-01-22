@@ -59,12 +59,12 @@ public class Controller extends AbstractComponent {
 	protected ControllerOutboundPort 	controllerHeatSensorOutboundPort;
 
 
-	protected double windSpeed = 0;
-	protected double temperature = 0;
-	public boolean isWindTurbineOn = false;
-	public boolean isBatteryOn = false;
-	public double batteryPercentage = 100;
-	protected double remainingEnergy = 0;
+	protected double windSpeed;
+	protected double temperature;
+	public boolean isWindTurbineOn;
+	public boolean isBatteryOn;
+	public double batteryPercentage;
+	protected double remainingEnergy;
 
 	protected double[] maxConso = {15.0,25.0,35.0,20.0};
 
@@ -173,6 +173,16 @@ public class Controller extends AbstractComponent {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
 		}
 
+		//---------------Variables-----------------
+		windSpeed = 0;
+		temperature = 0;
+		isWindTurbineOn = false;
+		isBatteryOn = false;
+		batteryPercentage = 100;
+		remainingEnergy = 0;
+
+
+		
 		//-------------------GUI-------------------
 		this.tracer.setTitle("Controller") ;
 		this.tracer.setRelativePosition(0, 0) ;

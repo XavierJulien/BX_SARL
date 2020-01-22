@@ -34,7 +34,6 @@ package simulation.components.electricMeter;
 //knowledge of the CeCILL-C license and that you accept its terms.
 
 import java.util.HashMap;
-import java.util.Random;
 
 import fr.sorbonne_u.components.AbstractComponent;
 import fr.sorbonne_u.components.cyphy.AbstractCyPhyComponent;

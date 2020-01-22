@@ -20,7 +20,6 @@ import interfaces.charger.ChargerI;
 import ports.charger.ChargerInboundPort;
 import ports.charger.ChargerOutboundPort;
 import simulation.components.charger.ChargerSimulatorPlugin;
-import simulation.models.battery.BatteryModel.Mode;
 import simulation.models.charger.ChargerCoupledModel;
 
 @RequiredInterfaces(required = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
@@ -36,17 +35,17 @@ implements	EmbeddingComponentStateAccessI{
 	protected final String					chargerBatteryOutboundPortURI ;	
 	protected final String					chargerElectricMeterOutboundPortURI ;
 	protected final String					chargerElectricMeterInboundPortURI ;
-	
-	protected ChargerSimulatorPlugin		asp ;
-	
 	protected ChargerOutboundPort			chargerOutboundPort ;
 	protected ChargerInboundPort			chargerInboundPort ;
 	protected ChargerOutboundPort			chargerBatteryOutboundPort ;
 	protected ChargerOutboundPort			chargerElectricMeterOutboundPort ;
 	protected ChargerInboundPort			chargerElectricMeterInboundPort ;
 	
-	protected boolean 						isOn=false;
-	protected final double 					conso = 15;
+	protected ChargerSimulatorPlugin		asp ;
+	
+	
+	protected boolean 						isOn;
+	protected final double 					conso;
 	
 	
 //------------------------------------------------------------------------
@@ -79,13 +78,10 @@ implements	EmbeddingComponentStateAccessI{
 		chargerElectricMeterInboundPort.publishPort();
 		chargerBatteryOutboundPort = new ChargerOutboundPort(chargerBatteryOutboundPortURI, this);
 		chargerBatteryOutboundPort.publishPort();
-		
-		this.chargerOutboundPort =	new ChargerOutboundPort(chargerOutboundPortURI, this);
-		this.chargerOutboundPort.localPublishPort();
-		this.chargerElectricMeterOutboundPort =	new ChargerOutboundPort(chargerElectricMeterOutboundPortURI, this);
-		this.chargerElectricMeterOutboundPort.localPublishPort();
-
-		
+		chargerOutboundPort = new ChargerOutboundPort(chargerOutboundPortURI, this);
+		chargerOutboundPort.localPublishPort();
+		chargerElectricMeterOutboundPort =	new ChargerOutboundPort(chargerElectricMeterOutboundPortURI, this);
+		chargerElectricMeterOutboundPort.localPublishPort();
 
 		if (AbstractCVM.isDistributed) {
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
@@ -97,6 +93,9 @@ implements	EmbeddingComponentStateAccessI{
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 3) ;
 		
+		//----------------Variables----------------
+		this.isOn = false;
+		this.conso = 15;
 		//----------------Modelisation-------------
 		
 		this.initialise();
@@ -107,6 +106,7 @@ implements	EmbeddingComponentStateAccessI{
 	//------------------------------------------------------------------------
 	//----------------------------SERVICES------------------------------------
 	//------------------------------------------------------------------------
+	
 	public void startCharger() throws Exception{
 		this.logMessage("The charger is starting his job....") ;
 		isOn = true;
@@ -131,16 +131,14 @@ implements	EmbeddingComponentStateAccessI{
 		this.chargerBatteryOutboundPort.sendPower(power) ;
 	}
 
-	//------------------------------------------------------------------------
-	//----------------------------MODEL METHODS-------------------------------
-	//------------------------------------------------------------------------
-	
-	
-	@Override
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Charger component.") ;
 	}
+	//------------------------------------------------------------------------
+	//----------------------------MODEL METHODS-------------------------------
+	//------------------------------------------------------------------------
+	
 	
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
@@ -155,6 +153,7 @@ implements	EmbeddingComponentStateAccessI{
 	public void execute() throws Exception{
 		super.execute();
 		
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("chargerRef", this) ;
@@ -172,6 +171,8 @@ implements	EmbeddingComponentStateAccessI{
 					}
 				}) ;
 		Thread.sleep(10L) ;
+		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -191,6 +192,10 @@ implements	EmbeddingComponentStateAccessI{
 				1000, TimeUnit.MILLISECONDS);
 	}
 
+	
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
 		return ChargerCoupledModel.build() ;

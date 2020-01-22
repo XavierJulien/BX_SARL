@@ -15,7 +15,6 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import simulation.events.heatSensor.HeatSensorUpdater;
 import simulation.events.heatSensor.HeatSensorWindowOpen;
 import simulation.events.heatSensor.HeatSensorWindowStillOpen;
-import simulation.events.windSensor.WindSensorUpdater;
 
 @ModelExternalEvents(exported = { HeatSensorUpdater.class,
 								  HeatSensorWindowOpen.class,

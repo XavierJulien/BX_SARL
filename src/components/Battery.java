@@ -37,8 +37,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected double 					prod;
 	protected double 					maxCharge;
 	protected double					chargePercentage;
-	protected boolean 					isOn=false;
-	protected boolean 					isCharging = false;
+	protected boolean 					isOn;
+	protected boolean 					isCharging;
 	protected double 					currentCharge;
 	
 //------------------------------------------------------------------------
@@ -59,7 +59,6 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		this.batteryInboundPortURI = batteryInboundPortURI;
 		this.batteryOutboundPortURI = batteryOutboundPortURI;
 		this.batteryChargerInboundPortURI = batteryChargerInboundPortURI;
-		this.prod = 0;
 
 		//-------------------PUBLISH-------------------
 		batteryInboundPort = new BatteryInboundPort(batteryInboundPortURI, this) ;
@@ -81,11 +80,12 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		
 		
 		//----------------Variables----------------
-		
+		this.prod = 0;
 		this.maxCharge = 500;
 		this.chargePercentage = 0;
 		this.currentCharge = 500;
-		
+		this.isOn = false;
+		this.isCharging = false;
 		this.prod = 10;
 		
 		//----------------Modelisation-------------
@@ -95,8 +95,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		
 		
 	}
-
-
+	
 //------------------------------------------------------------------------
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
@@ -137,27 +136,17 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	}
 	
 	
-	//------------------------------------------------------------------------
-	//-----------------------------EXECUTE------------------------------------
-	//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//----------------------INITIALISE & EXECUTE------------------------------
+//------------------------------------------------------------------------
 	
 	
-	protected void		initialise() throws Exception
-	{
-		// The coupled model has been made able to create the simulation
-		// architecture description.
+	protected void		initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		// Create the appropriate DEVS simulation plug-in.
 		this.asp = new BatterySimulatorPlugin() ;
-		// Set the URI of the plug-in, using the URI of its associated
-		// simulation model.
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
-		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
-
-		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
 	}
 	
@@ -168,6 +157,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	public void execute() throws Exception {
 		super.execute();
 		
+		
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("batteryRef", this) ;
@@ -187,6 +178,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 				}) ;
 		Thread.sleep(10L) ;
 		
+		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -209,6 +202,10 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 				1000, TimeUnit.MILLISECONDS);
 	}
 
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
+	
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
 		return BatteryCoupledModel.build() ;

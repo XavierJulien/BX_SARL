@@ -19,7 +19,6 @@ import ports.kettle.KettleOutboundPort;
 import simulation.components.kettle.KettleSimulatorPlugin;
 import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
-import simulation.models.kettle.KettleModel.State;
 
 @RequiredInterfaces(required = {KettleI.class})
 @OfferedInterfaces(offered = {KettleI.class})
@@ -41,7 +40,7 @@ implements EmbeddingComponentStateAccessI{
 	protected KettleSimulatorPlugin		asp ;
 	
 	protected boolean 					isOn=false;
-	protected final double 				consumption = 10;
+	protected double 					consumption = 10;
 	protected double 					currentConsumption;
 	
 	
@@ -87,11 +86,15 @@ implements EmbeddingComponentStateAccessI{
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(2, 2) ;
+		
+		//----------------Variables----------------
+		isOn=false;
+		consumption = 10;
+		currentConsumption = 0;
+		
+		//----------------Modelisation-------------
+		
 		this.initialise();
-		
-		
-		
-		this.currentConsumption = consumption;
 	}
 
 
@@ -121,9 +124,9 @@ implements EmbeddingComponentStateAccessI{
 	
 	
 	
-	//------------------------------------------------------------------------
-	//-------------------------TREATMENT METHODS------------------------------
-	//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//-------------------------TREATMENT METHODS------------------------------
+//------------------------------------------------------------------------
 	
 	protected void updateConsumption(KettleModel.Content content) {
 		if(!isOn) {
@@ -151,25 +154,16 @@ implements EmbeddingComponentStateAccessI{
 	
 	
 	
-	//------------------------------------------------------------------------
-	//------------------------------EXECUTION---------------------------------
-	//------------------------------------------------------------------------
+//------------------------------------------------------------------------
+//------------------------------EXECUTION---------------------------------
+//------------------------------------------------------------------------
 	
 	protected void initialise() throws Exception {
-		// The coupled model has been made able to create the simulation
-		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		// Create the appropriate DEVS simulation plug-in.
 		this.asp = new KettleSimulatorPlugin() ;
-		// Set the URI of the plug-in, using the URI of its associated
-		// simulation model.
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
-		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
-
-		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
 	}
 	
@@ -180,11 +174,12 @@ implements EmbeddingComponentStateAccessI{
 	@Override
 	public void execute() throws Exception {
 		super.execute();
+	
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("componentRef", this) ;
+		simParams.put("kettleRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
-		// Start the simulation.
 		this.runTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -199,6 +194,8 @@ implements EmbeddingComponentStateAccessI{
 				}) ;
 		Thread.sleep(10L) ;
 		
+		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -216,7 +213,22 @@ implements EmbeddingComponentStateAccessI{
 				},
 				1000, TimeUnit.MILLISECONDS);
 	}
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
 
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return KettleCoupledModel.build() ;
+	}
+
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
+				   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
+				   this.asp.getModelStateValue(KettleModel.URI, "temperature");
+	}
 
 //------------------------------------------------------------------------
 //----------------------------FINALISE------------------------------------
@@ -240,19 +252,5 @@ implements EmbeddingComponentStateAccessI{
 			kettleElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
-	}
-
-
-	@Override
-	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
-		return KettleCoupledModel.build() ;
-	}
-
-
-	@Override
-	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		return this.asp.getModelStateValue(KettleModel.URI, "state") + " " + 
-				   this.asp.getModelStateValue(KettleModel.URI, "content") + " " + 
-				   this.asp.getModelStateValue(KettleModel.URI, "temperature");
 	}
 }

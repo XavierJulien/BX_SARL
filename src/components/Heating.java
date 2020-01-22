@@ -40,12 +40,18 @@ implements	EmbeddingComponentStateAccessI{
 	protected HeatingOutboundPort				heatingElectricMeterOutboundPort ;
 	protected HeatingInboundPort				heatingElectricMeterInboundPort ;
 	protected HeatingTemperatureSensorInboundPort		heatingToHeatSensorInboundPort ;
-	protected boolean 							isOn = false;
-	protected int 								maxPower = 10;
+	
+	
+	protected boolean 							isOn;
+	protected int 								maxPower;
 	protected int 								powerPercentage;
-	protected int								maxConsumption = 10;
+	protected int								maxConsumption;
 	protected int 								consumption;
 
+	
+//------------------------------------------------------------------------
+//----------------------------CONSTRUCTOR---------------------------------
+//------------------------------------------------------------------------
 	protected Heating(String uri,
 						String heatingOutboundPortURI,
 						String heatingInboundPortURI,
@@ -88,6 +94,16 @@ implements	EmbeddingComponentStateAccessI{
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(3, 2) ;
+		
+		
+		//----------------Variables----------------
+		isOn = false;
+		maxPower = 10;
+		powerPercentage = 0;
+		maxConsumption = 10;
+		consumption = 0;
+		
+		//----------------Modelisation-------------
 		
 		this.initialise();
 	}
@@ -132,7 +148,6 @@ implements	EmbeddingComponentStateAccessI{
 		this.logMessage("The heating is now running at "+powerPercentage+"% of his maximum power") ;
 	}
 	
-	
 	public double sendHeating() throws Exception {
 		if(isOn) {
 			this.logMessage("Sending Heat....") ;
@@ -140,9 +155,6 @@ implements	EmbeddingComponentStateAccessI{
 		}else {
 			return 0;
 		}
-		
-		
-		
 	}
 
 	public void	start() throws ComponentStartException{
@@ -150,42 +162,31 @@ implements	EmbeddingComponentStateAccessI{
 		this.logMessage("starting Heating component.") ;
 	}
 	
-	protected void initialise() throws Exception {
-		// The coupled model has been made able to create the simulation
-		// architecture description.
-		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		// Create the appropriate DEVS simulation plug-in.
-		this.asp = new HeatingSimulatorPlugin() ;
-		
-		// Set the URI of the plug-in, using the URI of its associated
-		// simulation model.
-		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		
-		// Set the simulation architecture.
-		this.asp.setSimulationArchitecture(localArchitecture) ;
-		// Install the plug-in on the component, starting its own life-cycle.
-		this.installPlugin(this.asp) ;
-		
 
-		// Toggle logging on to get a log on the screen.
+//------------------------------------------------------------------------
+//----------------------INITIALISE & EXECUTE------------------------------
+//------------------------------------------------------------------------
+		
+	
+	protected void initialise() throws Exception {
+		Architecture localArchitecture = this.createLocalArchitecture(null) ;
+		this.asp = new HeatingSimulatorPlugin() ;
+		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
+		this.asp.setSimulationArchitecture(localArchitecture) ;
+		this.installPlugin(this.asp) ;
 		this.toggleLogging() ;
 	}
-	
-	
-	
 	
 	@Override
 	public void execute() throws Exception{
 		super.execute();
 		
+		
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
-		// To give an example of the embedding component access facility, the
-		// following lines show how to set the reference to the embedding
-		// component or a proxy responding to the access calls.
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("heatingRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
-		// Start the simulation.
 		this.runTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -199,6 +200,9 @@ implements	EmbeddingComponentStateAccessI{
 					}
 				}) ;
 		Thread.sleep(10L) ;
+		
+		//---------------BCM---------------
+
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -215,7 +219,10 @@ implements	EmbeddingComponentStateAccessI{
 	}
 	
 	
-	
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
+
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
 		return HeatingCoupledModel.build() ;

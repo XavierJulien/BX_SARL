@@ -32,11 +32,13 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	protected WindTurbineOutboundPort	windTurbineOutboundPort;
 	protected WindTurbineInboundPort	windTurbineSensorInboundPort;
 	protected WindTurbineInboundPort	windTurbineInboundPort;
+	
+	protected WindTurbineSimulatorPlugin		asp ;
+
 	protected double 					prod;
 	protected boolean 					isOn=false;
 	protected double 					windSpeed;
 	
-	protected WindTurbineSimulatorPlugin		asp ;
 
 	
 //------------------------------------------------------------------------
@@ -57,8 +59,6 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 		this.windTurbineInboundPortURI = windTurbineInboundPortURI;
 		this.windTurbineOutboundPortURI = windTurbineOutboundPortURI;
 		this.windTurbineSensorInboundPortURI = windTurbineSensorInboundPortURI;
-		this.prod = 0;
-		this.windSpeed =0;
 
 		//-------------------PUBLISH-------------------
 		windTurbineInboundPort = new WindTurbineInboundPort(windTurbineInboundPortURI, this);
@@ -74,11 +74,18 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 			this.executionLog.setDirectory(System.getProperty("user.home"));
 		}	
 
-		this.initialise();
-		
 		//-------------------GUI-------------------
 		this.tracer.setTitle(uri);
 		this.tracer.setRelativePosition(0, 2);
+
+		//----------------Variables----------------
+
+		this.prod = 0;
+		this.windSpeed =0;
+		
+		//----------------Modelisation-------------
+
+		this.initialise();
 	}
 
 
@@ -113,38 +120,29 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	}
 	
 	
-	
+//------------------------------------------------------------------------
+//----------------------INITIALISE & EXECUTE------------------------------
+//------------------------------------------------------------------------
 	
 	protected void initialise() throws Exception {
-		// The coupled model has been made able to create the simulation
-		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		// Create the appropriate DEVS simulation plug-in.
 		this.asp = new WindTurbineSimulatorPlugin() ;
-		// Set the URI of the plug-in, using the URI of its associated
-		// simulation model.
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
-		
-		
-		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
-		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
 	}
 	
 	
 	@Override
 	public void execute() throws Exception {
-		
 		super.execute();
 		
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("windTurbineRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
-		// Start the simulation.
 		this.runTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -159,6 +157,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 				}) ;
 		Thread.sleep(2000L) ;
 		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -184,6 +183,30 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	}
 
 
+	
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
+	@Override
+	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
+		return WindTurbineCoupledModel.build() ;
+	}
+
+	@Override
+	public Object getEmbeddingComponentStateValue(String name) throws Exception {
+		if(name.equals("windSpeed")) {
+			return new Double(windSpeed);
+		}else {
+			if(name.equals("state")) {
+				return new Boolean(isOn);
+			}else{
+				return null;
+			}
+			
+		}
+		
+	}
+	
 //------------------------------------------------------------------------
 //----------------------------FINALISE------------------------------------
 //------------------------------------------------------------------------
@@ -204,29 +227,5 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 			windTurbineSensorInboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
-	}
-
-
-	@Override
-	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
-		return WindTurbineCoupledModel.build() ;
-	}
-
-	
-	
-	@Override
-	public Object getEmbeddingComponentStateValue(String name) throws Exception {
-		if(name.equals("windSpeed")) {
-			return new Double(windSpeed);
-		}else {
-			if(name.equals("state")) {
-				return new Boolean(isOn);
-			}else{
-				return null;
-			}
-			
-		}
-		
-	}
-	
+	}	
 }

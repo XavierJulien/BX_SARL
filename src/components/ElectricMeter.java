@@ -19,7 +19,6 @@ import ports.electricmeter.ElectricMeterInboundPort;
 import ports.electricmeter.ElectricMeterOutboundPort;
 import simulation.components.electricMeter.ElectricMeterSimulatorPlugin;
 import simulation.models.electricMeter.ElectricMeterCoupledModel;
-import simulation.models.windturbine.WindTurbineCoupledModel;
 
 @RequiredInterfaces(required = {ElectricMeterI.class, ElectricMeterControllerI.class})
 @OfferedInterfaces(offered = {ElectricMeterI.class, ElectricMeterControllerI.class})
@@ -45,10 +44,10 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 	protected ElectricMeterOutboundPort		electricMeterChargerOutboundPort ;
 	protected ElectricMeterInboundPort		electricMeterChargerInboundPort ;
 	
-	protected boolean 					isOn=false;
-	protected double					consumptionHeating = 0;
-	protected double					consumptionCharger = 0;
-	protected double					consumptionKettle = 0;
+	protected boolean 					isOn;
+	protected double					consumptionHeating;
+	protected double					consumptionCharger;
+	protected double					consumptionKettle;
 	
 	protected ElectricMeterSimulatorPlugin		asp ;
 
@@ -113,7 +112,15 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(3, 3) ;
 		
+		//----------------Variables----------------
+
+		isOn=false;
+		consumptionHeating = 0;
+		consumptionCharger = 0;
+		consumptionKettle = 0;
 		
+		
+		//----------------Modelisation-------------
 		this.initialise();
 	}
 
@@ -156,6 +163,11 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		this.logMessage("starting Electric Meter component.") ;
 	}
 	
+
+//------------------------------------------------------------------------
+//----------------------INITIALISE & EXECUTE------------------------------
+//------------------------------------------------------------------------
+
 	
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
@@ -171,6 +183,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 	public void execute() throws Exception{
 		super.execute();
 		
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("electricMeterRef", this) ;
@@ -191,7 +204,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		Thread.sleep(10L) ;
 		
 		
-		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -207,6 +220,9 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 				1000, TimeUnit.MILLISECONDS);
 	}
 	
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
 
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{

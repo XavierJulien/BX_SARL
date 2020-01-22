@@ -25,31 +25,34 @@ import simulation.models.windSensor.WindSensorModel;
 public class WindSensor extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI{
 
 	
-	protected WindSensorSimulatorPlugin		asp ;
 	
 	protected final String				uri ;
-	/** The inbound port URI for the eolienne.*/
 	protected final String				windSensorInboundPortURI ;
 	protected final String				windSensorOutboundPortURI ;
-
 	protected final WindSensorInboundPort windSensorInboundPort;
 	protected final WindSensorOutboundPort windSensorOutboundPort;
 
+	protected WindSensorSimulatorPlugin		asp ;
 	
-	protected double power = 0;
+	protected double power;
 
 
-
-	protected WindSensor(String uri, String windSensorInboundPortURI, String windSensorOutboundPortURI) throws Exception{
-
+//------------------------------------------------------------------------
+//----------------------------CONSTRUCTOR---------------------------------
+//------------------------------------------------------------------------
+	protected WindSensor(String uri, 
+						 String windSensorInboundPortURI, 
+						 String windSensorOutboundPortURI) throws Exception{
 		super(uri, 1, 1);
+		
 		this.uri = uri;
 		this.windSensorInboundPortURI = windSensorInboundPortURI;
 		this.windSensorOutboundPortURI = windSensorOutboundPortURI;
 
+		
+		//-------------------PUBLISH-------------------
 		windSensorInboundPort = new WindSensorInboundPort(windSensorInboundPortURI, this) ;
 		windSensorInboundPort.publishPort() ;
-		
 		windSensorOutboundPort = new WindSensorOutboundPort(windSensorOutboundPortURI, this) ;
 		windSensorOutboundPort.localPublishPort() ;
 
@@ -57,17 +60,28 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 			this.executionLog.setDirectory(System.getProperty("user.dir")) ;
 		} else {
 			this.executionLog.setDirectory(System.getProperty("user.home")) ;
-		}	
+		}
 		
-		this.initialise();
 
+		//-------------------GUI-------------------
 		this.tracer.setTitle("WindSensor") ;
 		this.tracer.setRelativePosition(2, 0) ;
+
+		//----------------Variables----------------
+
+		power = 0;
+		
+		//----------------Modelisation-------------
+		
+		this.initialise();
 	}
+
+//------------------------------------------------------------------------
+//----------------------------SERVICES------------------------------------
+//------------------------------------------------------------------------
 
 	public void sendWindSpeed() throws Exception {
 		this.logMessage("Sending wind power....") ;
-		//Waiting for simulation, here's a little function to replace it for the moment
 		power = (Double)this.asp.getModelStateValue(WindSensorModel.URI, "currentWind" );
 		this.windSensorOutboundPort.sendWindSpeed(power) ;
 	}
@@ -81,23 +95,16 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	}
 	
 	
-	
+//------------------------------------------------------------------------
+//----------------------INITIALISE & EXECUTE------------------------------
+//------------------------------------------------------------------------
+
 	protected void initialise() throws Exception {
-		// The coupled model has been made able to create the simulation
-		// architecture description.
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
-		// Create the appropriate DEVS simulation plug-in.
 		this.asp = new WindSensorSimulatorPlugin() ;
-		// Set the URI of the plug-in, using the URI of its associated
-		// simulation model.
 		this.asp.setPluginURI(localArchitecture.getRootModelURI()) ;
-		// Set the simulation architecture.
 		this.asp.setSimulationArchitecture(localArchitecture) ;
-		
-		
-		// Install the plug-in on the component, starting its own life-cycle.
 		this.installPlugin(this.asp) ;
-		// Toggle logging on to get a log on the screen.
 		this.toggleLogging() ;
 	}
 	
@@ -107,6 +114,7 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	public void execute() throws Exception {
 		super.execute();
 
+		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("windSensorRef", this) ;
@@ -126,15 +134,15 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 				}) ;
 		Thread.sleep(10L) ;
 		
+		
+		//---------------BCM---------------
 		this.scheduleTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
 					public void run() {
 						try {
 							while(true) {
-									
-									((WindSensor)this.getTaskOwner()).sendWindSpeed();
-								
+								((WindSensor)this.getTaskOwner()).sendWindSpeed();
 								Thread.sleep(1000);
 							}
 							
@@ -149,11 +157,9 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 		
 	}
 	
-	// ------------------------------------------------------------------------
-	// MODELISATION
-	// ------------------------------------------------------------------------
-
-	
+//------------------------------------------------------------------------
+//-------------------------SIMULATION METHODS-----------------------------
+//------------------------------------------------------------------------
 	
 	@Override
 	protected Architecture createLocalArchitecture(String architectureURI) throws Exception{
@@ -172,27 +178,23 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 		
 	}
 	
-	
-	
-
-	// ------------------------------------------------------------------------
-	// FINALISE / SHUTDOWN
-	// ------------------------------------------------------------------------
-
-
+//------------------------------------------------------------------------
+//----------------------------FINALISE------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
 		super.finalise();
 	}
 
+//------------------------------------------------------------------------
+//----------------------------SHUTDOWN------------------------------------
+//------------------------------------------------------------------------
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
 			windSensorInboundPort.unpublishPort();
 			windSensorOutboundPort.unpublishPort();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {e.printStackTrace();}
 		super.shutdown();
 	}
 }
