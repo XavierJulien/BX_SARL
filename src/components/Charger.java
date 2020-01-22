@@ -119,7 +119,11 @@ implements	EmbeddingComponentStateAccessI{
 	
 	public void sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
-		this.chargerElectricMeterOutboundPort.sendConsumption(conso) ;
+		if(isOn) {
+			this.chargerElectricMeterOutboundPort.sendConsumption(conso) ;
+		}else {
+			this.chargerElectricMeterOutboundPort.sendConsumption(0) ;			
+		}
 	}
 	
 	public void sendPower(double power) throws Exception {
@@ -175,9 +179,10 @@ implements	EmbeddingComponentStateAccessI{
 						try {
 							while(true) {
 								if(isOn) {
-									((Charger)this.getTaskOwner()).sendConsumption();
+									
 									((Charger)this.getTaskOwner()).sendPower((conso*2)/3.0);
 								}
+								((Charger)this.getTaskOwner()).sendConsumption();
 								Thread.sleep(1000);
 							}
 						} catch (Exception e) {throw new RuntimeException(e) ;}

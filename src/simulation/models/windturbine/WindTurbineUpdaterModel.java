@@ -75,7 +75,7 @@ import simulation.events.windturbine.WTProductionUpdater;
 //-----------------------------------------------------------------------------
 @ModelExternalEvents(exported = {WTProductionUpdater.class})
 //-----------------------------------------------------------------------------
-public class			WindTurbineUserModel
+public class			WindTurbineUpdaterModel
 extends		AtomicES_Model
 {
 	// -------------------------------------------------------------------------
@@ -128,7 +128,7 @@ extends		AtomicES_Model
 	 * @param simulationEngine		simulation engine enacting the model.
 	 * @throws Exception   			<i>TODO</i>.
 	 */
-	public				WindTurbineUserModel(
+	public				WindTurbineUpdaterModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine

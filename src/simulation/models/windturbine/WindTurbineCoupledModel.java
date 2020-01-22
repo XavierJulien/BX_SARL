@@ -156,10 +156,10 @@ extends		CoupledModel
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		atomicModelDescriptors.put(
-				WindTurbineUserModel.URI,
+				WindTurbineUpdaterModel.URI,
 				AtomicModelDescriptor.create(
-						WindTurbineUserModel.class,
-						WindTurbineUserModel.URI,
+						WindTurbineUpdaterModel.class,
+						WindTurbineUpdaterModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
@@ -169,13 +169,13 @@ extends		CoupledModel
 
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(WindTurbineModel.URI) ;
-		submodels.add(WindTurbineUserModel.URI) ;
+		submodels.add(WindTurbineUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		
 		EventSource from3 =
-				new EventSource(WindTurbineUserModel.URI, WTProductionUpdater.class) ;
+				new EventSource(WindTurbineUpdaterModel.URI, WTProductionUpdater.class) ;
 		EventSink[] to3 = new EventSink[] {
 				new EventSink(WindTurbineModel.URI, WTProductionUpdater.class)} ;
 		connections.put(from3, to3) ;

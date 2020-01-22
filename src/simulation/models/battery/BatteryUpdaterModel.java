@@ -16,7 +16,7 @@ import simulation.events.battery.UpdateBatteryCharge;
 
 @ModelExternalEvents(exported = { UpdateBatteryCharge.class})
 
-public class BatteryUserModel extends AtomicES_Model{
+public class BatteryUpdaterModel extends AtomicES_Model{
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
@@ -24,9 +24,6 @@ public class BatteryUserModel extends AtomicES_Model{
 	private static final long serialVersionUID = 1L ;
 	public static final String	URI = "BatteryUserModel" ;
 	
-	protected double	initialDelay ;
-	protected double	interdayDelay ;
-	protected double	meanTimeBetweenUsages ;
 	protected double	meanTimeBetweenBatteryUpdate ;
 	
 	protected Class<?>	nextEvent ;
@@ -41,7 +38,7 @@ public class BatteryUserModel extends AtomicES_Model{
 	// Constructors
 	// -------------------------------------------------------------------------
 	
-	public BatteryUserModel(
+	public BatteryUpdaterModel(
 			String uri,
 			TimeUnit simulatedTimeUnit,
 			SimulatorI simulationEngine
@@ -62,19 +59,11 @@ public class BatteryUserModel extends AtomicES_Model{
 	@Override
 	public void			initialiseState(Time initialTime) 
 	{
-		
-		this.initialDelay = 10.0 ;
-		this.interdayDelay = 5.0 ;
-		this.meanTimeBetweenUsages = 5.0 ;
+
 		
 		
-		this.meanTimeBetweenBatteryUpdate = 7.0;
+		this.meanTimeBetweenBatteryUpdate = 10.0;
 		this.bm = BatteryModel.Mode.DISCHARGING;
-		
-		
-		this.chargingCapacity = 206.0;
-		this.dischargingOnUse = 5.0;
-		this.dischargingOffUse = 1.0;
 		
 		
 		super.initialiseState(initialTime) ;

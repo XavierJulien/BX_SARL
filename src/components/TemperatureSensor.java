@@ -80,9 +80,7 @@ implements	EmbeddingComponentStateAccessI
 		temperature += heat;
 		//this.logMessage("The TemperatureSensor sees that the heating increase the temperature of "+heat+" degrees") ;
 	}
-	public void temperatureNaturalDecrease() {
-		temperature -= temperature *(5.0/100);
-	}
+
 	
 	//------------------------------------------------------------------------
 	//----------------------------MODEL METHODS-------------------------------
@@ -124,6 +122,7 @@ implements	EmbeddingComponentStateAccessI
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
 		simParams.put("heatSensorRef", this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
+		Thread.sleep(1000L);
 		this.runTask(
 				new AbstractComponent.AbstractTask() {
 					@Override
@@ -148,7 +147,6 @@ implements	EmbeddingComponentStateAccessI
 								((TemperatureSensor)this.getTaskOwner()).sendTemperature() ;
 								
 								((TemperatureSensor)this.getTaskOwner()).getHeating() ;
-//								((TemperatureSensor)this.getTaskOwner()).temperatureNaturalDecrease();
 								Thread.sleep(1000);
 							}
 							
@@ -159,12 +157,6 @@ implements	EmbeddingComponentStateAccessI
 					}
 				},
 				1000, TimeUnit.MILLISECONDS);
-		
-		/*long start = System.currentTimeMillis() ;
-		se.doStandAloneSimulation(0.0, 5000.0) ;
-		long end = System.currentTimeMillis() ;
-		System.out.println(se.getFinalReport()) ;
-		System.out.println("Simulation ends. " + (end - start)) ;*/
 	}
 	
 	@Override

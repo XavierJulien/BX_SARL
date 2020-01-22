@@ -79,6 +79,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		this.tracer.setTitle(uri) ;
 		this.tracer.setRelativePosition(0, 3) ;
 		
+		
 		//----------------Variables----------------
 		
 		this.maxCharge = 500;
@@ -118,7 +119,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	public void sendEnergy() throws Exception {
 		isCharging = false;
 		this.logMessage("Sending energy....") ;
-		currentCharge -= prod;
+		currentCharge -= prod*2;
 		chargePercentage = Math.min(100,currentCharge*100.0/ maxCharge);
 		this.batteryOutboundPort.sendEnergy(prod) ;
 	}

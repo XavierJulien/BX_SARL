@@ -116,21 +116,21 @@ public class HeatSensorUpdaterModel extends AtomicES_Model
 	{
 		Duration d ;
 		if (this.nextEvent.equals(HeatSensorUpdater.class)) {
-			d = new Duration(1, this.getSimulatedTimeUnit()) ;
+			d = new Duration(meanTimeBetweenHeatUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			if(Math.random()>0.90) {
+			if(Math.random()>0.95) {
 				this.scheduleEvent(new HeatSensorWindowOpen(t)) ;
 			}else {
 				this.scheduleEvent(new HeatSensorUpdater(t)) ;	
 			}
 		}else if (this.nextEvent.equals(HeatSensorWindowOpen.class)) {
-			d = new Duration(1, this.getSimulatedTimeUnit()) ;
+			d = new Duration(meanTimeBetweenHeatUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
 			this.scheduleEvent(new HeatSensorWindowStillOpen(t)) ;
 		}else if (this.nextEvent.equals(HeatSensorWindowStillOpen.class)) {
-			d = new Duration(1, this.getSimulatedTimeUnit()) ;
+			d = new Duration(meanTimeBetweenHeatUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			if(Math.random()<0.2) {
+			if(Math.random()<0.1) {
 				this.scheduleEvent(new HeatSensorWindowStillOpen(t)) ;
 			}else {
 				this.scheduleEvent(new HeatSensorUpdater(t)) ;	

@@ -421,15 +421,15 @@ extends		AtomicHIOAwithEquations
 		}
 		
 		if(currentState == State.OFF) {
-			if(this.wind < 8) {
+			if(this.wind < 7) {
 				setState(State.ON);
-				currentProd.v = 3*wind;
+				currentProd.v = 2*wind;
 			}else {
 				currentProd.v = Math.max(0, currentProd.v-6);
 			}
 		}else {
-			if(this.wind < 8) {
-				currentProd.v = 3*wind;
+			if(this.wind < 7) {
+				currentProd.v = 2*wind;
 			}else {
 				setState(State.OFF);
 				currentProd.v = Math.max(0, currentProd.v-6);

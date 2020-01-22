@@ -73,10 +73,10 @@ public class BatteryCoupledModel  extends CoupledModel
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		atomicModelDescriptors.put(
-				BatteryUserModel.URI,
+				BatteryUpdaterModel.URI,
 				AtomicModelDescriptor.create(
-						BatteryUserModel.class,
-						BatteryUserModel.URI,
+						BatteryUpdaterModel.class,
+						BatteryUpdaterModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
@@ -86,12 +86,12 @@ public class BatteryCoupledModel  extends CoupledModel
 
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(BatteryModel.URI) ;
-		submodels.add(BatteryUserModel.URI) ;
+		submodels.add(BatteryUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(BatteryUserModel.URI, UpdateBatteryCharge.class) ;
+				new EventSource(BatteryUpdaterModel.URI, UpdateBatteryCharge.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
 						new EventSink(BatteryModel.URI, UpdateBatteryCharge.class)} ;

@@ -91,12 +91,19 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// Methods
 	// ------------------------------------------------------------------------
 
+	
+	/**
+	 * 
+	 */
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("batteryRef");
 		this.delay = new Duration(1.0, this.getSimulatedTimeUnit());
 	}
 
+	/**
+	 * create and show the different plotters
+	 */
 	@Override
 	public void initialiseState(Time initialTime) {
 		
@@ -117,7 +124,9 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * Initialize the variables, and plot the first points
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 
@@ -136,24 +145,29 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 		super.initialiseVariables(startTime);
 	}
-
+	/**
+	 * 
+	 */
 	@Override
 	public Vector<EventI> output() {
 		
 		return null;
 	}
-	
+	/**
+	 * 
+	 */
 	public Duration timeAdvance() {
 		if (this.componentRef == null) {
-			// the model has no internal event, however, its state will evolve
-			// upon reception of external events.
 			return Duration.INFINITY;
 		} else {
-			// This is to test the embedding component access facility.
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
 
+	
+	/**
+	 * This method is used to interpret the different events coming from an internal model
+	 */
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime) {
 		if (this.componentRef != null) {
@@ -166,13 +180,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 			}
 		}
 	}
-
+	/**
+	 * This method is used to interpret the different events coming from an external model
+	 */
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		
-		if (this.hasDebugLevel(2)) {
-		//	this.logMessage("BatteryModel::userDefinedExternalTransition 1");
-		}
-
 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 
@@ -180,10 +191,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractEvent;
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("TestModel::userDefinedExternalTransition 2 " + 
-//										ce.getClass().getCanonicalName());
-		}
+
 
 		this.batteryRemainingPlotter.addData(
 				SERIES, 
@@ -211,7 +219,9 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 
 	}
 
-	
+	/**
+	 * Plot the last point of the simulation then close the differnet plotters for this model.
+	 */
 	@Override
 	public void					endSimulation(Time endTime) throws Exception
 	{
@@ -235,18 +245,30 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-		
+	
+	/**
+	 * 
+	 * @return the battery mode (Charging / Discharging)
+	 */
 	public Mode					getMode() {
 		return this.currentMode;
 	}
 	
-	
+	/**
+	 * 
+	 * @return the battery charge value
+	 */
 	public double getBattery() {
 		return currentBattery.v;
 	}
 	
+	
+	/**
+	 * 
+	 * @return 1 if the battery is curretnly discharging, else 0
+	 */
 	public double getModeDouble() {
-		if(this.getMode() == Mode.CHARGING) {
+		if(this.getMode() == Mode.DISCHARGING) {
 			return 1;
 		}else {
 			return 0;
@@ -257,7 +279,9 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// Utils
 	// ------------------------------------------------------------------------
 
-	
+	/**
+	 * This method is used by the updateBatteryCharge events. It gets the charge value and the mode
+	 */
 	public void update()
 	{
 		
