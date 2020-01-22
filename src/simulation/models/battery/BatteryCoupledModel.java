@@ -25,7 +25,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulation.events.battery.UpdateBatteryCharge;
+import simulation.events.battery.UpdateBattery;
 
 public class BatteryCoupledModel  extends CoupledModel
 {
@@ -91,10 +91,10 @@ public class BatteryCoupledModel  extends CoupledModel
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(BatteryUpdaterModel.URI, UpdateBatteryCharge.class) ;
+				new EventSource(BatteryUpdaterModel.URI, UpdateBattery.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
-						new EventSink(BatteryModel.URI, UpdateBatteryCharge.class)} ;
+						new EventSink(BatteryModel.URI, UpdateBattery.class)} ;
 		connections.put(from1, to1) ;
 		
 		

@@ -53,7 +53,7 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.windturbine.WTProductionUpdater;
+import simulation.events.windturbine.WindTurbineUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -88,7 +88,7 @@ import simulation.events.windturbine.WTProductionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(imported = {WTProductionUpdater.class})
+@ModelExternalEvents(imported = {WindTurbineUpdater.class})
 
 //-----------------------------------------------------------------------------
 public class			WindTurbineModel

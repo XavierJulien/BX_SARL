@@ -48,7 +48,7 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.windturbine.WTProductionUpdater;
+import simulation.events.windturbine.WindTurbineUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -73,7 +73,7 @@ import simulation.events.windturbine.WTProductionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(exported = {WTProductionUpdater.class})
+@ModelExternalEvents(exported = {WindTurbineUpdater.class})
 //-----------------------------------------------------------------------------
 public class			WindTurbineUpdaterModel
 extends		AtomicES_Model
@@ -169,7 +169,7 @@ extends		AtomicES_Model
 				new Duration(1, TimeUnit.SECONDS) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
 		
-		this.scheduleEvent(new WTProductionUpdater(t)) ;
+		this.scheduleEvent(new WindTurbineUpdater(t)) ;
 
 		// Redo the initialisation to take into account the initial event
 		// just scheduled.
@@ -240,11 +240,11 @@ extends		AtomicES_Model
 		Duration d ;
 
 
-		if (this.nextEvent.equals(WTProductionUpdater.class)) {
+		if (this.nextEvent.equals(WindTurbineUpdater.class)) {
 			d = new Duration(1,
 					 this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new WTProductionUpdater(t)) ;
+			this.scheduleEvent(new WindTurbineUpdater(t)) ;
 		}
 		
 	}

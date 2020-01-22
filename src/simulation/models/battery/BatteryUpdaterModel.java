@@ -12,9 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.battery.UpdateBatteryCharge;
+import simulation.events.battery.UpdateBattery;
 
-@ModelExternalEvents(exported = { UpdateBatteryCharge.class})
+@ModelExternalEvents(exported = { UpdateBattery.class})
 
 public class BatteryUpdaterModel extends AtomicES_Model{
 	// -------------------------------------------------------------------------
@@ -73,7 +73,7 @@ public class BatteryUpdaterModel extends AtomicES_Model{
 							this.getSimulatedTimeUnit()) ;
 		
 		Time t = this.getCurrentStateTime().add(d1);
-		this.scheduleEvent(new UpdateBatteryCharge(t)) ;
+		this.scheduleEvent(new UpdateBattery(t)) ;
 		
 
 		this.nextTimeAdvance = this.timeAdvance() ;
@@ -123,9 +123,9 @@ public class BatteryUpdaterModel extends AtomicES_Model{
 		Duration d;
 
 		
-		if (this.nextEvent.equals(UpdateBatteryCharge.class)) {
+		if (this.nextEvent.equals(UpdateBattery.class)) {
 			d = new Duration(this.meanTimeBetweenBatteryUpdate, this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new UpdateBatteryCharge(this.getCurrentStateTime().add(d))) ;
+			this.scheduleEvent(new UpdateBattery(this.getCurrentStateTime().add(d))) ;
 		}
 	}
 	

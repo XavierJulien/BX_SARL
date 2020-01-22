@@ -53,7 +53,7 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.electricMeter.TotalConsumptionUpdater;
+import simulation.events.electricMeter.ElectricMeterUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -88,7 +88,7 @@ import simulation.events.electricMeter.TotalConsumptionUpdater;
 * @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
 */
 //-----------------------------------------------------------------------------
-@ModelExternalEvents(imported = {TotalConsumptionUpdater.class})
+@ModelExternalEvents(imported = {ElectricMeterUpdater.class})
 
 //-----------------------------------------------------------------------------
 public class			ElectricMeterModel

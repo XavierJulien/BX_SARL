@@ -59,7 +59,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
-import simulation.events.windturbine.WTProductionUpdater;
+import simulation.events.windturbine.WindTurbineUpdater;
 
 //-----------------------------------------------------------------------------
 /**
@@ -175,9 +175,9 @@ extends		CoupledModel
 									new HashMap<EventSource,EventSink[]>() ;
 		
 		EventSource from3 =
-				new EventSource(WindTurbineUpdaterModel.URI, WTProductionUpdater.class) ;
+				new EventSource(WindTurbineUpdaterModel.URI, WindTurbineUpdater.class) ;
 		EventSink[] to3 = new EventSink[] {
-				new EventSink(WindTurbineModel.URI, WTProductionUpdater.class)} ;
+				new EventSink(WindTurbineModel.URI, WindTurbineUpdater.class)} ;
 		connections.put(from3, to3) ;
 		
 		coupledModelDescriptors.put(

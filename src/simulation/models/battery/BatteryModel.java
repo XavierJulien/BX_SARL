@@ -17,9 +17,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.battery.UpdateBatteryCharge;
+import simulation.events.battery.UpdateBattery;
 
-@ModelExternalEvents(imported = { UpdateBatteryCharge.class})
+@ModelExternalEvents(imported = { UpdateBattery.class})
 
 public class BatteryModel extends AtomicHIOAwithEquations {
 	
