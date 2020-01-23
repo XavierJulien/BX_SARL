@@ -124,7 +124,7 @@ extends		CoupledModel
 	 * </pre>
 	 *
 	 * @return				the simulation architecture corresponding to this coupled model.
-	 * @throws Exception	<i>TO DO.</i>
+	 * 
 	 */
 	public static Architecture	build() throws Exception
 	{

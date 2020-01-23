@@ -39,8 +39,6 @@ import java.util.Vector;
 
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.math3.random.RandomDataGenerator;
-
 import fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
@@ -67,11 +65,10 @@ extends		AtomicES_Model
 	/** initial delay before sending the first switch on event.				*/
 	protected double	initialDelay ;
 	protected double	interdayDelay ;
-	protected double	meanTimeBetweenUsages ;
+	protected double	meanTimeBetweenConsumptionUpdate ;
 	protected Class<?>	nextEvent ;
 
 	/**	a random number generator from common math library.					*/
-	protected final RandomDataGenerator		rg ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
@@ -85,7 +82,6 @@ extends		AtomicES_Model
 	{
 		super(uri, simulatedTimeUnit, simulationEngine) ;
 
-		this.rg = new RandomDataGenerator() ;
 
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger()) ;
@@ -104,7 +100,6 @@ extends		AtomicES_Model
 		this.initialDelay = 10.0 ;
 		this.interdayDelay = 100.0 ;
 
-		this.rg.reSeedSecure() ;
 
 		// Initialise to get the correct current time.
 		super.initialiseState(initialTime) ;

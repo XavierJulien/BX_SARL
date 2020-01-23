@@ -21,8 +21,35 @@ import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.windSensor.WindSensorUpdater;
 
-@ModelExternalEvents(imported = {WindSensorUpdater.class})
 
+/**
+* The class <code>WindTurbineModel</code> implements a simplified DEVS
+* simulation model of a windturbine providing the current intensity of
+* electricity production as a continuous variable.
+*
+* <p><strong>Description</strong></p>
+* 
+* <p>
+* The windturbine can of course be switch on and off in case of a too strong wind
+* in order to avoid a break. 
+* The production of the wind turbine is computed depending of the wind speed 
+* </p>
+* <p>
+* The windturbine model is commanded through only one event
+* <code>WTPupdater</code>, which is used to update the production of the wind turbine.
+* </p>
+* 
+* <p><strong>Invariant</strong></p>
+* 
+* <pre>
+* invariant		true	
+* </pre>
+* 
+* <p>Created on : 2019-10-10</p>
+* 
+* 
+*/
+@ModelExternalEvents(imported = {WindSensorUpdater.class})
 public class WindSensorModel extends AtomicHIOAwithEquations {
 	
 	// -------------------------------------------------------------------------

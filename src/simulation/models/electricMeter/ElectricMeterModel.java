@@ -57,35 +57,29 @@ import simulation.events.electricMeter.ElectricMeterUpdater;
 
 //-----------------------------------------------------------------------------
 /**
-* The class <code>WindTurbineModel</code> implements a simplified DEVS
-* simulation model of a windturbine providing the current intensity of
-* electricity consumption as a continuous variable.
+* The class <code>ElectricMeter</code> implements a simplified DEVS
+* simulation model of an Electric meter providing the current consumption of the different "consumers" components 
 *
 * <p><strong>Description</strong></p>
 * 
 * <p>
-* The windturbine can of course be switch on and off as well as set to a low
-* or a high mode. In the low mode, the
-* power consumption is 800 watts while in the high mode it is 1200 watts.
-* The appliance is assumed to use a 220 volts tension. The model compute
-* the intensity of the current over time in amperes.
+* 
+* The house total consumption is determined by the values taken in the Electric meter component
 * </p>
 * <p>
-* The windturbine model is commanded through four external events:
-* <code>SwitchOn</code>, <code>SwitchOff</code>, <code>SetLow</code> and
-* <code>SetHigh</code> to make it go from one state to the other. When the
-* windturbine is switched on, it is put in the low mode.
+* The Electric model is commanded through only one event
+* <code>ElectrcMeterUpdater</code>, which is used to update the total consumption of all the components.
 * </p>
 * 
 * <p><strong>Invariant</strong></p>
 * 
 * <pre>
-* invariant		true	// TODO
+* invariant		true	
 * </pre>
 * 
 * <p>Created on : 2019-10-10</p>
 * 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
+* 
 */
 //-----------------------------------------------------------------------------
 @ModelExternalEvents(imported = {ElectricMeterUpdater.class})
@@ -131,14 +125,15 @@ extends		AtomicHIOAwithEquations
 	
 	protected static final double	TENSION = 220.0 ; // Volts
 
-	/** current intensity in Amperes; intensity is power/tension.			*/
+	/**
+	 * Value currentConsumption is used to store the total consumption
+	 */
 	@ExportedVariable(type = Double.class)
 	protected final Value<Double>				currentConsumption = new Value<Double>(this, 0.0, 0);
 
-	protected  double wind;
 	
 
-	/** plotter for the intensity level over time.							*/
+	/** plotter for the consumption over time.							*/
 	protected XYPlotter				consumptionPlotter ;
 
 	/** reference on the object representing the component that holds the
@@ -157,20 +152,19 @@ extends		AtomicHIOAwithEquations
 	{
 		super(uri, simulatedTimeUnit, simulationEngine) ;
 
-		// creation of a plotter to show the evolution of the intensity over
+		// creation of a plotter to show the evolution of the consumption over
 		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
 						"Total house consumption",
 						"Time (sec)",
-						"Consumption (Amp)",
+						"Consumption",
 						300,
 						250,
 						300,
 						200) ;
 		this.consumptionPlotter = new XYPlotter(pd) ;
 		this.consumptionPlotter.createSeries(SERIES) ;
-		this.wind = 0;
 
 		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger()) ;
@@ -199,19 +193,13 @@ extends		AtomicHIOAwithEquations
 	@Override
 	public void			initialiseState(Time initialTime)
 	{
-		// the windturbine starts in mode OFF
+		
 
-		// initialisation of the intensity plotter 
+		// initialisation of the consumption plotter 
 		this.consumptionPlotter.initialise() ;
 		// show the plotter on the screen
 		this.consumptionPlotter.showPlotter() ;
 
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e) ;
-		}
 
 		super.initialiseState(initialTime) ;
 	}
@@ -222,7 +210,7 @@ extends		AtomicHIOAwithEquations
 	@Override
 	protected void		initialiseVariables(Time startTime)
 	{
-		// as the windturbine starts in mode OFF, its power consumption is 0
+		//initialize the total consumption at 0
 		this.currentConsumption.v = 0.0 ;
 
 		// first data in the plotter to start the plot.
@@ -284,16 +272,12 @@ extends		AtomicHIOAwithEquations
 		// get the vector of current external events
 		Vector<EventI> currentEvents = this.getStoredEventAndReset() ;
 		// when this method is called, there is at least one external event,
-		// and for the windturbine model, there will be exactly one by
+		// and for the Electric Meter model, there will be exactly one by
 		// construction.
 		assert	currentEvents != null && currentEvents.size() == 1 ;
 
 		Event ce = (Event) currentEvents.get(0) ;
 		assert	ce instanceof AbstractEvent ;
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("ElectricMeterModel::userDefinedExternalTransition 2 "
-										+ ce.getClass().getCanonicalName()) ;
-		}
 
 		// the plot is piecewise constant; this data will close the currently
 		// open piece
@@ -304,7 +288,7 @@ extends		AtomicHIOAwithEquations
 
 		
 		// execute the current external event on this model, changing its state
-		// and intensity level
+		// and consumption
 		ce.executeOn(this) ;
 
 
@@ -349,17 +333,23 @@ extends		AtomicHIOAwithEquations
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 
-	
+	/**
+	 * 
+	 * @return the current consumption
+	 */
 	public double getConsumption() {
 		return currentConsumption.v;
 	}
 	
+	/**
+	 * This method is called by the ElectricMeterUpdater events to update the consumption.
+	 * It reads the total consumption in the component ref 
+	 */
 	public void updateConsumption() {
 		
 		try {
 			this.currentConsumption.v = (Double)componentRef.getEmbeddingComponentStateValue("total");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
