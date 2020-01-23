@@ -48,7 +48,6 @@ import fr.sorbonne_u.devs_simulation.hioa.models.vars.StaticVariableDescriptor;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSource;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.CoupledModel;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
@@ -58,7 +57,6 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.electricMeter.ElectricMeterUpdater;
 
 public class ElectricMeterCoupledModel extends	CoupledModel {
@@ -84,8 +82,7 @@ public class ElectricMeterCoupledModel extends	CoupledModel {
 		Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 		Map<VariableSource, StaticVariableDescriptor> reexportedVars,
 		Map<VariableSource, VariableSink[]> bindings
-		) throws Exception
-	{
+		) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine, submodels,
 			  imported, reexported, connections,
 			  importedVars, reexportedVars, bindings);
@@ -95,22 +92,8 @@ public class ElectricMeterCoupledModel extends	CoupledModel {
 	// Methods
 	// -------------------------------------------------------------------------
 
-	/**
-	 * build the simulation architecture corresponding to this coupled model.
-	 * 
-	 * <p><strong>Contract</strong></p>
-	 * 
-	 * <pre>
-	 * pre	true			// no precondition.
-	 * post	true			// no postcondition.
-	 * </pre>
-	 *
-	 * @return				the simulation architecture corresponding to this coupled model.
-	 * 
-	 */
 	public static Architecture	build() throws Exception {
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
-
 		atomicModelDescriptors.put(
 				ElectricMeterModel.URI,
 				AtomicHIOA_Descriptor.create(
@@ -127,18 +110,14 @@ public class ElectricMeterCoupledModel extends	CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
 		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
-
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(ElectricMeterModel.URI) ;
 		submodels.add(ElectricMeterUpdaterModel.URI) ;
-
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =	new EventSource(ElectricMeterUpdaterModel.URI, ElectricMeterUpdater.class) ;
 		EventSink[] to1 = new EventSink[] {new EventSink(ElectricMeterModel.URI, ElectricMeterUpdater.class)} ;
 		connections.put(from1, to1) ;
-		
 		coupledModelDescriptors.put(
 					ElectricMeterCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
@@ -153,7 +132,6 @@ public class ElectricMeterCoupledModel extends	CoupledModel {
 							null,
 							null,
 							null)) ;
-
 		return new Architecture(
 						ElectricMeterCoupledModel.URI,
 						atomicModelDescriptors,

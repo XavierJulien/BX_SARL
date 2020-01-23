@@ -48,7 +48,7 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 						"Total house consumption",
 						"Time (sec)",
 						"Consumption",
-						300,
+						600,
 						250,
 						300,
 						200) ;
