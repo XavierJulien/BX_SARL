@@ -14,7 +14,6 @@ import fr.sorbonne_u.devs_simulation.hioa.models.vars.StaticVariableDescriptor;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSource;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.CoupledModel;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
@@ -24,23 +23,19 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.battery.UpdateBattery;
 
-public class BatteryCoupledModel  extends CoupledModel
-{
+public class BatteryCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	/** URI of the unique instance of this class (in this example).			*/
 	public static final String	URI = "BatteryCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
 	public BatteryCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -52,18 +47,15 @@ public class BatteryCoupledModel  extends CoupledModel
 		Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 		Map<VariableSource, StaticVariableDescriptor> reexportedVars,
 		Map<VariableSource, VariableSink[]> bindings
-		) throws Exception
-	{
+		) throws Exception{
+		
 		super(uri, simulatedTimeUnit, simulationEngine, submodels,
 			  imported, reexported, connections,
 			  importedVars, reexportedVars, bindings);
 	}
 	
-	public static Architecture	build() throws Exception
-	{
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
-
+	public static Architecture build() throws Exception {
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
 		atomicModelDescriptors.put(
 				BatteryModel.URI,
 				AtomicHIOA_Descriptor.create(
@@ -80,25 +72,14 @@ public class BatteryCoupledModel  extends CoupledModel
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<String,CoupledModelDescriptor>() ;
-
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(BatteryModel.URI) ;
 		submodels.add(BatteryUpdaterModel.URI) ;
-
-		Map<EventSource,EventSink[]> connections =
-									new HashMap<EventSource,EventSink[]>() ;
-		EventSource from1 =
-				new EventSource(BatteryUpdaterModel.URI, UpdateBattery.class) ;
-		EventSink[] to1 =
-				new EventSink[] {
-						new EventSink(BatteryModel.URI, UpdateBattery.class)} ;
+		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
+		EventSource from1 =	new EventSource(BatteryUpdaterModel.URI, UpdateBattery.class) ;
+		EventSink[] to1 = new EventSink[] { new EventSink(BatteryModel.URI, UpdateBattery.class)} ;
 		connections.put(from1, to1) ;
-		
-		
-
 		coupledModelDescriptors.put(
 				BatteryCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
@@ -113,22 +94,10 @@ public class BatteryCoupledModel  extends CoupledModel
 							null,
 							null,
 							null)) ;
-
 		return new Architecture(
 						BatteryCoupledModel.URI,
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);
-	}
-	
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
 	}
 }

@@ -22,12 +22,10 @@ import simulation.events.charger.UpdateCharger;
 @ModelExternalEvents(imported = { UpdateCharger.class})
 
 public class ChargerModel extends AtomicHIOAwithEquations {
-	
 	public static enum 		Mode {
 		CHARGING,
 		OFF
 	}
-	
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
@@ -41,23 +39,14 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	protected EmbeddingComponentStateAccessI componentRef;
 	protected Duration delay;
 
-	//CURRENT
 	protected Mode 								currentMode;
 	protected final Value<Double> 				currentConsumption = new Value<Double>(this, 0.0, 0) ;
-
-
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public							ChargerModel(
-			String uri,
-			TimeUnit simulatedTimeUnit, 
-			SimulatorI simulationEngine
-			) throws Exception 
-	{
+	public ChargerModel(String uri,TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
-
 		PlotterDescription pd = 
 				new PlotterDescription(
 						"Consumption", 
@@ -69,7 +58,6 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 						200);
 		this.consumptionPlotter = new XYPlotter(pd);
 		this.consumptionPlotter.createSeries(SERIES);
-
 		PlotterDescription pd2 = 
 				new PlotterDescription(
 						"Charger Mode", 
@@ -81,12 +69,8 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 						200);
 		this.chargerModePlotter = new XYPlotter(pd2);
 		this.chargerModePlotter.createSeries(SERIES2);
-		
-
 		this.setLogger(new StandardLogger());
 	}
-	
-	
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
@@ -99,138 +83,79 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 
 	@Override
 	public void initialiseState(Time initialTime) {
-		
 		this.currentMode = Mode.OFF;
-		
-		
 		this.consumptionPlotter.initialise();
 		this.consumptionPlotter.showPlotter();
-		
 		this.chargerModePlotter.initialise();
 		this.chargerModePlotter.showPlotter();
-
-		try {
-			this.setDebugLevel(0);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
 		super.initialiseState(initialTime);
 	}
 
 	@Override
 	protected void initialiseVariables(Time startTime) {
-
 		this.currentConsumption.v = 0.0;
-		
 		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentConsumption.v);
-		
 		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				0);
-
-
 		super.initialiseVariables(startTime);
 	}
 
 	@Override
-	public Vector<EventI> output() {
-		
-		return null;
-	}
+	public Vector<EventI> output() {return null;}
 	
 	public Duration timeAdvance() {
 		if (this.componentRef == null) {
-			// the model has no internal event, however, its state will evolve
-			// upon reception of external events.
 			return Duration.INFINITY;
 		} else {
-			// This is to test the embedding component access facility.
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
 
-	@Override
-	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-
-			try {
-				this.logMessage("component state = " + 
-						componentRef.getEmbeddingComponentStateValue("consumption"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
 	public void userDefinedExternalTransition(Duration elapsedTime) {
-		
-		if (this.hasDebugLevel(2)) {
-		//	this.logMessage("ChargerModel::userDefinedExternalTransition 1");
-		}
-
-
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-
 		assert currentEvents != null && currentEvents.size() == 1;
-
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractEvent;
-		if (this.hasDebugLevel(2)) {
-//			this.logMessage("TestModel::userDefinedExternalTransition 2 " + 
-//										ce.getClass().getCanonicalName());
-		}
-
 		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentConsumption.v);
-		
 		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
-		
 		ce.executeOn(this);
-
 		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentConsumption.v);
-		
 		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
-
 		super.userDefinedExternalTransition(elapsedTime);
-		if (this.hasDebugLevel(2)) {
-			this.logMessage("ChargerModel::userDefinedExternalTransition 5");
-		}
 	}
 
 	
 	@Override
-	public void					endSimulation(Time endTime) throws Exception
-	{
+	public void endSimulation(Time endTime) throws Exception {
 		this.consumptionPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentConsumption.v);
 		Thread.sleep(10000L);
 		this.consumptionPlotter.dispose();
-		
 		this.chargerModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
 		Thread.sleep(10000L);
 		this.chargerModePlotter.dispose();
-
 		super.endSimulation(endTime);
 	}
 	
@@ -238,14 +163,9 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 		
-	public Mode					getMode() {
-		return this.currentMode;
-	}
+	public Mode	getMode() {return this.currentMode;}
 	
-	
-	public double getConsumption() {
-		return currentConsumption.v;
-	}
+	public double getConsumption() {return currentConsumption.v;}
 	
 	public double getModeDouble() {
 		if(this.getMode() == Mode.CHARGING) {
@@ -258,11 +178,7 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
-
-	
-	public void update() //se demerder pour envoyer un event
-	{
-		
+	public void update() { //se demerder pour envoyer un event
 		try {
 			boolean on =  (Boolean)componentRef.getEmbeddingComponentStateValue("state");
 			if(on) {
@@ -271,11 +187,7 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 				this.currentMode = Mode.OFF;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//sending event
 	}
-	
-
 }

@@ -41,7 +41,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	protected EmbeddingComponentStateAccessI componentRef;
 	protected Duration delay;
 
-	//CURRENT
+
 	protected Mode 								currentMode;
 	protected final Value<Double> 				currentBattery = new Value<Double>(this, 0.0, 0) ;
 
@@ -50,14 +50,8 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public							BatteryModel(
-			String uri,
-			TimeUnit simulatedTimeUnit, 
-			SimulatorI simulationEngine
-			) throws Exception 
-	{
+	public BatteryModel(String uri,TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
-
 		PlotterDescription pd = 
 				new PlotterDescription(
 						"Remaining Battery", 
@@ -69,7 +63,6 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 						200);
 		this.batteryRemainingPlotter = new XYPlotter(pd);
 		this.batteryRemainingPlotter.createSeries(SERIES);
-
 		PlotterDescription pd2 = 
 				new PlotterDescription(
 						"Battery Mode", 
@@ -81,81 +74,45 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 						200);
 		this.batteryModePlotter = new XYPlotter(pd2);
 		this.batteryModePlotter.createSeries(SERIES2);
-		
-
 		this.setLogger(new StandardLogger());
 	}
-	
-	
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
 
-	
-	/**
-	 * 
-	 */
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("batteryRef");
 		this.delay = new Duration(1.0, this.getSimulatedTimeUnit());
 	}
 
-	/**
-	 * create and show the different plotters
-	 */
 	@Override
 	public void initialiseState(Time initialTime) {
 		
 		this.currentMode = Mode.DISCHARGING;
-		
-		
 		this.batteryRemainingPlotter.initialise();
 		this.batteryRemainingPlotter.showPlotter();
-		
 		this.batteryModePlotter.initialise();
 		this.batteryModePlotter.showPlotter();
 
-		try {
-			this.setDebugLevel(0);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
 		super.initialiseState(initialTime);
 	}
-	/**
-	 * Initialize the variables, and plot the first points
-	 */
+	
 	@Override
 	protected void initialiseVariables(Time startTime) {
 
 		this.currentBattery.v = 0.0;
-		
 		this.batteryRemainingPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentBattery.v);
-		
 		this.batteryModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				0);
-
-
 		super.initialiseVariables(startTime);
 	}
-	/**
-	 * 
-	 */
-	@Override
-	public Vector<EventI> output() {
-		
-		return null;
-	}
-	/**
-	 * 
-	 */
+
 	public Duration timeAdvance() {
 		if (this.componentRef == null) {
 			return Duration.INFINITY;
@@ -164,66 +121,34 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 		}
 	}
 
-	
-	/**
-	 * This method is used to interpret the different events coming from an internal model
-	 */
-	@Override
-	public void userDefinedInternalTransition(Duration elapsedTime) {
-		if (this.componentRef != null) {
-
-			try {
-				this.logMessage("component state = " + 
-						componentRef.getEmbeddingComponentStateValue("mode"));
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-	/**
-	 * This method is used to interpret the different events coming from an external model
-	 */
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-
 		assert currentEvents != null && currentEvents.size() == 1;
-
 		Event ce = (Event) currentEvents.get(0);
 		assert ce instanceof AbstractEvent;
-
-
 		this.batteryRemainingPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentBattery.v);
-		
 		this.batteryModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
-		
 		ce.executeOn(this);
-
 		this.batteryRemainingPlotter.addData(
 				SERIES, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				currentBattery.v);
-		
 		this.batteryModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
-
 		super.userDefinedExternalTransition(elapsedTime);
-
 	}
 
-	/**
-	 * Plot the last point of the simulation then close the differnet plotters for this model.
-	 */
 	@Override
-	public void					endSimulation(Time endTime) throws Exception
+	public void	endSimulation(Time endTime) throws Exception
 	{
 		this.batteryRemainingPlotter.addData(
 				SERIES, 
@@ -231,14 +156,12 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 				currentBattery.v);
 		Thread.sleep(10000L);
 		this.batteryRemainingPlotter.dispose();
-		
 		this.batteryModePlotter.addData(
 				SERIES2, 
 				this.getCurrentStateTime().getSimulatedTime(), 
 				this.getModeDouble());
 		Thread.sleep(10000L);
 		this.batteryModePlotter.dispose();
-
 		super.endSimulation(endTime);
 	}
 	
@@ -246,27 +169,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 	
-	/**
-	 * 
-	 * @return the battery mode (Charging / Discharging)
-	 */
-	public Mode					getMode() {
-		return this.currentMode;
-	}
+	public Mode	getMode() {return this.currentMode;}
+ 
+	public double getBattery() {return currentBattery.v;}
 	
-	/**
-	 * 
-	 * @return the battery charge value
-	 */
-	public double getBattery() {
-		return currentBattery.v;
-	}
-	
-	
-	/**
-	 * 
-	 * @return 1 if the battery is curretnly discharging, else 0
-	 */
 	public double getModeDouble() {
 		if(this.getMode() == Mode.DISCHARGING) {
 			return 1;
@@ -279,12 +185,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// Utils
 	// ------------------------------------------------------------------------
 
-	/**
-	 * This method is used by the updateBatteryCharge events. It gets the charge value and the mode
-	 */
-	public void update()
-	{
-		
+	public void update(){
 		try {
 			this.currentBattery.v = (Double)componentRef.getEmbeddingComponentStateValue("charge");
 			boolean b = (Boolean)componentRef.getEmbeddingComponentStateValue("charging");
@@ -294,11 +195,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 				this.currentMode = Mode.DISCHARGING;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
-	
-	
+
+	@Override
+	public Vector<EventI> output() {return null;}
 }
