@@ -140,10 +140,10 @@ extends		CoupledModel
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		atomicModelDescriptors.put(
-				ElectricMeterUserModel.URI,
+				ElectricMeterUpdaterModel.URI,
 				AtomicModelDescriptor.create(
-						ElectricMeterUserModel.class,
-						ElectricMeterUserModel.URI,
+						ElectricMeterUpdaterModel.class,
+						ElectricMeterUpdaterModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
@@ -153,12 +153,12 @@ extends		CoupledModel
 
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(ElectricMeterModel.URI) ;
-		submodels.add(ElectricMeterUserModel.URI) ;
+		submodels.add(ElectricMeterUpdaterModel.URI) ;
 
 		Map<EventSource,EventSink[]> connections =
 									new HashMap<EventSource,EventSink[]>() ;
 		EventSource from1 =
-				new EventSource(ElectricMeterUserModel.URI, ElectricMeterUpdater.class) ;
+				new EventSource(ElectricMeterUpdaterModel.URI, ElectricMeterUpdater.class) ;
 		EventSink[] to1 =
 				new EventSink[] {
 						new EventSink(ElectricMeterModel.URI, ElectricMeterUpdater.class)} ;

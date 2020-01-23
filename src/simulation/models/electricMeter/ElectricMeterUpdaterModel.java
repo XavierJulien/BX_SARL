@@ -52,7 +52,7 @@ import simulation.events.electricMeter.ElectricMeterUpdater;
 //-----------------------------------------------------------------------------
 @ModelExternalEvents(exported = {ElectricMeterUpdater.class})
 //-----------------------------------------------------------------------------
-public class			ElectricMeterUserModel
+public class			ElectricMeterUpdaterModel
 extends		AtomicES_Model
 {
 	// -------------------------------------------------------------------------
@@ -60,7 +60,7 @@ extends		AtomicES_Model
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	public static final String	URI = "ElectricMeterUserModel" ;
+	public static final String	URI = "ElectricMeterUpdaterModel" ;
 
 	/** initial delay before sending the first switch on event.				*/
 	protected double	initialDelay ;
@@ -74,7 +74,7 @@ extends		AtomicES_Model
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				ElectricMeterUserModel(
+	public				ElectricMeterUpdaterModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
@@ -128,7 +128,7 @@ extends		AtomicES_Model
 	public Duration			timeAdvance()
 	{
 		Duration d = super.timeAdvance() ;
-		this.logMessage("ElectricMeterUserModel::timeAdvance() 1 " + d +
+		this.logMessage("ElectricMeterUpdaterModel::timeAdvance() 1 " + d +
 									" " + this.eventListAsString()) ;
 		return d ;
 	}
@@ -145,7 +145,7 @@ extends		AtomicES_Model
 
 		this.nextEvent = ret.get(0).getClass() ;
 
-		this.logMessage("ElectricMeterUserModel::output() " +
+		this.logMessage("ElectricMeterUpdaterModel::output() " +
 									this.nextEvent.getCanonicalName()) ;
 		return ret ;
 	}

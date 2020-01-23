@@ -8,6 +8,10 @@ public class ElectricMeterSimulatorPlugin extends	AtomicSimulatorPlugin{
 	
 	private static final long serialVersionUID = 1L;
 	
+	
+	/**
+	 * The method getModelStateValue is used int the component to get the model values
+	 */
 	@Override
 	public Object getModelStateValue(String modelURI, String name) throws Exception{
 		ModelDescriptionI m = this.simulator.getDescendentModel(modelURI) ;

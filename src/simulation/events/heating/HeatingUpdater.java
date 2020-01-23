@@ -12,7 +12,11 @@ public class HeatingUpdater extends AbstractEvent {
 	public HeatingUpdater(Time timeOfOccurrence){
 		super(timeOfOccurrence, null) ;
 	}
-
+	
+	
+	/**
+	 * The method executeOn is used when the event is processed
+	 */
 	@Override
 	public void executeOn(AtomicModel model){
 		assert	model instanceof HeatingModel ;

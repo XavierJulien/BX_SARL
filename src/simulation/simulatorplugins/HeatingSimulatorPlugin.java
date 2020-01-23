@@ -16,8 +16,7 @@ public class HeatingSimulatorPlugin extends	AtomicSimulatorPlugin{
 			return ((HeatingModel)m).getPower() ;
 		}
 		else{
-			assert name.equals("temperature");
-			return ((HeatingModel)m).getTemperature() ;
+			return null ;
 		}
 	}
 }

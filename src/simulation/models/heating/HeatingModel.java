@@ -28,13 +28,42 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Inner classes and types
 	// -------------------------------------------------------------------------
-
+	/**
+	 * The enum State represent the state of the component (on/off)
+	 * 
+	 *
+	 */
 	public static enum 		State {
 		OFF,
 		ON
 	}
 	
-
+	
+	/**
+	* The class <code>Heating</code> implements a simplified DEVS
+	* simulation model of an Heating providing the current power level (in percentage) of the heating 
+	*
+	* <p><strong>Description</strong></p>
+	* 
+	* <p>
+	* 
+	* The heating power is determined by the controller, which choose to put more power or dicrease it.
+	* </p>
+	* <p>
+	* The Electric model is commanded through only one event
+	* <code>HeatingUpdater</code>, which is used to update the heating power level.
+	* </p>
+	* 
+	* <p><strong>Invariant</strong></p>
+	* 
+	* <pre>
+	* invariant		true	
+	* </pre>
+	* 
+	* <p>Created on : 2019-10-10</p>
+	* 
+	* 
+	*/
 	public static class		HeatingReport
 	extends		AbstractSimulationReport
 	{
@@ -58,15 +87,12 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 
 	private static final long					serialVersionUID = 1L;
-	protected static final double				CONSUMPTION = 1200.0; // Watts
 	private static final String					SERIESPOWER = "power";
 	public static final String					URI = "HeatingModel";
-	protected XYPlotter							temperaturePlotter;
 	protected XYPlotter							powerPlotter; 
 	
 	//CURRENT
 	protected int							currentPower;
-	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
 	protected boolean 							on= false;					
 	
 	
@@ -84,14 +110,14 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	{
 		super(uri, simulatedTimeUnit, simulationEngine);
 
-		// creation of a plotter to show the evolution of the temperature over
+		// creation of a plotter to show the evolution of the heating behaviour over
 		// time during the simulation.
 				
 		PlotterDescription pdOnOff =
 				new PlotterDescription(
 						"Heating power",
 						"Time (sec)",
-						"State (ON = 1/OFF = 0)",
+						"Power percentage",
 						300,
 						750,
 						300,
@@ -122,7 +148,7 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	@Override
 	public void					initialiseState(Time initialTime)
 	{
-		// the heating starts in mode OFF
+		// the heating starts at 0%
 		this.currentPower = 0;
 
 		//initialise the plotter for the state
@@ -136,8 +162,6 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	@Override
 	protected void				initialiseVariables(Time startTime)
 	{
-		// as the heating starts in mode OFF, its power consumption is 0
-		this.currentTemperature.v = 0.0;
 
 		// first data in the plotter to start the plot.
 		this.powerPlotter.addData(
@@ -229,14 +253,16 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 	
+	
+	/**
+	 * 
+	 * @return the current heating power percentage
+	 */
 	public int				getPower()
 	{
 		return this.currentPower;
 	}
-	public double				getTemperature()
-	{
-		return this.currentTemperature.v;
-	}
+
 	
 
 	
@@ -244,7 +270,9 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// Utils
 	// ------------------------------------------------------------------------
 
-
+	/**
+	 * The method UpdatePower is used by the HeatingUpdater events to update the power percentage by reading it in the component
+	 */
 	public void					updatePower(){
 		try {
 			this.currentPower= (Integer)componentRef.getEmbeddingComponentStateValue("power");
