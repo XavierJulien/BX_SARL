@@ -34,14 +34,13 @@ public class WindSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	/** URI of the unique instance of this class (in this example).			*/
 	public static final String	URI = "HeatingCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				WindSensorCoupledModel(
+	public WindSensorCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine,
@@ -52,8 +51,7 @@ public class WindSensorCoupledModel extends CoupledModel {
 		Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 		Map<VariableSource, StaticVariableDescriptor> reexportedVars,
 		Map<VariableSource, VariableSink[]> bindings
-		) throws Exception
-	{
+		) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine, submodels,
 			  imported, reexported, connections,
 			  importedVars, reexportedVars, bindings);
@@ -63,10 +61,8 @@ public class WindSensorCoupledModel extends CoupledModel {
 	// Methods
 	// -------------------------------------------------------------------------
 
-	public static Architecture	build() throws Exception
-	{
+	public static Architecture build() throws Exception {
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
-
 		atomicModelDescriptors.put(
 				WindSensorModel.URI,
 				AtomicHIOA_Descriptor.create(
@@ -75,8 +71,6 @@ public class WindSensorCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-		
-		
 		atomicModelDescriptors.put(
 				WindSensorUpdaterModel.URI,
 				AtomicModelDescriptor.create(
@@ -85,23 +79,14 @@ public class WindSensorCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
-
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<String,CoupledModelDescriptor>() ;
-
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(WindSensorModel.URI) ;
 		submodels.add(WindSensorUpdaterModel.URI) ;
-
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		
-		EventSource from2 =
-				new EventSource(WindSensorUpdaterModel.URI, WindSensorUpdater.class) ;
-		EventSink[] to2 = new EventSink[] {
-				new EventSink(WindSensorModel.URI, WindSensorUpdater.class)} ;
+		EventSource from2 = new EventSource(WindSensorUpdaterModel.URI, WindSensorUpdater.class) ;
+		EventSink[] to2 = new EventSink[] {new EventSink(WindSensorModel.URI, WindSensorUpdater.class)} ;
 		connections.put(from2, to2) ;
-		
 		coupledModelDescriptors.put(
 					WindSensorCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
@@ -116,23 +101,10 @@ public class WindSensorCoupledModel extends CoupledModel {
 							null,
 							null,
 							null)) ;
-
 		return new Architecture(
 						WindSensorCoupledModel.URI,
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);
 	}
-
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
-	}
 }
-//-----------------------------------------------------------------------------

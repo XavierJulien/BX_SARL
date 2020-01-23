@@ -18,137 +18,57 @@ import simulation.events.windSensor.WindSensorUpdater;
 
 public class WindSensorUpdaterModel extends AtomicES_Model
 {
-	private static final long serialVersionUID = 1L ;
-	public static final String	URI = "WindSensorUpdaterModel" ;
-	
-	/** initial delay before sending the first switch on event.				*/
-	protected double	initialDelay ;
-	
-	protected double	meanTimeBetweenWindUpdate ;
-	/** next event to be sent.												*/
-	protected Class<?>	nextEvent ;
-	
-	protected final RandomDataGenerator		rg ;
-	
-	protected boolean initialCall;
-	
-	
+	private static final long serialVersionUID = 1L;
+	public static final String	URI = "WindSensorUpdaterModel";
+	protected double	meanTimeBetweenWindUpdate;
+	protected Class<?>	nextEvent;
+	protected final RandomDataGenerator		rg;
+
 	public WindSensorUpdaterModel(
 			String uri,
 			TimeUnit simulatedTimeUnit,
 			SimulatorI simulationEngine
-			) throws Exception
-		{
-			super(uri, simulatedTimeUnit, simulationEngine) ;
+			) throws Exception {
+		super(uri, simulatedTimeUnit, simulationEngine);
+		this.rg = new RandomDataGenerator();
+		this.setLogger(new StandardLogger());
+	}
 
-			this.rg = new RandomDataGenerator() ;
-
-			// create a standard logger (logging on the terminal)
-			this.setLogger(new StandardLogger()) ;
-		}
-	
 	@Override
-	public void			initialiseState(Time initialTime) 
-	{
-		
-		this.initialDelay = 10.0 ;
-		
-		this.initialCall = true;
-		
+	public void	initialiseState(Time initialTime) {
 		this.meanTimeBetweenWindUpdate = 7.0;
-
-		this.rg.reSeedSecure() ;
-
-		// Initialise to get the correct current time.
-		super.initialiseState(initialTime) ;
-
-		// Schedule the first SwitchOn event.
-		Duration d1 = new Duration(
-							this.initialDelay,
-							this.getSimulatedTimeUnit()) ;
-		Duration d2 =
-			new Duration(
-					1,
-					this.getSimulatedTimeUnit()) ;
-		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new WindSensorUpdater(t)) ;
-		
-
-		// Redo the initialisation to take into account the initial event
-		// just scheduled.
-		this.nextTimeAdvance = this.timeAdvance() ;
-		this.timeOfNextEvent =
-				this.getCurrentStateTime().add(this.nextTimeAdvance) ;
-
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e) ;
-		}
+		this.rg.reSeedSecure();
+		super.initialiseState(initialTime);
+		Duration d1 = new Duration(this.meanTimeBetweenWindUpdate,this.getSimulatedTimeUnit());
+		Duration d2 = new Duration(this.meanTimeBetweenWindUpdate,this.getSimulatedTimeUnit());
+		Time t = this.getCurrentStateTime().add(d1).add(d2);
+		this.scheduleEvent(new WindSensorUpdater(t));
+		this.nextTimeAdvance = this.timeAdvance();
+		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
 	}
-	
+
 	@Override
-	public Duration			timeAdvance()
-	{
-		// This is just for debugging purposes; the time advance for an ES
-		// model is given by the earliest time among the currently scheduled
-		// events.
-		Duration d = super.timeAdvance() ;
-//		this.logMessage("HeatingUpdaterModel::timeAdvance() 1 " + d +
-//									" " + this.eventListAsString()) ;
-		return d ;
+	public Duration	timeAdvance() {
+		Duration d = super.timeAdvance();
+		return d;
 	}
-	
+
 	@Override
-	public Vector<EventI>	output()
-	{
-		// output is called just before executing an internal transition
-		// in ES models, this corresponds to having at least one event in
-		// the event list which time of occurrence corresponds to the current
-		// simulation time when performing the internal transition.
-
-		// when called, there must be an event to be executed and it will
-		// be sent to other models when they are external events.
-		assert	!this.eventList.isEmpty() ;
-		// produce the set of such events by calling the super method
-		Vector<EventI> ret = super.output() ;
-		// by construction, there will be only one such event
-		assert	ret.size() == 1 ;
-
-		// remember which external event was sent (in ES model, events are
-		// either internal or external, hence an external event is removed
-		// from the event list to be sent and it will not be accessible to
-		// the internal transition method; hence, we store the information
-		// to keep it for the internal transition)
-		this.nextEvent = ret.get(0).getClass() ;
-
-//		this.logMessage("HeatingUpdaterModel::output() " +
-//									this.nextEvent.getCanonicalName()) ;
-		return ret ;
+	public Vector<EventI> output(){
+		assert	!this.eventList.isEmpty();
+		Vector<EventI> ret = super.output();
+		assert	ret.size() == 1;
+		this.nextEvent = ret.get(0).getClass();
+		return ret;
 	}
-	
+
 	@Override
-	public void				userDefinedInternalTransition(
-		Duration elapsedTime
-		)
-	{
-		// This method implements a usage scenario for the hair dryer.
-		// Here, we assume that the hair dryer is used once each cycle (day)
-		// and then it starts in low mode, is set in high mode shortly after,
-		// used for a while in high mode and then set back in low mode to
-		// complete the drying.
-		Duration d ;
-		// See what is the type of event to be executed
+	public void	userDefinedInternalTransition(Duration elapsedTime){
+		Duration d;
 		if (this.nextEvent.equals(WindSensorUpdater.class)) {
-			//System.out.println("In HeatingUpdaterModef");
-			d = new Duration(1, this.getSimulatedTimeUnit()) ;
-			// compute the time of occurrence (in the future)
-			Time t = this.getCurrentStateTime().add(d) ;
-			// schedule the event
-			this.scheduleEvent(new WindSensorUpdater(t)) ;
+			d = new Duration(1, this.getSimulatedTimeUnit());
+			Time t = this.getCurrentStateTime().add(d);
+			this.scheduleEvent(new WindSensorUpdater(t));
 		}
-		
 	}
-	
 }

@@ -61,39 +61,18 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.windturbine.WindTurbineUpdater;
 
-//-----------------------------------------------------------------------------
-/**
-* The class <code>WindTurbineCoupledModel</code> implements the DEVS simulation
-* coupled model for the windturbine example.
-*
-* <p><strong>Description</strong></p>
-* 
-* <p><strong>Invariant</strong></p>
-* 
-* <pre>
-* invariant		true
-* </pre>
-* 
-* <p>Created on : 2019-10-11</p>
-* 
-* @author	<a href="mailto:Jacques.Malenfant@lip6.fr">Jacques Malenfant</a>
-*/
-public class			WindTurbineCoupledModel
-extends		CoupledModel
-{
+public class WindTurbineCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
-
+	
 	private static final long serialVersionUID = 1L ;
-	/** URI of the unique instance of this class (in this example).			*/
 	public static final String	URI = "WindTurbineCoupledModel" ;
-
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				WindTurbineCoupledModel(
+	public WindTurbineCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine,
@@ -104,8 +83,7 @@ extends		CoupledModel
 		Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 		Map<VariableSource, StaticVariableDescriptor> reexportedVars,
 		Map<VariableSource, VariableSink[]> bindings
-		) throws Exception
-	{
+		) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine, submodels,
 			  imported, reexported, connections,
 			  importedVars, reexportedVars, bindings);
@@ -114,20 +92,6 @@ extends		CoupledModel
 	// -------------------------------------------------------------------------
 	// Methods
 	// -------------------------------------------------------------------------
-
-	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.CoupledModel#getFinalReport()
-	 */
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
-	}
 
 	/**
 	 * build the simulation architecture corresponding to this coupled model.
@@ -142,11 +106,8 @@ extends		CoupledModel
 	 * @return				the simulation architecture corresponding to this coupled model.
 	 * @throws Exception	<i>TO DO.</i>
 	 */
-	public static Architecture	build() throws Exception
-	{
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
-
+	public static Architecture build() throws Exception {
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
 		atomicModelDescriptors.put(
 				WindTurbineModel.URI,
 				AtomicHIOA_Descriptor.create(
@@ -163,23 +124,14 @@ extends		CoupledModel
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<String,CoupledModelDescriptor>() ;
-
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(WindTurbineModel.URI) ;
 		submodels.add(WindTurbineUpdaterModel.URI) ;
-
-		Map<EventSource,EventSink[]> connections =
-									new HashMap<EventSource,EventSink[]>() ;
-		
-		EventSource from3 =
-				new EventSource(WindTurbineUpdaterModel.URI, WindTurbineUpdater.class) ;
-		EventSink[] to3 = new EventSink[] {
-				new EventSink(WindTurbineModel.URI, WindTurbineUpdater.class)} ;
+		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
+		EventSource from3 = new EventSource(WindTurbineUpdaterModel.URI, WindTurbineUpdater.class) ;
+		EventSink[] to3 = new EventSink[] {new EventSink(WindTurbineModel.URI, WindTurbineUpdater.class)} ;
 		connections.put(from3, to3) ;
-		
 		coupledModelDescriptors.put(
 					WindTurbineCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
@@ -194,7 +146,6 @@ extends		CoupledModel
 							null,
 							null,
 							null)) ;
-
 		return new Architecture(
 						WindTurbineCoupledModel.URI,
 						atomicModelDescriptors,
@@ -202,4 +153,3 @@ extends		CoupledModel
 						TimeUnit.SECONDS);
 	}
 }
-//-----------------------------------------------------------------------------

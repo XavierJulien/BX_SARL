@@ -61,23 +61,19 @@ import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.electricMeter.ElectricMeterUpdater;
 
-//-----------------------------------------------------------------------------
-public class			ElectricMeterCoupledModel
-extends		CoupledModel
-{
+public class ElectricMeterCoupledModel extends	CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	/** URI of the unique instance of this class (in this example).			*/
 	public static final String	URI = "ElectricMeterCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public				ElectricMeterCoupledModel(
+	public ElectricMeterCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine,
@@ -100,20 +96,6 @@ extends		CoupledModel
 	// -------------------------------------------------------------------------
 
 	/**
-	 * @see fr.sorbonne_u.devs_simulation.models.CoupledModel#getFinalReport()
-	 */
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
-	}
-
-	/**
 	 * build the simulation architecture corresponding to this coupled model.
 	 * 
 	 * <p><strong>Contract</strong></p>
@@ -126,10 +108,8 @@ extends		CoupledModel
 	 * @return				the simulation architecture corresponding to this coupled model.
 	 * 
 	 */
-	public static Architecture	build() throws Exception
-	{
-		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors =
-				new HashMap<>() ;
+	public static Architecture	build() throws Exception {
+		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
 
 		atomicModelDescriptors.put(
 				ElectricMeterModel.URI,
@@ -148,20 +128,15 @@ extends		CoupledModel
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<String,CoupledModelDescriptor>() ;
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(ElectricMeterModel.URI) ;
 		submodels.add(ElectricMeterUpdaterModel.URI) ;
 
-		Map<EventSource,EventSink[]> connections =
-									new HashMap<EventSource,EventSink[]>() ;
-		EventSource from1 =
-				new EventSource(ElectricMeterUpdaterModel.URI, ElectricMeterUpdater.class) ;
-		EventSink[] to1 =
-				new EventSink[] {
-						new EventSink(ElectricMeterModel.URI, ElectricMeterUpdater.class)} ;
+		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
+		EventSource from1 =	new EventSource(ElectricMeterUpdaterModel.URI, ElectricMeterUpdater.class) ;
+		EventSink[] to1 = new EventSink[] {new EventSink(ElectricMeterModel.URI, ElectricMeterUpdater.class)} ;
 		connections.put(from1, to1) ;
 		
 		coupledModelDescriptors.put(
@@ -186,4 +161,3 @@ extends		CoupledModel
 						TimeUnit.SECONDS);
 	}
 }
-//-----------------------------------------------------------------------------

@@ -28,29 +28,6 @@ import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 								HeatSensorWindowStillOpen.class})
 
 public class HeatSensorModel extends AtomicHIOAwithEquations {
-	
-	// -------------------------------------------------------------------------
-	// Inner classes and types
-	// -------------------------------------------------------------------------
-
-
-	public static class		HeatSensorReport
-	extends		AbstractSimulationReport
-	{
-		private static final long serialVersionUID = 1L;
-		
-		public			HeatSensorReport(String modelURI)
-		{
-			super(modelURI);
-		}
-
-
-		@Override
-		public String	toString()
-		{
-			return "HeatSensorReport(" + this.getModelURI() + ")";
-		}
-	}
 
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -61,26 +38,19 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	private static double 						xValue = 0;
 	public static final String					URI = "HeatSensorModel";
 	protected XYPlotter							temperaturePlotter;
-	
-	//CURRENT
 	protected final Value<Double>				currentTemperature = new Value<Double>(this, 0.0, 0);
-	
 	protected EmbeddingComponentStateAccessI 	componentRef;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
 
-	public						HeatSensorModel(
+	public HeatSensorModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
 		SimulatorI simulationEngine
-		) throws Exception
-	{
+		) throws Exception{
 		super(uri, simulatedTimeUnit, simulationEngine);
-
-		// creation of a plotter to show the evolution of the wind speed over
-		// time during the simulation.
 		PlotterDescription pd =
 				new PlotterDescription(
 						"Temperature",
@@ -92,7 +62,6 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 						200);
 		this.temperaturePlotter = new XYPlotter(pd);
 		this.temperaturePlotter.createSeries(SERIES);
-		// create a standard logger (logging on the terminal)
 		this.setLogger(new StandardLogger());
 	}
 
@@ -100,169 +69,95 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	// Methods
 	// ------------------------------------------------------------------------
 
-
 	@Override
-	public void					setSimulationRunParameters(
+	public void	setSimulationRunParameters(
 		Map<String, Object> simParams
-		) throws Exception
-	{
-		// The reference to the embedding component
-		this.componentRef =
-			(EmbeddingComponentStateAccessI) simParams.get("heatSensorRef");
+		) throws Exception {
+		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("heatSensorRef");
 	}
 
-
 	@Override
-	public void					initialiseState(Time initialTime)
-	{
-		// the heating starts in mode OFF
-		// initialisation of the wind speed plotter 
+	public void initialiseState(Time initialTime){
 		this.temperaturePlotter.initialise();
-		// show the plotter on the screen
 		this.temperaturePlotter.showPlotter();
-
 		super.initialiseState(initialTime);
 	}
 
-
 	@Override
-	protected void				initialiseVariables(Time startTime)
-	{
-		// the wind sensor starts to emit the wind speed
+	protected void initialiseVariables(Time startTime) {
 		this.currentTemperature.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
-
-		// first data in the plotter to start the plot.
 		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
-
-		
 		super.initialiseVariables(startTime);
 	}
 
 
 	@Override
-	public Vector<EventI>		output()
-	{
-		// the model does not export any event.
+	public Vector<EventI> output(){
 		return null;
 	}
 
 
 	@Override
-	public Duration				timeAdvance()
-	{
+	public Duration timeAdvance(){
 		if (this.componentRef == null) {
-			// the model has no internal event, however, its state will evolve
-			// upon reception of external events.
 			return Duration.INFINITY;
 		} else {
-			// This is to test the embedding component access facility.
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
 
-
-
 	@Override
-	public void					userDefinedExternalTransition(Duration elapsedTime)
-	{
-
-		// get the vector of current external events
+	public void userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
-		// when this method is called, there is at least one external event,
-		// and for the wind sensor model, there will be exactly one by
-		// construction.
 		assert	currentEvents != null && currentEvents.size() == 1;
-
 		Event ce = (Event) currentEvents.get(0);
 		assert	ce instanceof AbstractEvent;
-
-		// the plot is piecewise constant; this data will close the currently
-		// open piece
 		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
-		
-		
-
-
-		// execute the current external event on this model, changing its state
-		// and Wind speed
 		ce.executeOn(this);
-
-
-
-		// add a new data on the plotter; this data will open a new piece
 		this.temperaturePlotter.addData(
 				SERIES,
 				this.getCurrentStateTime().getSimulatedTime(),
 				this.getTemperature());
-		
-
 		super.userDefinedExternalTransition(elapsedTime);
-
 	}
 
 
 	@Override
-	public void					endSimulation(Time endTime) throws Exception
-	{
+	public void endSimulation(Time endTime) throws Exception {
 		this.temperaturePlotter.addData(
 				SERIES,
 				endTime.getSimulatedTime(),
 				this.getTemperature());
 		Thread.sleep(10000L);
 		this.temperaturePlotter.dispose();
-		
-		
-
 		super.endSimulation(endTime);
-	}
-
-
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		return new HeatSensorReport(this.getURI());
 	}
 
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
 	
-	
-	public double				getTemperature()
-	{
-		return this.currentTemperature.v;
-	}
-	
+	public double getTemperature(){return this.currentTemperature.v;}
 	
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
 
-	public void					updateTemperature() {
+	public void updateTemperature() {
 		try {
 			this.currentTemperature.v = ((Double)componentRef.getEmbeddingComponentStateValue("temperature"));
 			this.currentTemperature.v *= 0.90;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		
-		
 	}
 	
-	public void 				openWindow() {
-		this.currentTemperature.v -= 5;
-	}
-	
-	public void keepTemperature() {
-		this.currentTemperature.v -=0.5;
-	}
+	public void openWindow() {this.currentTemperature.v -= 5;}
+	public void keepTemperature() {this.currentTemperature.v -=0.5;}
 }
-//------------------------------------------------------------------------------

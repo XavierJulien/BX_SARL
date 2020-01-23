@@ -36,13 +36,11 @@ public class HeatSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 
 	private static final long serialVersionUID = 1L ;
-	/** URI of the unique instance of this class (in this example).			*/
 	public static final String	URI = "HeatingSensorCoupledModel" ;
 
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
 	public				HeatSensorCoupledModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -54,8 +52,7 @@ public class HeatSensorCoupledModel extends CoupledModel {
 		Map<StaticVariableDescriptor, VariableSink[]> importedVars,
 		Map<VariableSource, StaticVariableDescriptor> reexportedVars,
 		Map<VariableSource, VariableSink[]> bindings
-		) throws Exception
-	{
+		) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine, submodels,
 			  imported, reexported, connections,
 			  importedVars, reexportedVars, bindings);
@@ -64,11 +61,8 @@ public class HeatSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Methods
 	// -------------------------------------------------------------------------
-
-	public static Architecture	build() throws Exception
-	{
+	public static Architecture build() throws Exception {
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;
-
 		atomicModelDescriptors.put(
 				HeatSensorModel.URI,
 				AtomicHIOA_Descriptor.create(
@@ -77,8 +71,6 @@ public class HeatSensorCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-		
-		
 		atomicModelDescriptors.put(
 				HeatSensorUpdaterModel.URI,
 				AtomicModelDescriptor.create(
@@ -87,35 +79,20 @@ public class HeatSensorCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-
-
-		Map<String,CoupledModelDescriptor> coupledModelDescriptors =
-				new HashMap<String,CoupledModelDescriptor>() ;
-
+		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(HeatSensorModel.URI) ;
 		submodels.add(HeatSensorUpdaterModel.URI) ;
-
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		
-		EventSource from1 =
-				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowOpen.class) ;
-		EventSink[] to1 = new EventSink[] {
-				new EventSink(HeatSensorModel.URI, HeatSensorWindowOpen.class)} ;
+		EventSource from1 = new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowOpen.class) ;
+		EventSink[] to1 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorWindowOpen.class)} ;
 		connections.put(from1, to1) ;
-		
-		EventSource from2 =
-				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorUpdater.class) ;
-		EventSink[] to2 = new EventSink[] {
-				new EventSink(HeatSensorModel.URI, HeatSensorUpdater.class)} ;
+		EventSource from2 = new EventSource(HeatSensorUpdaterModel.URI, HeatSensorUpdater.class) ;
+		EventSink[] to2 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorUpdater.class)} ;
 		connections.put(from2, to2) ;
-		
-		EventSource from3 =
-				new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowStillOpen.class) ;
-		EventSink[] to3 = new EventSink[] {
-				new EventSink(HeatSensorModel.URI, HeatSensorWindowStillOpen.class)} ;
+		EventSource from3 =	new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowStillOpen.class) ;
+		EventSink[] to3 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorWindowStillOpen.class)} ;
 		connections.put(from3, to3) ;
-		
 		coupledModelDescriptors.put(
 					HeatSensorCoupledModel.URI,
 					new CoupledHIOA_Descriptor(
@@ -130,23 +107,10 @@ public class HeatSensorCoupledModel extends CoupledModel {
 							null,
 							null,
 							null)) ;
-
 		return new Architecture(
 						HeatSensorCoupledModel.URI,
 						atomicModelDescriptors,
 						coupledModelDescriptors,
 						TimeUnit.SECONDS);
 	}
-
-	@Override
-	public SimulationReportI	getFinalReport() throws Exception
-	{
-		StandardCoupledModelReport ret =
-							new StandardCoupledModelReport(this.getURI()) ;
-		for (int i = 0 ; i < this.submodels.length ; i++) {
-			ret.addReport(this.submodels[i].getFinalReport()) ;
-		}
-		return ret ;
-	}
 }
-//-----------------------------------------------------------------------------

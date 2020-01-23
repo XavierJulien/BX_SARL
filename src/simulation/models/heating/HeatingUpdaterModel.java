@@ -16,111 +16,65 @@ import simulation.events.heating.HeatingUpdater;
 
 @ModelExternalEvents(exported = { HeatingUpdater.class})
 
-public class HeatingUpdaterModel extends AtomicES_Model
-{
+public class HeatingUpdaterModel extends AtomicES_Model {
+	
 	private static final long serialVersionUID = 1L ;
 	public static final String	URI = "HeatingUpdaterModel" ;
-	
-	/** initial delay before sending the first updater event.				*/
-	protected double	initialDelay ;
-	
 	protected double	meanTimeBetweenTempUpdate ;
-	/** next event to be sent.												*/
 	protected Class<?>	nextEvent ;
-	
 	protected final RandomDataGenerator		rg ;
-	
-	protected boolean initialCall;
-	
-	
+
 	public HeatingUpdaterModel(
 			String uri,
 			TimeUnit simulatedTimeUnit,
 			SimulatorI simulationEngine
-			) throws Exception
-		{
-			super(uri, simulatedTimeUnit, simulationEngine) ;
+			) throws Exception{
+		super(uri, simulatedTimeUnit, simulationEngine) ;
+		this.rg = new RandomDataGenerator() ;
+		this.setLogger(new StandardLogger()) ;
+	}
 
-			this.rg = new RandomDataGenerator() ;
-
-			// create a standard logger (logging on the terminal)
-			this.setLogger(new StandardLogger()) ;
-		}
-	
 	@Override
-	public void			initialiseState(Time initialTime) 
-	{
-		
-		this.initialDelay = 10.0 ;
-		
-		this.initialCall = true;
-		
+	public void	initialiseState(Time initialTime) {
 		this.meanTimeBetweenTempUpdate = 7.0;
-
 		this.rg.reSeedSecure() ;
-
-		// Initialise to get the correct current time.
 		super.initialiseState(initialTime) ;
-
-		// Schedule the first updater event.
 		Duration d1 = new Duration(
-							this.initialDelay,
-							this.getSimulatedTimeUnit()) ;
+				this.meanTimeBetweenTempUpdate,
+				this.getSimulatedTimeUnit()) ;
 		Duration d2 =
-			new Duration(
-					2.0 * this.meanTimeBetweenTempUpdate *
-											this.rg.nextBeta(1.75, 1.75),
-					this.getSimulatedTimeUnit()) ;
+				new Duration(
+						2.0 * this.meanTimeBetweenTempUpdate *
+						this.rg.nextBeta(1.75, 1.75),
+						this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
 		this.scheduleEvent(new HeatingUpdater(t)) ;
-		
-
-		// Redo the initialisation to take into account the initial event
-		// just scheduled.
 		this.nextTimeAdvance = this.timeAdvance() ;
-		this.timeOfNextEvent =
-				this.getCurrentStateTime().add(this.nextTimeAdvance) ;
-
-		try {
-			// set the debug level triggering the production of log messages.
-			this.setDebugLevel(1) ;
-		} catch (Exception e) {
-			throw new RuntimeException(e) ;
-		}
+		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance) ;
 	}
-	
-	@Override
-	public Duration			timeAdvance()
-	{
 
+	@Override
+	public Duration	timeAdvance(){
 		Duration d = super.timeAdvance() ;
 		return d ;
 	}
-	
+
 	@Override
-	public Vector<EventI>	output()
-	{
+	public Vector<EventI> output(){
 		assert	!this.eventList.isEmpty() ;
 		Vector<EventI> ret = super.output() ;
 		assert	ret.size() == 1 ;
 		this.nextEvent = ret.get(0).getClass() ;
 		return ret ;
 	}
-	
-	
-	/**
-	 * 
-	 */
+
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime)	{
-
 		Duration d ;
 		if (this.nextEvent.equals(HeatingUpdater.class)) {
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
 			this.scheduleEvent(new HeatingUpdater(t)) ;
 		}
-		
 	}
-	
 }
