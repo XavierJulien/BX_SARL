@@ -38,6 +38,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	protected double 					prod;
 	protected boolean 					isOn=false;
 	protected double 					windSpeed;
+	protected final String				windTurbineRef;
 	
 
 	
@@ -47,7 +48,8 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	protected WindTurbine(String uri,
 			String windTurbineOutboundPortURI,
 			String windTurbineSensorInboundPortURI,
-					   String windTurbineInboundPortURI) throws Exception{
+					   String windTurbineInboundPortURI,
+					   String windTurbineRef) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -82,6 +84,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 
 		this.prod = 0;
 		this.windSpeed =0;
+		this.windTurbineRef = windTurbineRef;
 		
 		//----------------Modelisation-------------
 
@@ -141,7 +144,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("windTurbineRef", this) ;
+		simParams.put(windTurbineRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		this.runTask(
 				new AbstractComponent.AbstractTask() {

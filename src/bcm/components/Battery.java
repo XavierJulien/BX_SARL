@@ -40,6 +40,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected boolean 					isOn;
 	protected boolean 					isCharging;
 	protected double 					currentCharge;
+	protected final String				batteryRef;
 	
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
@@ -49,7 +50,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 					   String batteryInboundPortURI,
 					   String batteryChargerInboundPortURI,
 					   double maxCharge,
-					   double production ) throws Exception{
+					   double production,
+					   String batteryRef) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -88,6 +90,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		this.isOn = false;
 		this.isCharging = false;
 		this.prod = production;
+		this.batteryRef = batteryRef;
 		
 		//----------------Modelisation-------------
 		
@@ -162,7 +165,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("batteryRef", this) ;
+		simParams.put(batteryRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(

@@ -40,6 +40,7 @@ implements EmbeddingComponentStateAccessI{
 	protected boolean 					isOn=false;
 	protected double 					consumption = 10;
 	protected double 					currentConsumption;
+	protected final String				kettleRef;
 	
 	
 
@@ -50,7 +51,8 @@ implements EmbeddingComponentStateAccessI{
 	protected Kettle(String uri,
 						 String kettleElectricMeterOutboundPortURI,
 						 String kettleElectricMeterInboundPortURI,
-						 double consumption) throws Exception{
+						 double consumption,
+						 String kettleRef) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
@@ -81,6 +83,7 @@ implements EmbeddingComponentStateAccessI{
 		isOn=false;
 		this.consumption = consumption;
 		currentConsumption = 0;
+		this.kettleRef = kettleRef;
 		
 		//----------------Modelisation-------------
 		
@@ -158,7 +161,7 @@ implements EmbeddingComponentStateAccessI{
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("kettleRef", this) ;
+		simParams.put(kettleRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		this.runTask(
 				new AbstractComponent.AbstractTask() {

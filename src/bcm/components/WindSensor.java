@@ -34,6 +34,8 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 
 	protected WindSensorSimulatorPlugin		asp ;
 	
+	protected final String 				windSensorRef;
+	
 	protected double power;
 
 
@@ -42,7 +44,8 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 //------------------------------------------------------------------------
 	protected WindSensor(String uri, 
 						 String windSensorInboundPortURI, 
-						 String windSensorOutboundPortURI) throws Exception{
+						 String windSensorOutboundPortURI,
+						 String windSensorRef) throws Exception{
 		super(uri, 1, 1);
 		
 		this.uri = uri;
@@ -68,7 +71,8 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 		this.tracer.setRelativePosition(2, 0) ;
 
 		//----------------Variables----------------
-
+		
+		this.windSensorRef = windSensorRef;
 		power = 0;
 		
 		//----------------Modelisation-------------
@@ -117,7 +121,7 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("windSensorRef", this) ;
+		simParams.put(windSensorRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(

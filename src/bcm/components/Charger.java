@@ -46,6 +46,7 @@ implements	EmbeddingComponentStateAccessI{
 	
 	protected boolean 						isOn;
 	protected final double 					conso;
+	protected final String					chargerRef;
 	
 	
 //------------------------------------------------------------------------
@@ -57,7 +58,8 @@ implements	EmbeddingComponentStateAccessI{
 					   String chargerElectricMeterOutboundPortURI,
 					   String chargerElectricMeterInboundPortURI,
 					   String chargerBatteryOutboundPortURI,
-					   double conso) throws Exception{
+					   double conso,
+					   String chargerRef) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -97,6 +99,7 @@ implements	EmbeddingComponentStateAccessI{
 		//----------------Variables----------------
 		this.isOn = false;
 		this.conso = conso;
+		this.chargerRef = chargerRef;
 		//----------------Modelisation-------------
 		
 		this.initialise();
@@ -157,7 +160,7 @@ implements	EmbeddingComponentStateAccessI{
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("chargerRef", this) ;
+		simParams.put(chargerRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		this.runTask(
 				new AbstractComponent.AbstractTask() {

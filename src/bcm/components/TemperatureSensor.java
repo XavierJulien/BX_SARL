@@ -37,13 +37,19 @@ implements	EmbeddingComponentStateAccessI
 	protected final TemperatureSensorHeatingOutboundPort temperatureSensorHeatingOutboundPort;
 	protected final TemperatureSensorOutboundPort temperatureSensorOutboundPort;
 	
+	
 	protected HeatSensorSimulatorPlugin		asp ;
 
+	protected final String temperatureSensorRef;
 	protected double temperature;
 
 
 
-	protected TemperatureSensor(String uri, String temperatureSensorInboundPortURI, String linkWithHeatingOutboundPortURI, String temperatureSensorOutboundPortURI) throws Exception{
+	protected TemperatureSensor(String uri,
+								String temperatureSensorInboundPortURI,
+								String linkWithHeatingOutboundPortURI,
+								String temperatureSensorOutboundPortURI,
+								String tempertureSensorRef) throws Exception{
 
 		super(uri, 1, 1);
 		this.uri = uri;
@@ -73,6 +79,7 @@ implements	EmbeddingComponentStateAccessI
 		
 		//----------------Variables----------------
 		temperature = 12;
+		this.temperatureSensorRef = tempertureSensorRef;
 		
 		//----------------Modelisation-------------
 
@@ -120,7 +127,7 @@ implements	EmbeddingComponentStateAccessI
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("heatSensorRef", this) ;
+		simParams.put(temperatureSensorRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		Thread.sleep(1000L);
 		this.runTask(

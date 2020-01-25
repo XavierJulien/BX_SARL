@@ -47,6 +47,7 @@ implements	EmbeddingComponentStateAccessI{
 	protected int 								powerPercentage;
 	protected int								maxConsumption;
 	protected int 								consumption;
+	protected final String						heatingRef;
 
 	
 //------------------------------------------------------------------------
@@ -59,7 +60,8 @@ implements	EmbeddingComponentStateAccessI{
 						String heatingElectricMeterOutboundPortURI,
 						String heatingElectricMeterInboundPortURI,
 						int maxPower,
-						int consumption) throws Exception{
+						int consumption,
+						String heatingRef) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -104,6 +106,7 @@ implements	EmbeddingComponentStateAccessI{
 		powerPercentage = 0;
 		maxConsumption = consumption;
 		consumption = 0;
+		this.heatingRef = heatingRef;
 		
 		//----------------Modelisation-------------
 		
@@ -187,7 +190,7 @@ implements	EmbeddingComponentStateAccessI{
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 500L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("heatingRef", this) ;
+		simParams.put(heatingRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		this.runTask(
 				new AbstractComponent.AbstractTask() {

@@ -48,6 +48,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 	protected double					consumptionHeating;
 	protected double					consumptionCharger;
 	protected double					consumptionKettle;
+	protected final String				EMRef;
 	
 	protected ElectricMeterSimulatorPlugin		asp ;
 
@@ -64,7 +65,8 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 					   String electricMeterKettleOutboundPortURI,
 					   String electricMeterKettleInboundPortURI,
 					   String electricMeterChargerOutboundPortURI,
-					   String electricMeterChargerInboundPortURI) throws Exception{
+					   String electricMeterChargerInboundPortURI,
+					   String EMRef) throws Exception{
 		super(uri, 2, 1);
 
 		assert uri != null;
@@ -118,6 +120,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		consumptionHeating = 0;
 		consumptionCharger = 0;
 		consumptionKettle = 0;
+		this.EMRef = EMRef;
 		
 		
 		//----------------Modelisation-------------
@@ -186,7 +189,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		//---------------SIMULATION---------------
 		SimulationEngine.SIMULATION_STEP_SLEEP_TIME = 1000L ;
 		HashMap<String,Object> simParams = new HashMap<String,Object>() ;
-		simParams.put("electricMeterRef", this) ;
+		simParams.put(EMRef, this) ;
 		this.asp.setSimulationRunParameters(simParams) ;
 		// Start the simulation.
 		this.runTask(

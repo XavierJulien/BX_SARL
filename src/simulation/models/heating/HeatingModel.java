@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
+import bcm.launcher.CVM;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
@@ -99,7 +100,7 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
-		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get("heatingRef");
+		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.heatingRef);
 	}
 
 	@Override

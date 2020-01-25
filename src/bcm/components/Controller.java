@@ -279,7 +279,6 @@ public class Controller extends AbstractComponent {
 	}
 
 
-	// TODO A COMPLETER AVEC LES NOUVEAUX TRUCS/COMPORTEMENTS
 	public void execute() throws Exception {
 		super.execute();
 		this.scheduleTask(
