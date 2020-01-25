@@ -3,7 +3,9 @@ package bcm.components;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import bcm.interfaces.kettle.KettleI;
+import bcm.interfaces.heating.HeatingI;
+import bcm.interfaces.heating.HeatingTemperatureSensorI;
+import bcm.interfaces.kettle.KettleElectricMeterI;
 import bcm.ports.kettle.KettleInboundPort;
 import bcm.ports.kettle.KettleOutboundPort;
 import fr.sorbonne_u.components.AbstractComponent;
@@ -20,19 +22,15 @@ import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
 import simulation.simulatorplugins.KettleSimulatorPlugin;
 
-@RequiredInterfaces(required = {KettleI.class})
-@OfferedInterfaces(offered = {KettleI.class})
+@RequiredInterfaces(required = {KettleElectricMeterI.class})
+@OfferedInterfaces(offered = {KettleElectricMeterI.class})
 public class Kettle 
 extends AbstractCyPhyComponent 
 implements EmbeddingComponentStateAccessI{
 	
 	protected final String				uri ;
-	protected final String				kettleInboundPortURI ;	
-	protected final String				kettleOutboundPortURI ;
 	protected final String				kettleElectricMeterOutboundPortURI ;
 	protected final String				kettleElectricMeterInboundPortURI ;
-	protected KettleOutboundPort		kettleOutboundPort ;
-	protected KettleInboundPort			kettleInboundPort ;
 	protected KettleOutboundPort		kettleElectricMeterOutboundPort ;
 	protected KettleInboundPort			kettleElectricMeterInboundPort ;
 	
@@ -50,28 +48,19 @@ implements EmbeddingComponentStateAccessI{
 	//----------------------------CONSTRUCTOR---------------------------------
 	//------------------------------------------------------------------------
 	protected Kettle(String uri,
-						 String kettleOutboundPortURI,
-						 String kettleInboundPortURI,
 						 String kettleElectricMeterOutboundPortURI,
 						 String kettleElectricMeterInboundPortURI,
 						 double consumption) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
-		assert kettleOutboundPortURI != null;
-		assert kettleInboundPortURI != null;
+
 
 		this.uri = uri;
-		this.kettleInboundPortURI = kettleInboundPortURI;
-		this.kettleOutboundPortURI = kettleOutboundPortURI;
 		this.kettleElectricMeterInboundPortURI = kettleElectricMeterInboundPortURI;
 		this.kettleElectricMeterOutboundPortURI = kettleElectricMeterOutboundPortURI;
 
 		//-------------------PUBLISH-------------------
-		kettleInboundPort = new KettleInboundPort(kettleInboundPortURI, this) ;
-		kettleInboundPort.publishPort() ;
-		this.kettleOutboundPort = new KettleOutboundPort(kettleOutboundPortURI, this) ;
-		this.kettleOutboundPort.localPublishPort() ;
 		
 		kettleElectricMeterInboundPort = new KettleInboundPort(kettleElectricMeterInboundPortURI, this) ;
 		kettleElectricMeterInboundPort.publishPort() ;
@@ -102,17 +91,7 @@ implements EmbeddingComponentStateAccessI{
 //------------------------------------------------------------------------
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
-	
-	public void startKettle() throws Exception{
-		this.logMessage("The kettle is starting his job....") ;
-		isOn = true;
-	}
 
-	public void stopKettle() throws Exception{
-		this.logMessage("The kettle is stopping his job....") ;
-		isOn =false;
-	}
-	
 	public void sendConsumption() throws Exception {
 			this.logMessage("Sending consumption.... "+currentConsumption ) ;
 			this.kettleElectricMeterOutboundPort.sendConsumption(currentConsumption) ;
@@ -236,7 +215,6 @@ implements EmbeddingComponentStateAccessI{
 //------------------------------------------------------------------------
 	@Override
 	public void finalise() throws Exception {
-		kettleOutboundPort.doDisconnection();
 		kettleElectricMeterOutboundPort.doDisconnection();
 		super.finalise();
 	}
@@ -247,8 +225,6 @@ implements EmbeddingComponentStateAccessI{
 	@Override
 	public void shutdown() throws ComponentShutdownException {
 		try {
-			kettleInboundPort.unpublishPort();
-			kettleOutboundPort.unpublishPort();
 			kettleElectricMeterInboundPort.unpublishPort();
 			kettleElectricMeterOutboundPort.unpublishPort();
 		} catch (Exception e) {e.printStackTrace();}

@@ -9,10 +9,7 @@ public interface ControllerI extends OfferedI,RequiredI{
 	public void startWindTurbine() throws Exception;
 	public void stopWindTurbine() throws Exception;
 	public void getProduction(double production) throws Exception;
-	
-	//------------BOUILLOIRE------------
-	public void startKettle() throws Exception;
-	public void stopKettle() throws Exception;
+
 	
 	//------------CHAUFFAGE------------
 	public void startHeating() throws Exception;

@@ -50,31 +50,6 @@ public class ControllerInboundPort extends AbstractInboundPort implements Contro
 				}) ;
 	}
 
-	//---------------------------------------------------
-	//--------------------BOUILLOIRE---------------------
-	//---------------------------------------------------
-	@Override
-	public void startKettle() throws Exception {
-		this.owner.handleRequestAsync(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((Controller)this.getServiceOwner()).startKettle();
-						return null;
-					}
-				}) ;		
-	}
-	@Override
-	public void stopKettle() throws Exception {
-		this.owner.handleRequestAsync(
-				new AbstractComponent.AbstractService<Void>() {
-					@Override
-					public Void call() throws Exception {
-						((Controller)this.getServiceOwner()).stopKettle();
-						return null;
-					}
-				}) ;		
-	}
 	
 
 	

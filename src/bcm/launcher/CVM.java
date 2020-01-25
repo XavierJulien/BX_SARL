@@ -19,7 +19,6 @@ import bcm.connectors.electricmeter.ElectricMeterConnector;
 import bcm.connectors.electricmeter.ElectricMeterControllerConnector;
 import bcm.connectors.heating.HeatingControllerConnector;
 import bcm.connectors.heating.HeatingElectricMeterConnector;
-import bcm.connectors.kettle.KettleControllerConnector;
 import bcm.connectors.kettle.KettleElectricMetterConnector;
 import bcm.connectors.sensors.TemperatureSensorControllerConnector;
 import bcm.connectors.sensors.TemperatureSensorHeatingConnector;
@@ -55,10 +54,6 @@ public class CVM extends AbstractCVM {
 	//--------------------------------------------------------------	
 	public static final String	KETTLE_COMPONENT_URI = "my-URI-kettle" ;
 	public static final String 	KETTLE_MODEL_URI = "kettle-model-uri";
-	protected static final String	URIKettleOutboundPortURI = "kettleOPort" ;
-	protected static final String	URIKettleInboundPortURI = "kettleIPort" ;
-	protected static final String	URIControllerKettleOutboundPortURI = "controllerKettleOPort" ;
-	protected static final String	URIControllerKettleInboundPortURI = "controllerKettleIPort" ;
 	protected static final String	URIKettleElectricMeterOutboundPortURI = "kettleElectricMeterOPort" ;
 	protected static final String	URIKettleElectricMeterInboundPortURI = "kettleElectricMeterIPort" ;
 	protected static final double 	kettleConsumption = 10;
@@ -190,8 +185,6 @@ public class CVM extends AbstractCVM {
 				AbstractComponent.createComponent(
 						Kettle.class.getCanonicalName(),
 						new Object[]{KETTLE_COMPONENT_URI,
-								URIKettleOutboundPortURI,
-								URIKettleInboundPortURI,
 								URIElectricMeterKettleOutboundPortURI,
 								URIElectricMeterKettleInboundPortURI,
 								kettleConsumption}) ;
@@ -310,8 +303,6 @@ public class CVM extends AbstractCVM {
 						new Object[]{CONTROLLER_COMPONENT_URI,
 								URIControllerWindTurbineOutboundPortURI,
 								URIControllerWindTurbineInboundPortURI,
-								URIControllerKettleOutboundPortURI,
-								URIControllerKettleInboundPortURI,
 								URIControllerHeatingOutboundPortURI,
 								URIControllerHeatingInboundPortURI,
 								URIControllerElectricMeterOutboundPortURI,
@@ -362,21 +353,7 @@ public class CVM extends AbstractCVM {
 				ElectricMeterConnector.class.getCanonicalName()) ;	
 		
 		
-		//--------------------------------------------------------------
-		//  KETLLE <=> CONTROLLER
-		//--------------------------------------------------------------
-		this.doPortConnection(
-				this.uriKettleURI,
-				URIKettleOutboundPortURI,
-				URIControllerKettleInboundPortURI,
-				KettleControllerConnector.class.getCanonicalName()) ;
-		this.doPortConnection(
-				this.uriControllerURI,
-				URIControllerKettleOutboundPortURI,
-				URIKettleInboundPortURI,
-				ControllerConnector.class.getCanonicalName()) ;	
 
-		
 		//--------------------------------------------------------------
 		//  KETTLE <=> ELECTRICMETER
 		//--------------------------------------------------------------

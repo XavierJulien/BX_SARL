@@ -43,16 +43,6 @@ public class ControllerOutboundPort extends AbstractOutboundPort implements	Cont
 	}
 
 	@Override
-	public void startKettle() throws Exception {
-		((ControllerI)this.connector).startKettle() ;		
-	}
-
-	@Override
-	public void stopKettle() throws Exception {
-		((ControllerI)this.connector).stopKettle() ;		
-	}
-
-	@Override
 	public void startHeating() throws Exception {
 		((ControllerI)this.connector).startHeating() ;		
 	}

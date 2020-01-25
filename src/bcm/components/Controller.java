@@ -22,8 +22,6 @@ public class Controller extends AbstractComponent {
 	protected final String				uri ;
 	protected final String				controllerWindTurbineInboundPortURI ;	
 	protected final String				controllerWindTurbineOutboundPortURI ;
-	protected final String				controllerKettleOutboundPortURI ;
-	protected final String				controllerKettleInboundPortURI ;
 	protected final String				controllerHeatingOutboundPortURI ;
 	protected final String				controllerHeatingInboundPortURI ;
 	protected final String				controllerElectricMeterOutboundPortURI ;
@@ -40,7 +38,6 @@ public class Controller extends AbstractComponent {
 	//-------------------------INBOUND PORT-------------------------
 	//--------------------------------------------------------------
 	protected ControllerInboundPort		controllerWindTurbineInboundPort ;
-	protected ControllerInboundPort		controllerKettleInboundPort ;
 	protected ControllerInboundPort		controllerHeatingInboundPort ;
 	protected ControllerInboundPort		controllerElectricMeterInboundPort ;
 	protected ControllerInboundPort		controllerChargerInboundPort ;
@@ -50,7 +47,6 @@ public class Controller extends AbstractComponent {
 	//-------------------------OUTBOUND PORT------------------------
 	//--------------------------------------------------------------
 	protected ControllerOutboundPort	controllerWindTurbineOutboundPort ;
-	protected ControllerOutboundPort 	controllerKettleOutboundPort;
 	protected ControllerOutboundPort 	controllerHeatingOutboundPort;
 	protected ControllerOutboundPort 	controllerElectricMeterOutboundPort;
 	protected ControllerOutboundPort 	controllerChargerOutboundPort;
@@ -75,9 +71,7 @@ public class Controller extends AbstractComponent {
 	//------------------------------------------------------------------------
 	protected Controller(String uri,
 			String controllerWindTurbineOutboundPortURI,
-			String controllerWindTurbineInboundPortURI, 
-			String controllerKettleOutboundPortURI, 
-			String controllerKettleInboundPortURI, 
+			String controllerWindTurbineInboundPortURI,
 			String controllerHeatingOutboundPortURI, 
 			String controllerHeatingInboundPortURI,
 			String controllerElectricMeterOutboundPortURI, 
@@ -96,7 +90,6 @@ public class Controller extends AbstractComponent {
 		//-------------------------INBOUND PORT-------------------------
 		//--------------------------------------------------------------
 		assert controllerWindTurbineInboundPortURI != null;
-		assert controllerKettleInboundPortURI != null;
 		assert controllerHeatingInboundPortURI != null;
 		assert controllerElectricMeterInboundPortURI != null;
 		assert controllerChargerInboundPortURI != null;
@@ -111,7 +104,6 @@ public class Controller extends AbstractComponent {
 		assert controllerElectricMeterOutboundPortURI != null;
 		assert controllerWindSensorOutboundPortURI != null;
 		assert controllerHeatSensorOutboundPortURI != null;
-		assert controllerKettleOutboundPortURI != null;
 		assert controllerChargerOutboundPortURI != null;
 		assert controllerBatteryOutboundPortURI != null;
 
@@ -121,8 +113,6 @@ public class Controller extends AbstractComponent {
 		this.controllerWindTurbineOutboundPortURI = controllerWindTurbineOutboundPortURI;
 		this.controllerWindSensorOutboundPortURI = controllerWindSensorOutboundPortURI;
 		this.controllerHeatSensorOutboundPortURI = controllerHeatSensorOutboundPortURI;
-		this.controllerKettleOutboundPortURI = controllerKettleOutboundPortURI;
-		this.controllerKettleInboundPortURI = controllerKettleInboundPortURI;
 		this.controllerHeatingOutboundPortURI = controllerHeatingOutboundPortURI;
 		this.controllerHeatingInboundPortURI = controllerHeatingInboundPortURI;
 		this.controllerElectricMeterOutboundPortURI = controllerElectricMeterOutboundPortURI;
@@ -136,8 +126,6 @@ public class Controller extends AbstractComponent {
 		//-------------------PUBLISH INBOUND PORT-------------------
 		controllerWindTurbineInboundPort = new ControllerInboundPort(controllerWindTurbineInboundPortURI, this) ;
 		controllerWindTurbineInboundPort.publishPort() ;
-		controllerKettleInboundPort = new ControllerInboundPort(controllerKettleInboundPortURI, this) ;
-		controllerKettleInboundPort.publishPort() ;
 		controllerHeatingInboundPort = new ControllerInboundPort(controllerHeatingInboundPortURI, this) ;
 		controllerHeatingInboundPort.publishPort() ;
 		controllerElectricMeterInboundPort = new ControllerInboundPort(controllerElectricMeterInboundPortURI, this) ;
@@ -156,8 +144,6 @@ public class Controller extends AbstractComponent {
 		this.controllerWindSensorOutboundPort.localPublishPort() ;
 		this.controllerHeatSensorOutboundPort = new ControllerOutboundPort(controllerHeatSensorOutboundPortURI, this) ;
 		this.controllerHeatSensorOutboundPort.localPublishPort() ;
-		this.controllerKettleOutboundPort = new ControllerOutboundPort(controllerKettleOutboundPortURI, this) ;
-		this.controllerKettleOutboundPort.localPublishPort() ;
 		this.controllerHeatingOutboundPort = new ControllerOutboundPort(controllerHeatingOutboundPortURI, this) ;
 		this.controllerHeatingOutboundPort.localPublishPort() ;
 		this.controllerElectricMeterOutboundPort = new ControllerOutboundPort(controllerElectricMeterOutboundPortURI, this) ;
@@ -203,17 +189,6 @@ public class Controller extends AbstractComponent {
 		this.logMessage("The controller is getting "+production+" units of energy from the wind turbine") ;
 	}
 
-	//--------------------------------------------------------------
-	//-------------------------BOUILLOIRE---------------------------
-	//--------------------------------------------------------------
-	public void startKettle() throws Exception{	
-		this.logMessage("Controller "+this.uri+" : tells kettle to start.") ;
-		this.controllerKettleOutboundPort.startKettle();
-	}
-	public void stopKettle() throws Exception{
-		this.logMessage("Controller "+this.uri+" : tells kettle to stop.") ;
-		this.controllerKettleOutboundPort.stopKettle();
-	}
 
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
@@ -437,7 +412,6 @@ public class Controller extends AbstractComponent {
 		controllerWindTurbineOutboundPort.doDisconnection();
 		controllerWindSensorOutboundPort.doDisconnection();
 		controllerHeatSensorOutboundPort.doDisconnection();
-		controllerKettleOutboundPort.doDisconnection();
 		controllerHeatingOutboundPort.doDisconnection();
 		controllerElectricMeterOutboundPort.doDisconnection();
 		controllerChargerOutboundPort.doDisconnection();
@@ -456,8 +430,6 @@ public class Controller extends AbstractComponent {
 			controllerWindSensorOutboundPort.unpublishPort();
 			controllerHeatSensorOutboundPort.unpublishPort();
 			controllerHeatSensorInboundPort.unpublishPort();
-			controllerKettleInboundPort.unpublishPort();
-			controllerKettleOutboundPort.unpublishPort();
 			controllerHeatingInboundPort.unpublishPort();
 			controllerHeatingOutboundPort.unpublishPort();
 			controllerElectricMeterInboundPort.unpublishPort();

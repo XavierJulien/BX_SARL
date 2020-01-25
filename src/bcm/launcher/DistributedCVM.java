@@ -17,7 +17,6 @@ import bcm.connectors.electricmeter.ElectricMeterConnector;
 import bcm.connectors.electricmeter.ElectricMeterControllerConnector;
 import bcm.connectors.heating.HeatingControllerConnector;
 import bcm.connectors.heating.HeatingElectricMeterConnector;
-import bcm.connectors.kettle.KettleControllerConnector;
 import bcm.connectors.kettle.KettleElectricMetterConnector;
 import bcm.connectors.sensors.TemperatureSensorHeatingConnector;
 import bcm.connectors.windturbine.WindTurbineControllerConnector;
@@ -515,12 +514,6 @@ extends		AbstractDistributedCVM
 					 &&	this.uriWindSensorURI != null && this.uriKettleURI != null
 					 &&	this.uriBatteryURI != null && this.uriChargerURI != null;
 			
-			//KETTLE <=> CONTROLLER
-			this.doPortConnection(
-					this.uriKettleURI,
-					URIKettleOutboundPortURI,
-					URIControllerKettleInboundPortURI,
-					KettleControllerConnector.class.getCanonicalName()) ;
 
 			//HEATING <=> CONTROLLER
 			this.doPortConnection(

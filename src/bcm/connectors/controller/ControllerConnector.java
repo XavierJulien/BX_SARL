@@ -5,7 +5,6 @@ import bcm.interfaces.charger.ChargerI;
 import bcm.interfaces.controller.ControllerI;
 import bcm.interfaces.electricmeter.ElectricMeterI;
 import bcm.interfaces.heating.HeatingI;
-import bcm.interfaces.kettle.KettleI;
 import bcm.interfaces.windturbine.WindTurbineI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 
@@ -27,17 +26,6 @@ public class ControllerConnector extends AbstractConnector implements Controller
 		((WindTurbineI)this.offering).sendProduction(production) ;	
 	}
 
-	//---------------------------------------------------
-	//--------------------BOUILLOIRE---------------------
-	//---------------------------------------------------
-	@Override
-	public void startKettle() throws Exception {
-		((KettleI)this.offering).startKettle();
-	}
-	@Override
-	public void stopKettle() throws Exception {
-		((KettleI)this.offering).stopKettle();
-	}
 
 	//---------------------------------------------------
 	//--------------------CHAUFFAGE----------------------
