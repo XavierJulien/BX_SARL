@@ -61,6 +61,7 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControllerKettleInboundPortURI = "controllerKettleIPort" ;
 	protected static final String	URIKettleElectricMeterOutboundPortURI = "kettleElectricMeterOPort" ;
 	protected static final String	URIKettleElectricMeterInboundPortURI = "kettleElectricMeterIPort" ;
+	protected static final double 	kettleConsumption = 10;
 	
 	//--------------------------------------------------------------
 	//-------------------------HEATING----------------------------
@@ -73,6 +74,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIControllerHeatingInboundPortURI = "controllerHeatingIPort" ;
 	protected static final String	URIHeatingElectricMeterOutboundPortURI = "heatingElectricMeterOPort" ;
 	protected static final String	URIHeatingElectricMeterInboundPortURI = "heatingElectricMeterIPort" ;
+	protected static final int		heatingMaxPower = 10;
+	protected static final int		heatingMaxConsumption = 10;
 	
 	//--------------------------------------------------------------
 	//-------------------------ELECTRICMETER-----------------------------
@@ -100,6 +103,7 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIChargerElectricMeterOutboundPortURI = "chargerElectricMeterOPort" ;
 	protected static final String	URIChargerElectricMeterInboundPortURI = "chargerElectricMeterIPort" ;
 	protected static final String	URIChargerBatteryOutboundPortURI = "chargerBatteryOPort" ;
+	protected static final double	chargerConsumption = 15;
 
 	
 	//--------------------------------------------------------------
@@ -111,6 +115,8 @@ public class CVM extends AbstractCVM {
 	protected static final String	URIBatteryChargerInboundPortURI = "batteryChargerIPort" ;	
 	protected static final String	URIControllerBatteryOutboundPortURI = "controllerBatteryOPort" ;
 	protected static final String	URIControllerBatteryInboundPortURI = "controllerBatteryIPort" ;
+	protected static final double	batteryMaxCharge = 500;
+	protected static final double	batteryprod = 10;
 	
 	//--------------------------------------------------------------
 	//-------------------------CAPTEUR VENT------------------------
@@ -187,7 +193,8 @@ public class CVM extends AbstractCVM {
 								URIKettleOutboundPortURI,
 								URIKettleInboundPortURI,
 								URIElectricMeterKettleOutboundPortURI,
-								URIElectricMeterKettleInboundPortURI}) ;
+								URIElectricMeterKettleInboundPortURI,
+								kettleConsumption}) ;
 		
 
 		assert	this.isDeployedComponent(this.uriKettleURI) ;
@@ -205,7 +212,9 @@ public class CVM extends AbstractCVM {
 								URIHeatingInboundPortURI,
 								URIHeatingToCapteurInboundPortURI,
 								URIElectricMeterHeatingOutboundPortURI,
-								URIElectricMeterHeatingInboundPortURI}) ;
+								URIElectricMeterHeatingInboundPortURI,
+								heatingMaxPower,
+								heatingMaxConsumption}) ;
 
 		assert	this.isDeployedComponent(this.uriHeatingURI) ;
 		this.toggleTracing(this.uriHeatingURI) ;
@@ -269,7 +278,8 @@ public class CVM extends AbstractCVM {
 								URIChargerInboundPortURI,
 								URIElectricMeterChargerOutboundPortURI,
 								URIElectricMeterChargerInboundPortURI,
-								URIChargerBatteryOutboundPortURI});
+								URIChargerBatteryOutboundPortURI,
+								chargerConsumption});
 		assert	this.isDeployedComponent(this.uriChargerURI) ;
 		this.toggleTracing(this.uriChargerURI) ;
 		this.toggleLogging(this.uriChargerURI) ;
@@ -284,7 +294,9 @@ public class CVM extends AbstractCVM {
 						new Object[]{BATTERY_COMPONENT_URI,
 								URIBatteryOutboundPortURI,
 								URIBatteryInboundPortURI,
-								URIBatteryChargerInboundPortURI}) ;
+								URIBatteryChargerInboundPortURI,
+								batteryMaxCharge,
+								batteryprod}) ;
 		assert	this.isDeployedComponent(this.uriBatteryURI) ;
 		this.toggleTracing(this.uriBatteryURI) ;
 		this.toggleLogging(this.uriBatteryURI) ;

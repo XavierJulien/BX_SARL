@@ -57,7 +57,9 @@ implements	EmbeddingComponentStateAccessI{
 						String heatingInboundPortURI,
 						String heatingToHeatSensorInboundPortURI,
 						String heatingElectricMeterOutboundPortURI,
-						String heatingElectricMeterInboundPortURI) throws Exception{
+						String heatingElectricMeterInboundPortURI,
+						int maxPower,
+						int consumption) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -98,9 +100,9 @@ implements	EmbeddingComponentStateAccessI{
 		
 		//----------------Variables----------------
 		isOn = false;
-		maxPower = 10;
+		this.maxPower = maxPower;
 		powerPercentage = 0;
-		maxConsumption = 10;
+		maxConsumption = consumption;
 		consumption = 0;
 		
 		//----------------Modelisation-------------

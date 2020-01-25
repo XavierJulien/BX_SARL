@@ -72,7 +72,7 @@ implements	EmbeddingComponentStateAccessI
 		this.tracer.setRelativePosition(3, 0) ;
 		
 		//----------------Variables----------------
-		temperature = 5;
+		temperature = 12;
 		
 		//----------------Modelisation-------------
 

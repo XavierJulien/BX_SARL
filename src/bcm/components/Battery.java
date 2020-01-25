@@ -47,7 +47,9 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	protected Battery(String uri,
 					   String batteryOutboundPortURI,
 					   String batteryInboundPortURI,
-					   String batteryChargerInboundPortURI) throws Exception{
+					   String batteryChargerInboundPortURI,
+					   double maxCharge,
+					   double production ) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -80,13 +82,12 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		
 		
 		//----------------Variables----------------
-		this.prod = 0;
-		this.maxCharge = 500;
-		this.chargePercentage = 0;
-		this.currentCharge = 500;
+		this.maxCharge = maxCharge;
+		this.chargePercentage = 100;
+		this.currentCharge = maxCharge;
 		this.isOn = false;
 		this.isCharging = false;
-		this.prod = 10;
+		this.prod = production;
 		
 		//----------------Modelisation-------------
 		

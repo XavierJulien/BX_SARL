@@ -56,7 +56,8 @@ implements	EmbeddingComponentStateAccessI{
 					   String chargerInboundPortURI,
 					   String chargerElectricMeterOutboundPortURI,
 					   String chargerElectricMeterInboundPortURI,
-					   String chargerBatteryOutboundPortURI) throws Exception{
+					   String chargerBatteryOutboundPortURI,
+					   double conso) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;
@@ -95,7 +96,7 @@ implements	EmbeddingComponentStateAccessI{
 		
 		//----------------Variables----------------
 		this.isOn = false;
-		this.conso = 15;
+		this.conso = conso;
 		//----------------Modelisation-------------
 		
 		this.initialise();

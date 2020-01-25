@@ -53,7 +53,8 @@ implements EmbeddingComponentStateAccessI{
 						 String kettleOutboundPortURI,
 						 String kettleInboundPortURI,
 						 String kettleElectricMeterOutboundPortURI,
-						 String kettleElectricMeterInboundPortURI) throws Exception{
+						 String kettleElectricMeterInboundPortURI,
+						 double consumption) throws Exception{
 		super(uri, 1, 1);
 
 		assert uri != null;
@@ -89,7 +90,7 @@ implements EmbeddingComponentStateAccessI{
 		
 		//----------------Variables----------------
 		isOn=false;
-		consumption = 10;
+		this.consumption = consumption;
 		currentConsumption = 0;
 		
 		//----------------Modelisation-------------
