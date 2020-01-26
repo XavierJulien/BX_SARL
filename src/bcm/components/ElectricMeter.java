@@ -72,6 +72,7 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		assert uri != null;
 		assert electricMeterOutboundPortURI != null;
 		assert electricMeterInboundPortURI != null;
+		assert EMRef != null;
 
 		this.uri = uri;
 		this.electricMeterInboundPortURI = electricMeterInboundPortURI;
@@ -132,35 +133,69 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 	
+	
+	/**
+	 * this method is called by an inbound port to start the electric meter
+	 * @throws Exception
+	 */
 	public void startElectricMeter() throws Exception{
 		this.logMessage("The electric Meter is starting his job....") ;
 		isOn = true;
 	}
 
+	/**
+	 * this method is called by an inbound port to stop the electric meter (unused for the moment)
+	 * @throws Exception
+	 */
 	public void stopElectricMeter() throws Exception{
 		this.logMessage("The electric Meter is stopping his job....") ;
 		isOn =false;
 	}
 	
+	
+	/**
+	 * this method is used to send the total house consumption to the controller
+	 * @throws Exception
+	 */
 	public void sendAllConsumption() throws Exception {
 		this.logMessage("Sending all comsumption....") ;
 		this.electricMeterOutboundPort.sendAllConsumption(consumptionKettle+consumptionCharger+consumptionHeating) ;
 	}
 	
+	/**
+	 * This method is called by an inboundport to get the heating current consumption
+	 * @param consumption the heating consumption
+	 * @throws Exception
+	 */
 	public void getHeatingConsumption(double consumption) throws Exception {
 		this.consumptionHeating = consumption;
 		this.logMessage("The electric Meter is informed that the heating consumes "+consumption+" units of energy.") ;
 	}
 	
+	/**
+	 * This method is called by an inboundport to get the kettle current consumption
+	 * @param consumption the kettle consumption
+	 * @throws Exception
+	 */
 	public void getKettleConsumption(double consumption) throws Exception {
 		this.consumptionKettle = consumption;
 		this.logMessage("The electric Meter is informed that the kettle consumes "+consumption+" units of energy.") ;
 	}
 	
+	
+	/**
+	 * This method is called by an inboundport to get the charger current consumption
+	 * @param consumption the charger consumption
+	 * @throws Exception
+	 */
 	public void getChargerConsumption(double consumption) throws Exception {
 		this.consumptionCharger = consumption;
 		this.logMessage("The electric Meter is informed that the charger consumes "+consumption+" units of energy.") ;
 	}
+	
+	/**
+	 * start the component
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Electric Meter component.") ;
@@ -182,6 +217,10 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 	}
 	
 	
+	
+	/**
+	 * the component execution, first the simulation, then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception{
 		super.execute();

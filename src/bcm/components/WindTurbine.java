@@ -56,6 +56,7 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 		assert windTurbineOutboundPortURI != null;
 		assert windTurbineInboundPortURI != null;
 		assert windTurbineSensorInboundPortURI != null;
+		assert windTurbineRef != null;
 		
 		this.uri = uri;
 		this.windTurbineInboundPortURI = windTurbineInboundPortURI;
@@ -96,27 +97,49 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
+	
+	/**
+	 * this method is used to start the windTurbine
+	 * @throws Exception
+	 */
 	public void startWindTurbine() throws Exception{
 		this.logMessage("The wind Turbine is starting his job....") ;
 		isOn = true;
 	}
 
+	/**
+	 * this method is used to stop the windTurbine
+	 * @throws Exception
+	 */
 	public void stopWindTurbine() throws Exception{
 		this.logMessage("The wind Turbine is stopping his job....") ;
 		isOn =false;
 	}
 	
+	/**
+	 * This method is used to send the wind turbine production to the controller
+	 * @throws Exception
+	 */
 	public void sendProduction() throws Exception {
 		this.logMessage("Sending energy....") ;
 		prod = (Double)this.asp.getModelStateValue(WindTurbineModel.URI, "production");
 		this.windTurbineOutboundPort.sendProduction(prod) ;
 	}
 	
+	/**
+	 * this method is called by an inbound port to update the wind speed with the value sent from the wind sensor
+	 * @param speed the current windspeed
+	 * @throws Exception
+	 */
 	public void getWindSpeed(double speed) throws Exception{
 		this.windSpeed = speed;
 		this.logMessage("The wind speed is "+ windSpeed) ;
 	}
 
+	
+	/**
+	 * start the component
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Wind Turbine component.") ;
@@ -127,6 +150,10 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 //----------------------INITIALISE & EXECUTE------------------------------
 //------------------------------------------------------------------------
 	
+	/**
+	 * initialize the simulation
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new WindTurbineSimulatorPlugin() ;
@@ -137,6 +164,9 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 	}
 	
 	
+	/**
+	 * execute the component, first the simulation starts, then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception {
 		super.execute();

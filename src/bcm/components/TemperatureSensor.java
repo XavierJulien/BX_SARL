@@ -52,10 +52,18 @@ implements	EmbeddingComponentStateAccessI
 								String tempertureSensorRef) throws Exception{
 
 		super(uri, 1, 1);
+		
+		assert uri != null;
+		assert temperatureSensorInboundPortURI != null;
+		assert linkWithHeatingOutboundPortURI != null;
+		assert temperatureSensorOutboundPortURI != null;
+		assert tempertureSensorRef != null;
+		
 		this.uri = uri;
 		this.temperatureSensorInboundPortURI = temperatureSensorInboundPortURI;
 		this.linkWithHeatingOutboundPortURI = linkWithHeatingOutboundPortURI;
 		this.temperatureSensorOutboundPortURI = temperatureSensorOutboundPortURI;
+		
 
 		
 		//-------------------PUBLISH-------------------
@@ -91,15 +99,28 @@ implements	EmbeddingComponentStateAccessI
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
+	
+	/**
+	 * this method is used to send the current temperature to the controller
+	 * @throws Exception
+	 */
 	public void sendTemperature() throws Exception {
 		this.logMessage("The temperature is "+temperature+" degrees") ;
 		this.temperatureSensorOutboundPort.sendTemperature(temperature) ;
 	}
+	
+	/**
+	 * this method is used to get the heat produced by the heating to update the current temperature
+	 * @throws Exception
+	 */
 	public void getHeating() throws Exception {
 		double heat = this.temperatureSensorHeatingOutboundPort.getHeating();
 		temperature += heat;
 	}
 
+	/**
+	 * start the component
+	 */
 	@Override
 	public void	start() throws ComponentStartException{
 		super.start() ;
@@ -119,6 +140,9 @@ implements	EmbeddingComponentStateAccessI
 		this.toggleLogging() ;
 	}
 	
+	/**
+	 * execute the component, first the simulation starts, then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception {
 		super.execute();

@@ -68,6 +68,9 @@ implements	EmbeddingComponentStateAccessI{
 		assert heatingOutboundPortURI != null;
 		assert heatingInboundPortURI != null;
 		assert heatingToHeatSensorInboundPortURI != null;
+		assert maxPower > 0;
+		assert consumption > 0;
+		assert heatingRef != null;
 
 		this.uri = uri;
 		this.heatingInboundPortURI = heatingInboundPortURI;
@@ -118,6 +121,11 @@ implements	EmbeddingComponentStateAccessI{
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 	
+	
+	/**
+	 * this method is called by an inbound port to start the heating
+	 * @throws Exception
+	 */
 	public void startHeating() throws Exception{
 		this.logMessage("The heating is starting his job....") ;
 		powerPercentage = 10;
@@ -125,6 +133,10 @@ implements	EmbeddingComponentStateAccessI{
 		isOn = true;
 	}
 
+	/**
+	 * this method is called by an inbound port to stop the heating
+	 * @throws Exception
+	 */
 	public void stopHeating() throws Exception{
 		this.logMessage("The heating is stopping his job....") ;
 		powerPercentage = 0;
@@ -132,6 +144,10 @@ implements	EmbeddingComponentStateAccessI{
 		isOn =false;
 	}
 
+	/**
+	 * this method is used to send the heating to the electric meter
+	 * @throws Exception
+	 */
 	public void sendConsumption() throws Exception {
 		this.logMessage("Sending comsumption....") ;
 		if(isOn) {
@@ -142,17 +158,32 @@ implements	EmbeddingComponentStateAccessI{
 		
 	}
 	
+	/**
+	 * this method is called by an inbound port to increase the power of the heating
+	 * @param power the increase value
+	 * @throws Exception
+	 */
 	public void putExtraPowerInHeating(double power) throws Exception {
 		powerPercentage = (int) Math.min(100, powerPercentage+power);
 		this.logMessage("The heating is now running at "+powerPercentage+"% of his maximum power") ;
 	}
 	
-	
+	/**
+	 * this method is called by an inbound port to decrease the power of the heating
+	 * @param power the decrease value
+	 * @throws Exception
+	 */
 	public void slowHeating(double power) throws Exception {
 		powerPercentage = (int) Math.max(0, powerPercentage-power);
 		this.logMessage("The heating is now running at "+powerPercentage+"% of his maximum power") ;
 	}
 	
+	
+	/**
+	 * this method is used to inform the temperature sensor of the heat produced by the heating
+	 * @return
+	 * @throws Exception
+	 */
 	public double sendHeating() throws Exception {
 		if(isOn) {
 			this.logMessage("Sending Heat....") ;
@@ -162,6 +193,9 @@ implements	EmbeddingComponentStateAccessI{
 		}
 	}
 
+	/**
+	 * start the component
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Heating component.") ;
@@ -182,6 +216,9 @@ implements	EmbeddingComponentStateAccessI{
 		this.toggleLogging() ;
 	}
 	
+	/**
+	 * execute the component, first the simulation starts then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception{
 		super.execute();

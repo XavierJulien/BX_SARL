@@ -184,6 +184,11 @@ public class Controller extends AbstractComponent {
 	//-------------------------EOLIENNE-----------------------------
 	//--------------------------------------------------------------
 
+	/**
+	 * THis method is called by an inbound port to transmit the wind turbine production to the controller
+	 * @param production the energy got from the windTurbine
+	 * @throws Exception
+	 */
 	public void getProduction(double production) throws Exception {
 		this.remainingEnergy += production;
 		this.logMessage("The controller is getting "+production+" units of energy from the wind turbine") ;
@@ -193,10 +198,20 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------CHARGEUR-----------------------------
 	//--------------------------------------------------------------
+	
+	/**
+	 * This method is used to start the charger
+	 * @throws Exception
+	 */
 	public void startCharger() throws Exception{	
 		this.logMessage("Controller "+this.uri+" : tells charger to start.") ;
 		this.controllerChargerOutboundPort.startCharger();
 	}
+	
+	/**
+	 * This method is used to stop the charger
+	 * @throws Exception
+	 */
 	public void stopCharger() throws Exception{
 		this.logMessage("Controller "+this.uri+" : tells charger to stop.") ;
 		this.controllerChargerOutboundPort.stopCharger();
@@ -205,20 +220,41 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------CHAUFFAGE----------------------------
 	//--------------------------------------------------------------
+	
+	/**
+	 * This method is used to start the heating
+	 * @throws Exception
+	 */
 	public void startHeating() throws Exception{	
 		this.logMessage("Controller "+this.uri+" : tells heating to start.") ;
 		this.controllerHeatingOutboundPort.startHeating();
 	}
+	
+	/**
+	 * This method is used to stop the heating
+	 * @throws Exception
+	 */
 	public void stopHeating() throws Exception{
 		this.logMessage("Controller "+this.uri+" : tells heating to stop.") ;
 		this.controllerHeatingOutboundPort.stopHeating();
 	}
 
+	/**
+	 * THis method is used to increase the heating power
+	 * @param power this is the value  of the increasing
+	 * @throws Exception
+	 */
 	public void putExtraPowerInHeating(int power) throws Exception{
 		this.logMessage("Controller puts "+ power+"% more power in the Heating");
 		this.controllerHeatingOutboundPort.putExtraPowerInHeating(power);
 	}
 
+	
+	/**
+	 * THis method is used to decrease the heating power
+	 * @param power this is the value  of the decreasing
+	 * @throws Exception
+	 */
 	public void slowHeating(int power) throws Exception{
 		this.logMessage("Controller decreases the Heating power by "+power+"%");
 		this.controllerHeatingOutboundPort.putExtraPowerInHeating(power);
@@ -228,14 +264,30 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------COMPTEUR-----------------------------
 	//--------------------------------------------------------------
+	
+	/**
+	 * This method is used to start the electric meter (this is used only once at the start of the execution)
+	 * @throws Exception
+	 */
 	public void startElectricMeter() throws Exception{	
 		this.logMessage("Controller "+this.uri+" : tells electric meter to start.") ;
 		this.controllerElectricMeterOutboundPort.startElectricMeter();
 	}
+	
+	/**
+	 * This method is used to stop the electric meter (unused for now, but could be used if we want to simulate the electric meter disjunction)
+	 * @throws Exception
+	 */
 	public void stopElectricMeter() throws Exception{
 		this.logMessage("Controller "+this.uri+" : tells electric meter to stop.") ;
 		this.controllerElectricMeterOutboundPort.stopElectricMeter();
 	}
+	
+	/**
+	 * this method is used to collect the total consumption of the components from the electric meter
+	 * @param total this is the total consumption of the kettle, the heating and the charger
+	 * @throws Exception
+	 */
 	public void getAllConsumption(double total) throws Exception {
 		this.remainingEnergy -= total;
 		this.logMessage("All the consumers consume "+total);
@@ -244,18 +296,40 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------BATTERIE-----------------------------
 	//--------------------------------------------------------------
+	
+	/**
+	 * This method is used to start the battery
+	 * @throws Exception
+	 */
 	public void startBattery() throws Exception{	
 		this.logMessage("Controller "+this.uri+" : tells battery to start.") ;
 		this.controllerBatteryOutboundPort.startBattery();
 	}
+	
+	/**
+	 * This method is used to stop the battery
+	 * @throws Exception
+	 */
 	public void stopBattery() throws Exception{
 		this.logMessage("Controller "+this.uri+" : tells battery to stop.") ;
 		this.controllerBatteryOutboundPort.stopBattery();
 	}
+	
+	/**
+	 * this method is called by an inboundport to get the remaining energy percentage of the battery
+	 * @param percentage the percentage left
+	 * @throws Exception
+	 */
 	public void getBatteryChargePercentage(double percentage) throws Exception {
 		this.batteryPercentage = percentage;
 		this.logMessage("The battery is "+percentage+"% loaded");
 	}
+	
+	/**
+	 * this method is called by an inboundport to get the battery energy production
+	 * @param energy the received energy
+	 * @throws Exception
+	 */
 	public void getBatteryProduction(double energy) throws Exception {
 		this.remainingEnergy += energy;
 		this.logMessage("The controller is getting "+energy+" units of energy from the Battery");
@@ -264,11 +338,23 @@ public class Controller extends AbstractComponent {
 	//--------------------------------------------------------------
 	//-------------------------CAPTEURS-----------------------------
 	//--------------------------------------------------------------
+	
+	/**
+	 * This method is called by an inboundport to inform the controller of the windspeed
+	 * @param speed the wind speed
+	 * @throws Exception
+	 */
 	public void getWindSpeed(double speed) throws Exception{
 		windSpeed = speed;
 		this.logMessage("The controller is informed that the wind power is"+speed) ;
 	}	
 
+	
+	/**
+	 * This method is called by an inboundport to inform the controller of the current temperature
+	 * @param temperature the current temperature
+	 * @throws Exception
+	 */
 	public void getTemperature(double temperature) throws Exception{
 		this.temperature = temperature;
 	}
@@ -279,6 +365,10 @@ public class Controller extends AbstractComponent {
 	}
 
 
+	
+	/**
+	 * the controller execution, first the simulation then the component behaviour
+	 */
 	public void execute() throws Exception {
 		super.execute();
 		this.scheduleTask(

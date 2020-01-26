@@ -48,6 +48,11 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 						 String windSensorRef) throws Exception{
 		super(uri, 1, 1);
 		
+		assert uri != null;
+		assert windSensorInboundPortURI != null;
+		assert windSensorOutboundPortURI != null;
+		assert windSensorRef != null;
+		
 		this.uri = uri;
 		this.windSensorInboundPortURI = windSensorInboundPortURI;
 		this.windSensorOutboundPortURI = windSensorOutboundPortURI;
@@ -84,15 +89,23 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
+	
+	/**
+	 * this method is used to send the wind speed to the controller
+	 * @throws Exception
+	 */
 	public void sendWindSpeed() throws Exception {
 		this.logMessage("Sending wind power....") ;
 		power = (Double)this.asp.getModelStateValue(WindSensorModel.URI, "currentWind" );
 		this.windSensorOutboundPort.sendWindSpeed(power) ;
 	}
 
+	
+	/**
+	 * Start the component
+	 */
 	@Override
-	public void			start() throws ComponentStartException
-	{
+	public void start() throws ComponentStartException {
 		super.start() ;
 		this.logMessage("starting WindSensor component.") ;
 		
@@ -113,7 +126,9 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 	}
 	
 	
-	
+	/**
+	 * Execute the component, first the simulation starts  then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception {
 		super.execute();

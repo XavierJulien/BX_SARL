@@ -58,6 +58,9 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		assert batteryOutboundPortURI != null;
 		assert batteryInboundPortURI != null;
 		assert batteryChargerInboundPortURI != null;
+		assert maxCharge > 0;
+		assert production > 0;
+		assert batteryRef != null;
 
 		this.uri = uri;
 		this.batteryInboundPortURI = batteryInboundPortURI;
@@ -103,22 +106,39 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 //------------------------------------------------------------------------
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
-
+	
+	/**
+	 * Turn the battery on
+	 * @throws Exception
+	 */
 	public void startBattery() throws Exception{
 		this.logMessage("The battery is starting his job....") ;
 		isOn = true;
 	}
 
+	/**
+	 *Turn the battery off 
+	 * @throws Exception
+	 */
 	public void stopBattery() throws Exception{
 		this.logMessage("The battery is stopping his job....") ;
 		isOn =false;
 	}
 
+	
+	/**
+	 * Used to inform the controller of the remaining battery charge
+	 * @throws Exception
+	 */
 	public void sendChargePercentage() throws Exception {
 		this.logMessage("Sending charge percentage....") ;
 		this.batteryOutboundPort.sendChargePercentage(chargePercentage);
 	}
 	
+	/**
+	 * Sends the amount of energy produced by the battery tp the controller
+	 * @throws Exception
+	 */
 	public void sendEnergy() throws Exception {
 		isCharging = false;
 		this.logMessage("Sending energy....") ;
@@ -127,13 +147,23 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		this.batteryOutboundPort.sendEnergy(prod) ;
 	}
 	
+	/**
+	 * Get energy from the charger
+	 * pre : power must be greater or equal to zero
+	 * @param power the energy amount received
+	 */
 	public void receivePower(double power) {
+		assert power >= 0;
 		isCharging = true;
 		this.currentCharge = currentCharge + power;
 		this.chargePercentage = currentCharge*100.0/maxCharge;
 		this.logMessage("receiving "+power+"kw from charger");
 	}
 
+	
+	/**
+	 * Starts the component
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Battery component.") ;
@@ -144,7 +174,10 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 //----------------------INITIALISE & EXECUTE------------------------------
 //------------------------------------------------------------------------
 	
-	
+	/**
+	 * Used for the simulation initialization
+	 * @throws Exception
+	 */
 	protected void		initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new BatterySimulatorPlugin() ;
@@ -156,7 +189,9 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	
 	
-	
+	/**
+	 * Execute the component : First the simulation is launched, then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception {
 		super.execute();

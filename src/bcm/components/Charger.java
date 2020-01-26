@@ -66,6 +66,8 @@ implements	EmbeddingComponentStateAccessI{
 		assert chargerOutboundPortURI != null;
 		assert chargerInboundPortURI != null;
 		assert chargerBatteryOutboundPortURI != null;
+		assert conso > 0;
+		assert chargerRef != null;
 
 		this.uri = uri;
 		this.chargerInboundPortURI = chargerInboundPortURI;
@@ -111,16 +113,28 @@ implements	EmbeddingComponentStateAccessI{
 	//----------------------------SERVICES------------------------------------
 	//------------------------------------------------------------------------
 	
+	/**
+	 * turns the charger on
+	 * @throws Exception
+	 */
 	public void startCharger() throws Exception{
 		this.logMessage("The charger is starting his job....") ;
 		isOn = true;
 	}
 
+	/**
+	 * turns the charger off
+	 * @throws Exception
+	 */
 	public void stopCharger() throws Exception{
 		this.logMessage("The charger is stopping his job....") ;
 		isOn =false;
 	}
 	
+	/**
+	 * used to inform the electric meter of the charger consumption
+	 * @throws Exception
+	 */
 	public void sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
 		if(isOn) {
@@ -130,11 +144,22 @@ implements	EmbeddingComponentStateAccessI{
 		}
 	}
 	
+	/**
+	 * Sends energy to the battery using the bcm communication process
+	 * pre : power >= 0
+	 * @param power
+	 * @throws Exception
+	 */
 	public void sendPower(double power) throws Exception {
+		assert power >=0;
 		this.logMessage("Sending power to battery "+power+"....") ;
 		this.chargerBatteryOutboundPort.sendPower(power) ;
 	}
 
+	
+	/**
+	 * starts the component
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Charger component.") ;
@@ -143,7 +168,10 @@ implements	EmbeddingComponentStateAccessI{
 	//----------------------------MODEL METHODS-------------------------------
 	//------------------------------------------------------------------------
 	
-	
+	/**
+	 * Used for the simulation initialization
+	 * @throws Exception
+	 */
 	protected void initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
 		this.asp = new ChargerSimulatorPlugin() ;
@@ -153,6 +181,10 @@ implements	EmbeddingComponentStateAccessI{
 		this.toggleLogging() ;
 	}
 	
+	
+	/**
+	 * Execute the component : First the simulation is launched, then the component behaviour
+	 */
 	@Override
 	public void execute() throws Exception{
 		super.execute();

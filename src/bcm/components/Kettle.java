@@ -38,7 +38,7 @@ implements EmbeddingComponentStateAccessI{
 	protected KettleSimulatorPlugin		asp ;
 	
 	protected boolean 					isOn=false;
-	protected double 					consumption = 10;
+	protected double 					consumption;
 	protected double 					currentConsumption;
 	protected final String				kettleRef;
 	
@@ -56,6 +56,11 @@ implements EmbeddingComponentStateAccessI{
 		super(uri, 1, 1);
 
 		assert uri != null;
+		assert kettleElectricMeterInboundPortURI != null;
+		assert kettleElectricMeterOutboundPortURI != null;
+		assert consumption > 0;
+		assert kettleRef != null;
+		
 
 
 		this.uri = uri;
@@ -95,11 +100,20 @@ implements EmbeddingComponentStateAccessI{
 //----------------------------SERVICES------------------------------------
 //------------------------------------------------------------------------
 
+	
+	/**
+	 * this method is used to send the kettle consumption to the electric meter
+	 * @throws Exception
+	 */
 	public void sendConsumption() throws Exception {
 			this.logMessage("Sending consumption.... "+currentConsumption ) ;
 			this.kettleElectricMeterOutboundPort.sendConsumption(currentConsumption) ;
 	}
 
+	/**
+	 * start the component
+	 * @throws ComponentStartException
+	 */
 	public void	start() throws ComponentStartException{
 		super.start() ;
 		this.logMessage("starting Kettle component.") ;
@@ -111,6 +125,11 @@ implements EmbeddingComponentStateAccessI{
 //-------------------------TREATMENT METHODS------------------------------
 //------------------------------------------------------------------------
 	
+	
+	/**
+	 * this method is used to update the consumption depending of the Content of the kettle
+	 * @param content Half / Full
+	 */
 	protected void updateConsumption(KettleModel.Content content) {
 		if(!isOn) {
 			currentConsumption = 0;
@@ -126,6 +145,10 @@ implements EmbeddingComponentStateAccessI{
 		
 	}
 	
+	/**
+	 * this method is used to update the state of the kettle
+	 * @param state
+	 */
 	protected void updateState(KettleModel.State state) {
 		if(state == KettleModel.State.ON) {
 			isOn = true;
@@ -154,6 +177,10 @@ implements EmbeddingComponentStateAccessI{
 	
 	
 
+	/**
+	 * execute the component, first the simulation starts then the component behaviour
+	 * @throws Exception
+	 */
 	@Override
 	public void execute() throws Exception {
 		super.execute();
