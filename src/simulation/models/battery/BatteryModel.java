@@ -46,7 +46,13 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	protected Mode 								currentMode;
 	protected final Value<Double> 				currentBattery = new Value<Double>(this, 0.0, 0) ;
 
-
+	/**
+	 * The class BatteryModel is used for the data plot
+	 * @param uri
+	 * @param simulatedTimeUnit
+	 * @param simulationEngine
+	 * @throws Exception
+	 */
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
@@ -80,7 +86,7 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.batteryRef);
@@ -169,7 +175,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-	
+	/**
+	 * 
+	 * @return the current mode of the battery : Charging / discharging
+	 */
 	public Mode	getMode() {return this.currentMode;}
  
 	public double getBattery() {return currentBattery.v;}
@@ -185,7 +194,10 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
-
+	/**
+	 * the method update is called by the updateBattery events
+	 * is updates the battery mode
+	 */
 	public void update(){
 		try {
 			this.currentBattery.v = (Double)componentRef.getEmbeddingComponentStateValue("charge");

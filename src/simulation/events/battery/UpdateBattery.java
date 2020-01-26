@@ -13,6 +13,10 @@ public class UpdateBattery extends AbstractEvent{
 		super(timeOfOccurrence, null) ;
 	}
 	
+	
+	/**
+	 * this methode is used when a scheduled event is executed
+	 */
 	@Override
 	public void executeOn(AtomicModel model){
 		assert	model instanceof BatteryModel ;

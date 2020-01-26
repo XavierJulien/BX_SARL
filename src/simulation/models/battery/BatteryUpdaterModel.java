@@ -48,6 +48,9 @@ public class BatteryUpdaterModel extends AtomicES_Model{
 	// Methods
 	// -------------------------------------------------------------------------
 	
+	/**
+	 * initialiseState initialise the simulation and schedules the first event
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.meanTimeBetweenBatteryUpdate = 10.0;
@@ -79,6 +82,10 @@ public class BatteryUpdaterModel extends AtomicES_Model{
 		return ret ;
 	}
 	
+	
+	/**
+	 * the method userDefinedInternalTransition only schedules UpdateBatteryEvents 
+	 */
 	@Override
 	public void	userDefinedInternalTransition(Duration elapsedTime){
 		Duration d;
