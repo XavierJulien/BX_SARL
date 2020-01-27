@@ -46,17 +46,26 @@ public class BatteryModel extends AtomicHIOAwithEquations {
 	protected Mode 								currentMode;
 	protected final Value<Double> 				currentBattery = new Value<Double>(this, 0.0, 0) ;
 
-	/**
-	 * The class BatteryModel is used for the data plot
-	 * @param uri
-	 * @param simulatedTimeUnit
-	 * @param simulationEngine
-	 * @throws Exception
-	 */
+	
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public BatteryModel(String uri,TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
 		PlotterDescription pd = 

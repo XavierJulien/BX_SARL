@@ -39,6 +39,22 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// ------------------------------------------------------------------------- 
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public ElectricMeterModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -61,18 +77,25 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.EMRef) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.consumptionPlotter.initialise() ;
 		this.consumptionPlotter.showPlotter() ;
 		super.initialiseState(initialTime) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentConsumption.v = 0.0 ;
@@ -82,12 +105,16 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 				this.getConsumption());
 		super.initialiseVariables(startTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output() {
 		return null ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration	timeAdvance(){
 		if (this.componentRef == null) {
@@ -96,7 +123,9 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS) ;
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void	userDefinedExternalTransition(Duration elapsedTime){
 
@@ -115,7 +144,9 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 				this.getConsumption());
 		super.userDefinedExternalTransition(elapsedTime) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	endSimulation(Time endTime) throws Exception {
 		this.consumptionPlotter.addData(
@@ -130,6 +161,18 @@ public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
+	/**
+	 * return the consumption of the electric meter.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the consumption of the electric meter.
+	 */
 	public double getConsumption() {return currentConsumption.v;}
 
 	/**

@@ -9,14 +9,12 @@ import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.annotations.ExportedVariable;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
@@ -27,6 +25,11 @@ import simulation.events.windturbine.WindTurbineUpdater;
 
 public class WindTurbineModel extends AtomicHIOAwithEquations {
 
+	/**
+	 * The enum State represent the state of the component (on/off)
+	 * 
+	 *
+	 */
 	public static enum State {
 		OFF,
 		ON
@@ -49,9 +52,8 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
 	/**
-	 * create a windturbine model instance.
+	 * create a model instance for this component.
 	 * 
 	 * <p><strong>Contract</strong></p>
 	 * 
@@ -90,12 +92,16 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.windTurbineRef) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.currentState = State.ON ;
@@ -103,7 +109,9 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 		this.intensityPlotter.showPlotter() ;
 		super.initialiseState(initialTime) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentProd.v = 0.0 ;
@@ -114,11 +122,16 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 		super.initialiseVariables(startTime);
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output() {
 		return null ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration	timeAdvance() {
 		if (this.componentRef == null) {
@@ -127,7 +140,9 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS) ;
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void	userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset() ;
@@ -145,7 +160,9 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 				this.getProduction());
 		super.userDefinedExternalTransition(elapsedTime) ;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	endSimulation(Time endTime) throws Exception {
 		this.intensityPlotter.addData(
@@ -202,7 +219,18 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 	 * @return	the current intensity of electricity consumption in amperes.
 	 */
 	public double getProduction() {return currentProd.v;}
-	
+	/**
+	 * update the power of the wind of the windturbine.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no postcondition
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void updateProduction() {	
 		try {
 			this.wind = ((Double)componentRef.getEmbeddingComponentStateValue("windSpeed")).doubleValue();

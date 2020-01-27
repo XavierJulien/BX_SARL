@@ -8,14 +8,12 @@ import bcm.launcher.CVM;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
@@ -34,11 +32,21 @@ import simulation.events.kettle.SwitchOn;
 
 public class KettleModel extends AtomicHIOAwithEquations {
 
+	/**
+	 * The enum State represent the state of the component (on/off)
+	 * 
+	 *
+	 */
 	public static enum State {
 		OFF,
 		ON
 	}
 	
+	/**
+	 * The enum Content represent the content of the kettle (on/off)
+	 * 
+	 *
+	 */
 	public static enum Content {
 		FULL,
 		HALF,
@@ -64,7 +72,22 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public KettleModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -99,12 +122,16 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.kettleRef);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.currentState = State.OFF;
@@ -115,7 +142,9 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		this.onOffPlotter.showPlotter();
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime){
 		this.currentTemperature.v = 0.0;
@@ -130,11 +159,16 @@ public class KettleModel extends AtomicHIOAwithEquations {
 		super.initialiseVariables(startTime);
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output() {
 		return null;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration	timeAdvance() {
 		if (this.componentRef == null) {
@@ -143,6 +177,9 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void	userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
@@ -168,7 +205,9 @@ public class KettleModel extends AtomicHIOAwithEquations {
 				this.getStateDouble());
 		super.userDefinedExternalTransition(elapsedTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	endSimulation(Time endTime) throws Exception {
 		this.temperaturePlotter.addData(
@@ -189,9 +228,31 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * return the state of the kettle.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the state of the kettle.
+	 */
 	public State getState() {return this.currentState;}
-	
+	/**
+	 * return the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode of the charger.
+	 */
 	public double getStateDouble() {
 		if(this.getState() == State.ON) {
 			return 1;
@@ -199,14 +260,48 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			return 0;
 		}
 	}
-	
+	/**
+	 * return the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode of the charger.
+	 */
 	public Content getContent() {return this.currentContent;}
+	/**
+	 * return the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode of the charger.
+	 */
 	public double getTemperature(){return this.currentTemperature.v;}
 	
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
-
+	/**
+	 * update the temperature of the kettle.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void updateTemperature() {
 		if(currentState == State.ON) {
 			if(currentContent == Content.FULL) {
@@ -227,7 +322,18 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			}
 		}
 	}
-	
+	/**
+	 * update the state of the kettle.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void	updateState() {
 		if(currentTemperature.v >= 100.0 && currentState == State.ON) {
 			currentState = State.OFF;
@@ -236,6 +342,30 @@ public class KettleModel extends AtomicHIOAwithEquations {
 			currentState = State.ON;
 		}
 	}
-	public void	updateState(State s){this.currentState = s;}
-	public void	updateContent(Content c){this.currentContent = c;}
+	/**
+	 * update the state of the kettle with a defined state.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	s != null
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
+	public void	updateState(State s){assert s!= null;this.currentState = s;}
+	/**
+	 * update the content of the kettle with a defined content.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	c != null
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
+	public void	updateContent(Content c){assert c!= null;this.currentContent = c;}
 }

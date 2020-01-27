@@ -23,6 +23,12 @@ import simulation.events.charger.UpdateCharger;
 @ModelExternalEvents(imported = { UpdateCharger.class})
 
 public class ChargerModel extends AtomicHIOAwithEquations {
+	
+	/**
+	 * The enum Mode represent the mode of the component (charging/off)
+	 * 
+	 *
+	 */
 	public static enum 		Mode {
 		CHARGING,
 		OFF
@@ -45,7 +51,22 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public ChargerModel(String uri,TimeUnit simulatedTimeUnit, SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine);
 		PlotterDescription pd = 
@@ -75,13 +96,17 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.chargerRef);
 		this.delay = new Duration(1.0, this.getSimulatedTimeUnit());
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void initialiseState(Time initialTime) {
 		this.currentMode = Mode.OFF;
@@ -91,7 +116,9 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 		this.chargerModePlotter.showPlotter();
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentConsumption.v = 0.0;
@@ -105,10 +132,15 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 				0);
 		super.initialiseVariables(startTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output() {return null;}
 	
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	public Duration timeAdvance() {
 		if (this.componentRef == null) {
 			return Duration.INFINITY;
@@ -116,7 +148,9 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
 		assert currentEvents != null && currentEvents.size() == 1;
@@ -142,7 +176,9 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 		super.userDefinedExternalTransition(elapsedTime);
 	}
 
-	
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void endSimulation(Time endTime) throws Exception {
 		this.consumptionPlotter.addData(
@@ -163,11 +199,44 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-		
+	/**
+	 * return the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode of the charger.
+	 */
 	public Mode	getMode() {return this.currentMode;}
-	
+	/**
+	 * return the consumption of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the consumption of the charger.
+	 */
 	public double getConsumption() {return currentConsumption.v;}
-	
+	/**
+	 * return the mode as a double.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode as a double.
+	 */
 	public double getModeDouble() {
 		if(this.getMode() == Mode.CHARGING) {
 			return 1;
@@ -179,6 +248,18 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
+	/**
+	 * update the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void.
+	 */
 	public void update() { //se demerder pour envoyer un event
 		try {
 			boolean on =  (Boolean)componentRef.getEmbeddingComponentStateValue("state");

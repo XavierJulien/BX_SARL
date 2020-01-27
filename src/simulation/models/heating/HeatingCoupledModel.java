@@ -60,6 +60,19 @@ public class HeatingCoupledModel extends CoupledModel {
 	// Methods
 	// -------------------------------------------------------------------------
 
+	/**
+	 * build the simulation architecture corresponding to this coupled model.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @return				the simulation architecture corresponding to this coupled model.
+	 * @throws Exception	
+	 */
 	public static Architecture	build() throws Exception
 	{
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;

@@ -8,14 +8,12 @@ import bcm.launcher.CVM;
 import fr.sorbonne_u.components.cyphy.interfaces.EmbeddingComponentStateAccessI;
 import fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOAwithEquations;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.Value;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.annotations.ModelExternalEvents;
 import fr.sorbonne_u.devs_simulation.models.events.Event;
 import fr.sorbonne_u.devs_simulation.models.events.EventI;
 import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.AbstractSimulationReport;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
@@ -45,7 +43,22 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public HeatSensorModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -69,21 +82,27 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(
 		Map<String, Object> simParams
 		) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.temperatureSensorRef);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void initialiseState(Time initialTime){
 		this.temperaturePlotter.initialise();
 		this.temperaturePlotter.showPlotter();
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentTemperature.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
@@ -94,13 +113,17 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 		super.initialiseVariables(startTime);
 	}
 
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output(){
 		return null;
 	}
 
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration timeAdvance(){
 		if (this.componentRef == null) {
@@ -109,7 +132,9 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
@@ -128,7 +153,9 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 		super.userDefinedExternalTransition(elapsedTime);
 	}
 
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void endSimulation(Time endTime) throws Exception {
 		this.temperaturePlotter.addData(
@@ -143,13 +170,35 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-	
+	/**
+	 * return the temperature read by the heatsensor.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the temperature read by the heatsensor.
+	 */
 	public double getTemperature(){return this.currentTemperature.v;}
 	
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
-
+	/**
+	 * update the temperature read by the heatsensor.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void updateTemperature() {
 		try {
 			this.currentTemperature.v = ((Double)componentRef.getEmbeddingComponentStateValue("temperature"));
@@ -159,6 +208,31 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 		}
 	}
 	
+	/**
+	 * update the temperature read by the heatsensor when a window is open.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void openWindow() {this.currentTemperature.v -= 5;}
+	
+	/**
+	 * update the temperature read by the heatsensor when the window is closed and the heating is off.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void keepTemperature() {this.currentTemperature.v -=0.5;}
 }

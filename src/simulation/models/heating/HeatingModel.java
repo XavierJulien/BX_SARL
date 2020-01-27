@@ -74,7 +74,22 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public HeatingModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
@@ -98,11 +113,16 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.heatingRef);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.currentPower = 0;
@@ -110,7 +130,9 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 		this.powerPlotter.showPlotter();
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime){
 		this.powerPlotter.addData(
@@ -119,12 +141,16 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 				0);
 		super.initialiseVariables(startTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output(){
 		return null;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration	timeAdvance(){
 		if (this.componentRef == null) {
@@ -133,7 +159,9 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void	userDefinedExternalTransition(Duration elapsedTime) { 
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
@@ -151,7 +179,9 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 				this.getPower());
 		super.userDefinedExternalTransition(elapsedTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void endSimulation(Time endTime) throws Exception {
 		this.powerPlotter.addData(
@@ -168,8 +198,16 @@ public class HeatingModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	
 	/**
+	 * return the current power of the heating.
 	 * 
-	 * @return the current heating power percentage
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the current power of the heating.
 	 */
 	public int getPower(){return this.currentPower;}
 	

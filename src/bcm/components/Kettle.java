@@ -3,8 +3,6 @@ package bcm.components;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
-import bcm.interfaces.heating.HeatingI;
-import bcm.interfaces.heating.HeatingTemperatureSensorI;
 import bcm.interfaces.kettle.KettleElectricMeterI;
 import bcm.ports.kettle.KettleInboundPort;
 import bcm.ports.kettle.KettleOutboundPort;

@@ -109,7 +109,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	/**
 	 * Turn the battery on
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void startBattery() throws Exception{
 		this.logMessage("The battery is starting his job....") ;
@@ -118,7 +118,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 
 	/**
 	 *Turn the battery off 
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void stopBattery() throws Exception{
 		this.logMessage("The battery is stopping his job....") ;
@@ -128,7 +128,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	/**
 	 * Used to inform the controller of the remaining battery charge
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void sendChargePercentage() throws Exception {
 		this.logMessage("Sending charge percentage....") ;
@@ -137,7 +137,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	/**
 	 * Sends the amount of energy produced by the battery tp the controller
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void sendEnergy() throws Exception {
 		isCharging = false;
@@ -176,7 +176,7 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	/**
 	 * Used for the simulation initialization
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	protected void		initialise() throws Exception {
 		Architecture localArchitecture = this.createLocalArchitecture(null) ;
@@ -191,6 +191,8 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 	
 	/**
 	 * Execute the component : First the simulation is launched, then the component behaviour
+	 * 	 * @throws Exception	<i>catch dans le bloc supérieur</i>
+
 	 */
 	@Override
 	public void execute() throws Exception {

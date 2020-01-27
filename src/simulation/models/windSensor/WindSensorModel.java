@@ -39,7 +39,22 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constructors
 	// -------------------------------------------------------------------------
-
+	/**
+	 * create a model instance for this component.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	uri != null
+	 * pre	simulatedTimeUnit != null
+	 * post	true			// no postcondition.
+	 * </pre>
+	 *
+	 * @param uri				URI of the model.
+	 * @param simulatedTimeUnit	time unit used for the simulation time.
+	 * @param simulationEngine	simulation engine to which the model is attached.
+	 * @throws Exception		<i>to do.</i>
+	 */
 	public WindSensorModel(
 			String uri,
 			TimeUnit simulatedTimeUnit,
@@ -63,19 +78,25 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.Model#setSimulationRunParameters(java.util.Map)
+	 */
 	@Override
 	public void	setSimulationRunParameters(Map<String, Object> simParams) throws Exception {
 		this.componentRef = (EmbeddingComponentStateAccessI) simParams.get(CVM.windSensorRef);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime){
 		this.windPlotter.initialise();
 		this.windPlotter.showPlotter();
 		super.initialiseState(initialTime);
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.hioa.models.AtomicHIOA#initialiseVariables(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	protected void initialiseVariables(Time startTime) {
 		this.currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
@@ -86,12 +107,16 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 		super.initialiseVariables(startTime);
 	}
 
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.AtomicModelI#output()
+	 */
 	@Override
 	public Vector<EventI> output() {
 		return null;
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.interfaces.ModelI#timeAdvance()
+	 */
 	@Override
 	public Duration	timeAdvance(){
 		if (this.componentRef == null) {
@@ -100,7 +125,9 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 			return new Duration(10.0, TimeUnit.SECONDS);
 		}
 	}
-
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedExternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void userDefinedExternalTransition(Duration elapsedTime) {
 		Vector<EventI> currentEvents = this.getStoredEventAndReset();
@@ -120,6 +147,9 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#endSimulation(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	endSimulation(Time endTime) throws Exception {
 		this.windPlotter.addData(
@@ -134,13 +164,35 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	// ------------------------------------------------------------------------
 	// Model-specific methods
 	// ------------------------------------------------------------------------
-
+	/**
+	 * return the mode of the charger.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no precondition.
+	 * post	ret != null
+	 * </pre>
+	 *
+	 * @return	the mode of the charger.
+	 */
 	public double getWind() {return this.currentWind.v;}
 
 	// ------------------------------------------------------------------------
 	// Utils
 	// ------------------------------------------------------------------------
-
+	/**
+	 * update the power of the wind of the sensor.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	true			// no postcondition
+	 * post	true			// no postcondition
+	 * </pre>
+	 *
+	 * @return	void
+	 */
 	public void	updateWind() {
 		currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);
 		xValue += 0.1;

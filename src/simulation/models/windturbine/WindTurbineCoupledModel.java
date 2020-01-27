@@ -48,7 +48,6 @@ import fr.sorbonne_u.devs_simulation.hioa.models.vars.StaticVariableDescriptor;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSink;
 import fr.sorbonne_u.devs_simulation.hioa.models.vars.VariableSource;
 import fr.sorbonne_u.devs_simulation.interfaces.ModelDescriptionI;
-import fr.sorbonne_u.devs_simulation.interfaces.SimulationReportI;
 import fr.sorbonne_u.devs_simulation.models.CoupledModel;
 import fr.sorbonne_u.devs_simulation.models.architectures.AbstractAtomicModelDescriptor;
 import fr.sorbonne_u.devs_simulation.models.architectures.AtomicModelDescriptor;
@@ -58,7 +57,6 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import fr.sorbonne_u.devs_simulation.utils.StandardCoupledModelReport;
 import simulation.events.windturbine.WindTurbineUpdater;
 
 public class WindTurbineCoupledModel extends CoupledModel {
@@ -104,7 +102,7 @@ public class WindTurbineCoupledModel extends CoupledModel {
 	 * </pre>
 	 *
 	 * @return				the simulation architecture corresponding to this coupled model.
-	 * @throws Exception	<i>TO DO.</i>
+	 * @throws Exception	
 	 */
 	public static Architecture build() throws Exception {
 		Map<String,AbstractAtomicModelDescriptor> atomicModelDescriptors = new HashMap<>() ;

@@ -115,7 +115,7 @@ implements	EmbeddingComponentStateAccessI{
 	
 	/**
 	 * turns the charger on
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void startCharger() throws Exception{
 		this.logMessage("The charger is starting his job....") ;
@@ -124,7 +124,7 @@ implements	EmbeddingComponentStateAccessI{
 
 	/**
 	 * turns the charger off
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void stopCharger() throws Exception{
 		this.logMessage("The charger is stopping his job....") ;
@@ -133,7 +133,7 @@ implements	EmbeddingComponentStateAccessI{
 	
 	/**
 	 * used to inform the electric meter of the charger consumption
-	 * @throws Exception
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void sendConsumption() throws Exception {
 		this.logMessage("Sending consumption....") ;
@@ -146,9 +146,9 @@ implements	EmbeddingComponentStateAccessI{
 	
 	/**
 	 * Sends energy to the battery using the bcm communication process
-	 * pre : power >= 0
-	 * @param power
-	 * @throws Exception
+	 * pre : power greater or equal then 0
+	 * @param power to send
+	 * @throws Exception	<i>catch dans le bloc supérieur</i>
 	 */
 	public void sendPower(double power) throws Exception {
 		assert power >=0;
