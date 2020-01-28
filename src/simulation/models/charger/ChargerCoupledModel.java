@@ -25,6 +25,21 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.charger.UpdateCharger;
 
+/**
+ * The class <code>ChargerCoupledModel</code> implements the DEVS simulation
+ * coupled model for the hair dryer example.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class ChargerCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -75,19 +90,19 @@ public class ChargerCoupledModel extends CoupledModel {
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		atomicModelDescriptors.put(
-				ChargerUserModel.URI,
+				ChargerUpdaterModel.URI,
 				AtomicModelDescriptor.create(
-						ChargerUserModel.class,
-						ChargerUserModel.URI,
+						ChargerUpdaterModel.class,
+						ChargerUpdaterModel.URI,
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
 		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(ChargerModel.URI) ;
-		submodels.add(ChargerUserModel.URI) ;
+		submodels.add(ChargerUpdaterModel.URI) ;
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		EventSource from1 = new EventSource(ChargerUserModel.URI, UpdateCharger.class) ;
+		EventSource from1 = new EventSource(ChargerUpdaterModel.URI, UpdateCharger.class) ;
 		EventSink[] to1 = new EventSink[] {new EventSink(ChargerModel.URI, UpdateCharger.class)} ;
 		connections.put(from1, to1) ;
 		coupledModelDescriptors.put(

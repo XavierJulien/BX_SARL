@@ -26,6 +26,21 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.heating.UpdaterHeating;
 
+/**
+ * The class <code>Heating CoupledModel</code> implements the DEVS simulation
+ * coupled model for the heating.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class HeatingCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -84,14 +99,14 @@ public class HeatingCoupledModel extends CoupledModel {
 						TimeUnit.SECONDS,
 						null,
 						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
-		atomicModelDescriptors.put(
+		/*atomicModelDescriptors.put(
 				HeatingUserModel.URI,
 				AtomicModelDescriptor.create(
 						HeatingUserModel.class,
 						HeatingUserModel.URI,
 						TimeUnit.SECONDS,
 						null,
-						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;
+						SimulationEngineCreationMode.ATOMIC_ENGINE)) ;*/
 		atomicModelDescriptors.put(
 				HeatingUpdaterModel.URI,
 				AtomicModelDescriptor.create(
@@ -103,12 +118,12 @@ public class HeatingCoupledModel extends CoupledModel {
 		Map<String,CoupledModelDescriptor> coupledModelDescriptors = new HashMap<String,CoupledModelDescriptor>() ;
 		Set<String> submodels = new HashSet<String>() ;
 		submodels.add(HeatingModel.URI) ;
-		submodels.add(HeatingUserModel.URI) ;
+		//submodels.add(HeatingUserModel.URI) ;
 		submodels.add(HeatingUpdaterModel.URI) ;
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		EventSource from5 = new EventSource(HeatingUserModel.URI, UpdaterHeating.class) ;
-		EventSink[] to5 = new EventSink[] {new EventSink(HeatingModel.URI, UpdaterHeating.class)} ;
-		connections.put(from5, to5) ;
+		//EventSource from5 = new EventSource(HeatingUserModel.URI, UpdaterHeating.class) ;
+		//EventSink[] to5 = new EventSink[] {new EventSink(HeatingModel.URI, UpdaterHeating.class)} ;
+		//connections.put(from5, to5) ;
 		EventSource from6 = new EventSource(HeatingUpdaterModel.URI, UpdaterHeating.class) ;
 		EventSink[] to6 = new EventSink[] {new EventSink(HeatingModel.URI, UpdaterHeating.class)} ;
 		connections.put(from6, to6) ;

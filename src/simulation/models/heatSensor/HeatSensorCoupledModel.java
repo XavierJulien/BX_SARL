@@ -28,6 +28,21 @@ import simulation.events.heatSensor.UpdaterHeatSensor;
 import simulation.events.heatSensor.HeatSensorWindowOpen;
 import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 
+/**
+ * The class <code>HeatSensorCoupledModel</code> implements the DEVS simulation
+ * coupled model for the heat sensor.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class HeatSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables

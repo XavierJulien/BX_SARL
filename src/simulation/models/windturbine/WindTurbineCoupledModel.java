@@ -59,6 +59,21 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.windturbine.UpdaterWindTurbine;
 
+/**
+ * The class <code>WindTurbineCoupledModel</code> implements the DEVS simulation
+ * coupled model for the wind turbine.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class WindTurbineCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables

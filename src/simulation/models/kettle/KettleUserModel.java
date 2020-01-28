@@ -23,6 +23,26 @@ import simulation.events.kettle.UpdaterKettle;
 								 EmptyKettle.class,
 								 UpdaterKettle.class})
 
+/**
+ * The class <code>KettleUserModel</code> implements a simple user simulation
+ * model for the kettle.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p>
+ * The model is meant to send events controlling the use of the kettle:
+ * switching on and off, filling or emptying it.
+ * </p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class KettleUserModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -39,11 +59,31 @@ public class KettleUserModel extends AtomicES_Model {
 	// Constructors
 	// -------------------------------------------------------------------------
 
+	/**
+	 * create a kettle user model instance.
+	 * 
+	 * <p><strong>Contract</strong></p>
+	 * 
+	 * <pre>
+	 * pre	simulatedTimeUnit != null
+	 * pre	simulationEngine == null ||
+	 * 		    	simulationEngine instanceof HIOA_AtomicEngine
+	 * post	this.getURI() != null
+	 * post	uri != null implies this.getURI().equals(uri)
+	 * post	this.getSimulatedTimeUnit().equals(simulatedTimeUnit)
+	 * post	simulationEngine != null implies
+	 * 			this.getSimulationEngine().equals(simulationEngine)
+	 * </pre>
+	 *
+	 * @param uri					unique identifier of the model.
+	 * @param simulatedTimeUnit		time unit used for the simulation clock.
+	 * @param simulationEngine		simulation engine enacting the model.
+	 * @throws Exception   			<i>TODO</i>.
+	 */
 	public				KettleUserModel(
 		String uri,
 		TimeUnit simulatedTimeUnit,
-		SimulatorI simulationEngine
-		) throws Exception {
+		SimulatorI simulationEngine) throws Exception {
 		super(uri, simulatedTimeUnit, simulationEngine) ;
 		this.rg = new RandomDataGenerator() ;
 		this.setLogger(new StandardLogger()) ;
@@ -53,6 +93,9 @@ public class KettleUserModel extends AtomicES_Model {
 	// Methods
 	// -------------------------------------------------------------------------
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#initialiseState(fr.sorbonne_u.devs_simulation.models.time.Time)
+	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
 		this.meanTimeBetweenTempUpdate = 7.0;
@@ -71,12 +114,18 @@ public class KettleUserModel extends AtomicES_Model {
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance) ;
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model#timeAdvance()
+	 */
 	@Override
 	public Duration timeAdvance() {
 		Duration d = super.timeAdvance() ;
 		return d ;
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.es.models.AtomicES_Model#output()
+	 */
 	@Override
 	public Vector<EventI> output() {
 		assert	!this.eventList.isEmpty() ;
@@ -86,6 +135,9 @@ public class KettleUserModel extends AtomicES_Model {
 		return ret ;
 	}
 
+	/**
+	 * @see fr.sorbonne_u.devs_simulation.models.AtomicModel#userDefinedInternalTransition(fr.sorbonne_u.devs_simulation.models.time.Duration)
+	 */
 	@Override
 	public void	userDefinedInternalTransition(Duration elapsedTime){
 		Duration d ;

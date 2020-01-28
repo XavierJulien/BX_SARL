@@ -30,6 +30,21 @@ import simulation.events.kettle.UpdaterKettle;
 import simulation.events.kettle.SwitchOff;
 import simulation.events.kettle.SwitchOn;
 
+/**
+ * The class <code>KettleCoupledModel</code> implements the DEVS simulation
+ * coupled model for the kettle.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class KettleCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables

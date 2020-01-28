@@ -25,6 +25,21 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.battery.UpdateBattery;
 
+/**
+ * The class <code>BatteryCoupledModel</code> implements the DEVS simulation
+ * coupled model for the battery.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class BatteryCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables

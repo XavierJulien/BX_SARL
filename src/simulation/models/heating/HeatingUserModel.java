@@ -1,4 +1,4 @@
-package simulation.models.heating;
+/*package simulation.models.heating;
 
 import java.util.Vector;
 import java.util.concurrent.TimeUnit;
@@ -88,4 +88,4 @@ public class HeatingUserModel extends AtomicES_Model {
 			this.scheduleEvent(new UpdaterHeating(t)) ;
 		}
 	}
-}
+}*/

@@ -26,6 +26,21 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.windSensor.UpdaterWindSensor;
 
+/**
+ * The class <code>WindSensorCoupledModel</code> implements the DEVS simulation
+ * coupled model for the wind sensor.
+ *
+ * <p><strong>Description</strong></p>
+ * 
+ * <p><strong>Invariant</strong></p>
+ * 
+ * <pre>
+ * invariant		true
+ * </pre>
+ * 
+ * 
+ * @author	Julien Xavier & Alexis Belanger</a>
+ */
 public class WindSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
 	// Constants and variables
