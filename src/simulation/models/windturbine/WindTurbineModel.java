@@ -19,9 +19,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.windturbine.WindTurbineUpdater;
+import simulation.events.windturbine.UpdaterWindTurbine;
 
-@ModelExternalEvents(imported = {WindTurbineUpdater.class})
+@ModelExternalEvents(imported = {UpdaterWindTurbine.class})
 
 public class WindTurbineModel extends AtomicHIOAwithEquations {
 

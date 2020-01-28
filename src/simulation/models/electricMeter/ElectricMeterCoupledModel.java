@@ -57,7 +57,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import simulation.events.electricMeter.ElectricMeterUpdater;
+import simulation.events.electricMeter.UpdaterElectricMeter;
 
 public class ElectricMeterCoupledModel extends	CoupledModel {
 	// -------------------------------------------------------------------------
@@ -127,8 +127,8 @@ public class ElectricMeterCoupledModel extends	CoupledModel {
 		submodels.add(ElectricMeterModel.URI) ;
 		submodels.add(ElectricMeterUpdaterModel.URI) ;
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		EventSource from1 =	new EventSource(ElectricMeterUpdaterModel.URI, ElectricMeterUpdater.class) ;
-		EventSink[] to1 = new EventSink[] {new EventSink(ElectricMeterModel.URI, ElectricMeterUpdater.class)} ;
+		EventSource from1 =	new EventSource(ElectricMeterUpdaterModel.URI, UpdaterElectricMeter.class) ;
+		EventSink[] to1 = new EventSink[] {new EventSink(ElectricMeterModel.URI, UpdaterElectricMeter.class)} ;
 		connections.put(from1, to1) ;
 		coupledModelDescriptors.put(
 					ElectricMeterCoupledModel.URI,

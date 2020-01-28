@@ -18,11 +18,11 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.heatSensor.HeatSensorUpdater;
+import simulation.events.heatSensor.UpdaterHeatSensor;
 import simulation.events.heatSensor.HeatSensorWindowOpen;
 import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 
-@ModelExternalEvents(imported = {HeatSensorUpdater.class,
+@ModelExternalEvents(imported = {UpdaterHeatSensor.class,
 								HeatSensorWindowOpen.class,
 								HeatSensorWindowStillOpen.class})
 

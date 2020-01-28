@@ -26,7 +26,7 @@ import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.FillKettle;
-import simulation.events.kettle.KettleUpdater;
+import simulation.events.kettle.UpdaterKettle;
 import simulation.events.kettle.SwitchOff;
 import simulation.events.kettle.SwitchOn;
 
@@ -119,11 +119,11 @@ public class KettleCoupledModel extends CoupledModel {
 		EventSource from4 =	new EventSource(KettleUserModel.URI, FillKettle.class) ;
 		EventSink[] to4 = new EventSink[] {	new EventSink(KettleModel.URI, FillKettle.class)} ;
 		connections.put(from4, to4) ;
-		EventSource from5 =	new EventSource(KettleUserModel.URI, KettleUpdater.class) ;
-		EventSink[] to5 = new EventSink[] {new EventSink(KettleModel.URI, KettleUpdater.class)} ;
+		EventSource from5 =	new EventSource(KettleUserModel.URI, UpdaterKettle.class) ;
+		EventSink[] to5 = new EventSink[] {new EventSink(KettleModel.URI, UpdaterKettle.class)} ;
 		connections.put(from5, to5) ;
-		EventSource from6 =	new EventSource(KettleUpdaterModel.URI, KettleUpdater.class) ;
-		EventSink[] to6 = new EventSink[] {new EventSink(KettleModel.URI, KettleUpdater.class)} ;
+		EventSource from6 =	new EventSource(KettleUpdaterModel.URI, UpdaterKettle.class) ;
+		EventSink[] to6 = new EventSink[] {new EventSink(KettleModel.URI, UpdaterKettle.class)} ;
 		connections.put(from6, to6) ;
 		coupledModelDescriptors.put(
 					KettleCoupledModel.URI,

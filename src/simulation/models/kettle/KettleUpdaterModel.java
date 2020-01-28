@@ -12,9 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.kettle.KettleUpdater;
+import simulation.events.kettle.UpdaterKettle;
 
-@ModelExternalEvents(exported = {KettleUpdater.class})
+@ModelExternalEvents(exported = {UpdaterKettle.class})
 
 public class KettleUpdaterModel extends AtomicES_Model{
 	private static final long serialVersionUID = 1L ;
@@ -44,7 +44,7 @@ public class KettleUpdaterModel extends AtomicES_Model{
 					this.rg.nextBeta(1.75, 1.75),
 					this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new KettleUpdater(t)) ;
+		this.scheduleEvent(new UpdaterKettle(t)) ;
 		this.nextTimeAdvance = this.timeAdvance() ;
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance) ;
 	}
@@ -67,10 +67,10 @@ public class KettleUpdaterModel extends AtomicES_Model{
 	@Override
 	public void	userDefinedInternalTransition(Duration elapsedTime) {
 		Duration d ;
-		if (this.nextEvent.equals(KettleUpdater.class)) {
+		if (this.nextEvent.equals(UpdaterKettle.class)) {
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new KettleUpdater(t)) ;
+			this.scheduleEvent(new UpdaterKettle(t)) ;
 		}
 	}
 }

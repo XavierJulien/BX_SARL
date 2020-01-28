@@ -24,7 +24,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import simulation.events.heating.HeatingUpdater;
+import simulation.events.heating.UpdaterHeating;
 
 public class HeatingCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
@@ -106,11 +106,11 @@ public class HeatingCoupledModel extends CoupledModel {
 		submodels.add(HeatingUserModel.URI) ;
 		submodels.add(HeatingUpdaterModel.URI) ;
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		EventSource from5 = new EventSource(HeatingUserModel.URI, HeatingUpdater.class) ;
-		EventSink[] to5 = new EventSink[] {new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
+		EventSource from5 = new EventSource(HeatingUserModel.URI, UpdaterHeating.class) ;
+		EventSink[] to5 = new EventSink[] {new EventSink(HeatingModel.URI, UpdaterHeating.class)} ;
 		connections.put(from5, to5) ;
-		EventSource from6 = new EventSource(HeatingUpdaterModel.URI, HeatingUpdater.class) ;
-		EventSink[] to6 = new EventSink[] {new EventSink(HeatingModel.URI, HeatingUpdater.class)} ;
+		EventSource from6 = new EventSource(HeatingUpdaterModel.URI, UpdaterHeating.class) ;
+		EventSink[] to6 = new EventSink[] {new EventSink(HeatingModel.URI, UpdaterHeating.class)} ;
 		connections.put(from6, to6) ;
 		coupledModelDescriptors.put(
 				HeatingCoupledModel.URI,

@@ -12,9 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.heating.HeatingUpdater;
+import simulation.events.heating.UpdaterHeating;
 
-@ModelExternalEvents(exported = { HeatingUpdater.class})
+@ModelExternalEvents(exported = { UpdaterHeating.class})
 
 public class HeatingUpdaterModel extends AtomicES_Model {
 	
@@ -48,7 +48,7 @@ public class HeatingUpdaterModel extends AtomicES_Model {
 						this.rg.nextBeta(1.75, 1.75),
 						this.getSimulatedTimeUnit()) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new HeatingUpdater(t)) ;
+		this.scheduleEvent(new UpdaterHeating(t)) ;
 		this.nextTimeAdvance = this.timeAdvance() ;
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance) ;
 	}
@@ -71,10 +71,10 @@ public class HeatingUpdaterModel extends AtomicES_Model {
 	@Override
 	public void userDefinedInternalTransition(Duration elapsedTime)	{
 		Duration d ;
-		if (this.nextEvent.equals(HeatingUpdater.class)) {
+		if (this.nextEvent.equals(UpdaterHeating.class)) {
 			d = new Duration(this.meanTimeBetweenTempUpdate, this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new HeatingUpdater(t)) ;
+			this.scheduleEvent(new UpdaterHeating(t)) ;
 		}
 	}
 }

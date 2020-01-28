@@ -19,9 +19,9 @@ import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
 import fr.sorbonne_u.utils.PlotterDescription;
 import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
-import simulation.events.electricMeter.ElectricMeterUpdater;
+import simulation.events.electricMeter.UpdaterElectricMeter;
 
-@ModelExternalEvents(imported = {ElectricMeterUpdater.class})
+@ModelExternalEvents(imported = {UpdaterElectricMeter.class})
 public class ElectricMeterModel extends	AtomicHIOAwithEquations {
 	// -------------------------------------------------------------------------
 	// Constants and variables

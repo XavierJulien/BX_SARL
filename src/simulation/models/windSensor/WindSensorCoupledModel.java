@@ -24,7 +24,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import simulation.events.windSensor.WindSensorUpdater;
+import simulation.events.windSensor.UpdaterWindSensor;
 
 public class WindSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------
@@ -94,8 +94,8 @@ public class WindSensorCoupledModel extends CoupledModel {
 		submodels.add(WindSensorModel.URI) ;
 		submodels.add(WindSensorUpdaterModel.URI) ;
 		Map<EventSource,EventSink[]> connections = new HashMap<EventSource,EventSink[]>() ;
-		EventSource from2 = new EventSource(WindSensorUpdaterModel.URI, WindSensorUpdater.class) ;
-		EventSink[] to2 = new EventSink[] {new EventSink(WindSensorModel.URI, WindSensorUpdater.class)} ;
+		EventSource from2 = new EventSource(WindSensorUpdaterModel.URI, UpdaterWindSensor.class) ;
+		EventSink[] to2 = new EventSink[] {new EventSink(WindSensorModel.URI, UpdaterWindSensor.class)} ;
 		connections.put(from2, to2) ;
 		coupledModelDescriptors.put(
 					WindSensorCoupledModel.URI,

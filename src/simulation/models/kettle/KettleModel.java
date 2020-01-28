@@ -20,7 +20,7 @@ import fr.sorbonne_u.utils.XYPlotter;
 import simulation.events.AbstractEvent;
 import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.FillKettle;
-import simulation.events.kettle.KettleUpdater;
+import simulation.events.kettle.UpdaterKettle;
 import simulation.events.kettle.SwitchOff;
 import simulation.events.kettle.SwitchOn;
 
@@ -28,7 +28,7 @@ import simulation.events.kettle.SwitchOn;
 								 SwitchOff.class,
 								 FillKettle.class,
 								 EmptyKettle.class,
-								 KettleUpdater.class})
+								 UpdaterKettle.class})
 
 public class KettleModel extends AtomicHIOAwithEquations {
 

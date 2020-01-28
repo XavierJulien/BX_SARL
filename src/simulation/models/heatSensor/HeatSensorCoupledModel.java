@@ -24,7 +24,7 @@ import fr.sorbonne_u.devs_simulation.models.events.EventSink;
 import fr.sorbonne_u.devs_simulation.models.events.EventSource;
 import fr.sorbonne_u.devs_simulation.models.events.ReexportedEvent;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
-import simulation.events.heatSensor.HeatSensorUpdater;
+import simulation.events.heatSensor.UpdaterHeatSensor;
 import simulation.events.heatSensor.HeatSensorWindowOpen;
 import simulation.events.heatSensor.HeatSensorWindowStillOpen;
 
@@ -98,8 +98,8 @@ public class HeatSensorCoupledModel extends CoupledModel {
 		EventSource from1 = new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowOpen.class) ;
 		EventSink[] to1 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorWindowOpen.class)} ;
 		connections.put(from1, to1) ;
-		EventSource from2 = new EventSource(HeatSensorUpdaterModel.URI, HeatSensorUpdater.class) ;
-		EventSink[] to2 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorUpdater.class)} ;
+		EventSource from2 = new EventSource(HeatSensorUpdaterModel.URI, UpdaterHeatSensor.class) ;
+		EventSink[] to2 = new EventSink[] {new EventSink(HeatSensorModel.URI, UpdaterHeatSensor.class)} ;
 		connections.put(from2, to2) ;
 		EventSource from3 =	new EventSource(HeatSensorUpdaterModel.URI, HeatSensorWindowStillOpen.class) ;
 		EventSink[] to3 = new EventSink[] {new EventSink(HeatSensorModel.URI, HeatSensorWindowStillOpen.class)} ;

@@ -12,9 +12,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.windSensor.WindSensorUpdater;
+import simulation.events.windSensor.UpdaterWindSensor;
 
-@ModelExternalEvents(exported = { WindSensorUpdater.class})
+@ModelExternalEvents(exported = { UpdaterWindSensor.class})
 
 public class WindSensorUpdaterModel extends AtomicES_Model
 {
@@ -42,7 +42,7 @@ public class WindSensorUpdaterModel extends AtomicES_Model
 		Duration d1 = new Duration(this.meanTimeBetweenWindUpdate,this.getSimulatedTimeUnit());
 		Duration d2 = new Duration(this.meanTimeBetweenWindUpdate,this.getSimulatedTimeUnit());
 		Time t = this.getCurrentStateTime().add(d1).add(d2);
-		this.scheduleEvent(new WindSensorUpdater(t));
+		this.scheduleEvent(new UpdaterWindSensor(t));
 		this.nextTimeAdvance = this.timeAdvance();
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance);
 	}
@@ -65,10 +65,10 @@ public class WindSensorUpdaterModel extends AtomicES_Model
 	@Override
 	public void	userDefinedInternalTransition(Duration elapsedTime){
 		Duration d;
-		if (this.nextEvent.equals(WindSensorUpdater.class)) {
+		if (this.nextEvent.equals(UpdaterWindSensor.class)) {
 			d = new Duration(1, this.getSimulatedTimeUnit());
 			Time t = this.getCurrentStateTime().add(d);
-			this.scheduleEvent(new WindSensorUpdater(t));
+			this.scheduleEvent(new UpdaterWindSensor(t));
 		}
 	}
 }

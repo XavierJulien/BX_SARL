@@ -1,15 +1,13 @@
-package simulation.events.kettle;
-
-import java.util.Random;
+package simulation.events.heating;
 
 import fr.sorbonne_u.devs_simulation.models.AtomicModel;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import simulation.events.AbstractEvent;
-import simulation.models.kettle.KettleModel;
+import simulation.models.heating.HeatingModel;
 
 /**
- * The class <code>FillKettle</code> defines the event of the kettle being
- * filled.
+ * The class <code>UpdaterHeating</code> defines the event of the heating being
+ * updated.
  *
  * <p><strong>Description</strong></p>
  * 
@@ -22,24 +20,23 @@ import simulation.models.kettle.KettleModel;
  * 
  * @author	Julien Xavier & Alexis Belanger</a>
  */
-public class FillKettle extends AbstractEvent {
+public class UpdaterHeating extends AbstractEvent {
 	
 	private static final long serialVersionUID = 1L;
 
-	public				FillKettle(Time timeOfOccurrence){
+	public UpdaterHeating(Time timeOfOccurrence){
 		super(timeOfOccurrence, null) ;
 	}
-
+	
+	
 	/**
 	 * @see fr.sorbonne_u.devs_simulation.models.events.Event#executeOn(fr.sorbonne_u.devs_simulation.models.AtomicModel)
 	 */
 	@Override
-	public void				executeOn(AtomicModel model){
-		assert	model instanceof KettleModel ;
-		if(new Random().nextBoolean()) {
-			((KettleModel)model).updateContent(KettleModel.Content.FULL);			
-		}else {
-			((KettleModel)model).updateContent(KettleModel.Content.HALF);
-		}
+	public void executeOn(AtomicModel model){
+		assert	model instanceof HeatingModel ;
+
+		((HeatingModel)model).updatePower();
+		
 	}
 }

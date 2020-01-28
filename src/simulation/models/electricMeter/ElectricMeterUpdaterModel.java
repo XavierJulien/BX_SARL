@@ -9,9 +9,9 @@ import fr.sorbonne_u.devs_simulation.models.time.Duration;
 import fr.sorbonne_u.devs_simulation.models.time.Time;
 import fr.sorbonne_u.devs_simulation.simulators.interfaces.SimulatorI;
 import fr.sorbonne_u.devs_simulation.utils.StandardLogger;
-import simulation.events.electricMeter.ElectricMeterUpdater;
+import simulation.events.electricMeter.UpdaterElectricMeter;
 
-@ModelExternalEvents(exported = {ElectricMeterUpdater.class})
+@ModelExternalEvents(exported = {UpdaterElectricMeter.class})
 public class ElectricMeterUpdaterModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
 	// Constants and variables
@@ -50,7 +50,7 @@ public class ElectricMeterUpdaterModel extends AtomicES_Model {
 		Duration d2 =
 				new Duration(1, TimeUnit.SECONDS) ;
 		Time t = this.getCurrentStateTime().add(d1).add(d2) ;
-		this.scheduleEvent(new ElectricMeterUpdater(t)) ;
+		this.scheduleEvent(new UpdaterElectricMeter(t)) ;
 		this.nextTimeAdvance = this.timeAdvance() ;
 		this.timeOfNextEvent = this.getCurrentStateTime().add(this.nextTimeAdvance) ;
 	}
@@ -73,11 +73,11 @@ public class ElectricMeterUpdaterModel extends AtomicES_Model {
 	@Override
 	public void	userDefinedInternalTransition(Duration elapsedTime){	
 		Duration d ;
-		if (this.nextEvent.equals(ElectricMeterUpdater.class)) {
+		if (this.nextEvent.equals(UpdaterElectricMeter.class)) {
 			d = new Duration(1,
 							 this.getSimulatedTimeUnit()) ;
 			Time t = this.getCurrentStateTime().add(d) ;
-			this.scheduleEvent(new ElectricMeterUpdater(t)) ;
+			this.scheduleEvent(new UpdaterElectricMeter(t)) ;
 		}
 	}
 }

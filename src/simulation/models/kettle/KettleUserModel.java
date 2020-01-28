@@ -15,13 +15,13 @@ import simulation.events.kettle.FillKettle;
 import simulation.events.kettle.EmptyKettle;
 import simulation.events.kettle.SwitchOff;
 import simulation.events.kettle.SwitchOn;
-import simulation.events.kettle.KettleUpdater;
+import simulation.events.kettle.UpdaterKettle;
 
 @ModelExternalEvents(exported = {SwitchOn.class,
 								 SwitchOff.class,
 								 FillKettle.class,
 								 EmptyKettle.class,
-								 KettleUpdater.class})
+								 UpdaterKettle.class})
 
 public class KettleUserModel extends AtomicES_Model {
 	// -------------------------------------------------------------------------
@@ -97,10 +97,10 @@ public class KettleUserModel extends AtomicES_Model {
 			this.scheduleEvent(new EmptyKettle(this.getCurrentStateTime().add(d))) ;
 		} else if (this.nextEvent.equals(SwitchOn.class)) {
 			d =	new Duration(2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d)));
-		} else if (this.nextEvent.equals(KettleUpdater.class)) {
+			this.scheduleEvent(new UpdaterKettle(this.getCurrentStateTime().add(d)));
+		} else if (this.nextEvent.equals(UpdaterKettle.class)) {
 			d =	new Duration(2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
-			this.scheduleEvent(new KettleUpdater(this.getCurrentStateTime().add(d))) ;
+			this.scheduleEvent(new UpdaterKettle(this.getCurrentStateTime().add(d))) ;
 		}else if(this.nextEvent.equals(EmptyKettle.class)) {
 			d =	new Duration(this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
