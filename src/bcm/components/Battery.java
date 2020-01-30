@@ -20,6 +20,12 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.battery.BatteryCoupledModel;
 import simulation.simulatorplugins.BatterySimulatorPlugin;
 
+
+/**
+ * This class represents the battery of the house, the battery can be turned on and off by the controller, charged by the charger and provide energy to the house
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {BatteryI.class, BatteryChargerI.class})
 @OfferedInterfaces(offered = {BatteryI.class, BatteryChargerI.class})
 public class Battery extends		AbstractCyPhyComponent implements	EmbeddingComponentStateAccessI{
@@ -45,6 +51,26 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	/**
+	 * Constructor of the Battery Component 
+	 * @param uri the battery URI
+	 * @param batteryOutboundPortURI Port for the battery -&gt controller connection
+	 * @param batteryInboundPortURI Port for the battery &lt- controller connection
+	 * @param batteryChargerInboundPortURI Port for the battery -&gt charger connection
+	 * @param maxCharge The highest quantity of energy the battery can contain
+	 * @param production The battery energy production
+	 * @param batteryRef The ref of the Battery Model
+	 * @throws Exception
+	 * <pre>
+	 * pre uri != null
+	 * pre batteryOutboundPortURI != null
+	 * pre batteryInboundPortURI != null
+	 * pre batteryChargerInboundPortURI != null
+	 * pre maxCharger &gt 0
+	 * pre production &gt 0
+	 * pre  batteryRef != null
+	 * </pre>
+	 */
 	protected Battery(String uri,
 					   String batteryOutboundPortURI,
 					   String batteryInboundPortURI,
@@ -98,8 +124,6 @@ public class Battery extends		AbstractCyPhyComponent implements	EmbeddingCompone
 		//----------------Modelisation-------------
 		
 		this.initialise();
-		
-		
 		
 	}
 	

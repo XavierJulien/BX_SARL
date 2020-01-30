@@ -20,6 +20,12 @@ import simulation.models.windSensor.WindSensorCoupledModel;
 import simulation.models.windSensor.WindSensorModel;
 import simulation.simulatorplugins.WindSensorSimulatorPlugin;
 
+
+/**
+ * this class represents the wind sensor of the house, it can inform the wind turbine of the wind speed
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {WindSensorI.class})
 @OfferedInterfaces(offered = {WindSensorI.class})
 public class WindSensor extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI{
@@ -42,6 +48,21 @@ public class WindSensor extends AbstractCyPhyComponent implements EmbeddingCompo
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	/**
+	 * the wind sensor component constructor
+	 * @param uri the wind sensor uri
+	 * @param windSensorInboundPortURI Port for the wind sensor &lt- controller connection
+	 * @param windSensorOutboundPortURI Port for the wind sensor -&gt controller connection
+	 * @param windSensorRef the ref of the wind sensor model
+	 * @throws Exception$
+	 * 
+	 * <pre>
+     * pre uri != null
+     * pre windSensorInboundPortURI != null
+     * pre windSensorOutboundPortURI != null
+     * pre windSensorRef != null
+	 * </pre>
+	 */
 	protected WindSensor(String uri, 
 						 String windSensorInboundPortURI, 
 						 String windSensorOutboundPortURI,

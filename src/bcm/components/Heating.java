@@ -21,6 +21,12 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.heating.HeatingCoupledModel;
 import simulation.simulatorplugins.HeatingSimulatorPlugin;
 
+
+/**
+ * This class represents the heating of the house, it can be turned on/off, it has a modular power (and so a modular consumption), and inform the temperature sensor of the produced heat
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {HeatingI.class, HeatingTemperatureSensorI.class})
 @OfferedInterfaces(offered = {HeatingI.class, HeatingTemperatureSensorI.class})
 public class Heating 
@@ -53,6 +59,31 @@ implements	EmbeddingComponentStateAccessI{
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	/**
+	 * the heating component constructor
+	 * @param uri the heating uri
+	 * @param heatingOutboundPortURI Port for the heating -&gt controller connection
+	 * @param heatingInboundPortURI Port for the heating &lt- controller connection
+	 * @param heatingToHeatSensorInboundPortURI Port for the heating &lt- heat sensor connection
+	 * @param heatingElectricMeterOutboundPortURI Port for the heating -&gt electricmeter connection
+	 * @param heatingElectricMeterInboundPortURI Port for the heating &lt- electricMeter connection
+	 * @param maxPower the maximum heat the heating can produce
+	 * @param consumption the heating consumption
+	 * @param heatingRef the ref of the heating model
+	 * @throws Exception
+	 * 
+	 * <pre>
+	 * pre uri != null
+     * pre heatingOutboundPortURI != null
+     * pre heatingInboundPortURI != null
+     * pre heatingToHeatSensorInboundPortURI != null
+     * pre heatingElectricMeterInboundPortURI != null
+     * pre heatingElectricMeterOutboundPortURI != null
+     * pre maxPower > 0;
+     * pre consumption > 0;
+     * pre heatingRef != null
+	 * </pre>
+	 */
 	protected Heating(String uri,
 						String heatingOutboundPortURI,
 						String heatingInboundPortURI,
@@ -68,6 +99,8 @@ implements	EmbeddingComponentStateAccessI{
 		assert heatingOutboundPortURI != null;
 		assert heatingInboundPortURI != null;
 		assert heatingToHeatSensorInboundPortURI != null;
+		assert heatingElectricMeterInboundPortURI != null;
+		assert heatingElectricMeterOutboundPortURI != null;
 		assert maxPower > 0;
 		assert consumption > 0;
 		assert heatingRef != null;

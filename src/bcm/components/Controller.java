@@ -12,6 +12,12 @@ import fr.sorbonne_u.components.cvm.AbstractCVM;
 import fr.sorbonne_u.components.exceptions.ComponentShutdownException;
 import fr.sorbonne_u.components.exceptions.ComponentStartException;
 
+
+/**
+ * This class represents the controller of the house, this central component decides of what component can/have to start and stop to manage the global consumption
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {ControllerI.class})
 @OfferedInterfaces(offered = {ControllerI.class})
 public class Controller extends AbstractComponent {
@@ -69,6 +75,44 @@ public class Controller extends AbstractComponent {
 	//------------------------------------------------------------------------
 	//----------------------------CONSTRUCTOR---------------------------------
 	//------------------------------------------------------------------------
+	/**
+	 * the Controller constructor
+	 * @param uri the uri of the controller component
+	 * @param controllerWindTurbineOutboundPortURI Port for the controller -&gt wind turbine connection
+	 * @param controllerWindTurbineInboundPortURI Port for the controller &lt- wind turbine connection
+	 * @param controllerHeatingOutboundPortURI Port for the controller -&gt wind turbine connection
+	 * @param controllerHeatingInboundPortURI Port for the controller &lt- heating connection
+	 * @param controllerElectricMeterOutboundPortURI Port for the controller -&gt electric meter connection
+	 * @param controllerElectricMeterInboundPortURI Port for the controller &lt- electric meter connection
+	 * @param controllerChargerOutboundPortURI Port for the controller -&gt Charger connection
+	 * @param controllerChargerInboundPortURI Port for the controller &lt- charger connection
+	 * @param controllerBatteryOutboundPortURI Port for the controller -&gt Battery connection
+	 * @param controllerBatteryInboundPortURI Port for the controller &lt- battery connection
+	 * @param controllerWindSensorOutboundPortURI Port for the controller -&gt wind sensor connection
+	 * @param controllerHeatSensorOutboundPortURI Port for the controller -&gt heat sensor connection
+	 * @param controllerHeatSensorInboundPortURI Port for the controller &lt- heat sensor connection
+	 * @throws Exception
+	 * 
+	 * <pre>
+	 * pre uri != null
+	 * 
+	 * pre controllerWindTurbineInboundPortURI != null
+	 * pre controllerHeatingInboundPortURI != null
+	 * pre controllerElectricMeterInboundPortURI != null
+	 * pre controllerChargerInboundPortURI != null
+	 * pre controllerBatteryInboundPortURI != null
+	 * pre controllerHeatSensorInboundPortURI != null
+     * 
+     * pre controllerWindTurbineOutboundPortURI != null
+	 * pre controllerHeatingOutboundPortURI != null
+	 * pre controllerElectricMeterOutboundPortURI != null
+	 * pre controllerWindSensorOutboundPortURI != null
+	 * pre controllerHeatSensorOutboundPortURI != null
+  	 * pre controllerChargerOutboundPortURI != null
+ 	 * pre controllerBatteryOutboundPortURI != null
+ 	 * 
+	 * </pre>
+	 */
 	protected Controller(String uri,
 			String controllerWindTurbineOutboundPortURI,
 			String controllerWindTurbineInboundPortURI,

@@ -22,6 +22,11 @@ import simulation.models.heatSensor.HeatSensorCoupledModel;
 import simulation.models.heatSensor.HeatSensorModel;
 import simulation.simulatorplugins.HeatSensorSimulatorPlugin;
 
+/**
+ * this class represents the temperature sensore of the house, it can send the current temperature to the controller and receive temperature information from the heating
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 @OfferedInterfaces(offered = {TemperatureSensorI.class, TemperatureSensorHeatingI.class})
 public class TemperatureSensor 
@@ -44,7 +49,23 @@ implements	EmbeddingComponentStateAccessI
 	protected double temperature;
 
 
-
+	/**
+	 * the temperature sensor component constructor
+	 * @param uri the temperature sensor URI
+	 * @param temperatureSensorInboundPortURI Port for the temperature sensor &lt- controller connection
+	 * @param linkWithHeatingOutboundPortURI  Port for the temperature sensor -&gt heating connection
+	 * @param temperatureSensorOutboundPortURI Port for the temperature sensor -&gt controller connection
+	 * @param tempertureSensorRef the ref of the temperature sensor model
+	 * @throws Exception
+	 * 
+	 * <pre> 
+     * pre uri != null
+     * pre temperatureSensorInboundPortURI != null
+     * pre linkWithHeatingOutboundPortURI != null
+     * pre temperatureSensorOutboundPortURI != null
+     * pre tempertureSensorRef != null
+	 * </pre>
+	 */
 	protected TemperatureSensor(String uri,
 								String temperatureSensorInboundPortURI,
 								String linkWithHeatingOutboundPortURI,

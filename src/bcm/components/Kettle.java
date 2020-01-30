@@ -20,6 +20,12 @@ import simulation.models.kettle.KettleCoupledModel;
 import simulation.models.kettle.KettleModel;
 import simulation.simulatorplugins.KettleSimulatorPlugin;
 
+
+/**
+ * This class represents the kettle of the house. this component behaviour is managed by the model, the only thing the component does is to send its consumption to the electric meter
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {KettleElectricMeterI.class})
 @OfferedInterfaces(offered = {KettleElectricMeterI.class})
 public class Kettle 
@@ -46,6 +52,24 @@ implements EmbeddingComponentStateAccessI{
 	//------------------------------------------------------------------------
 	//----------------------------CONSTRUCTOR---------------------------------
 	//------------------------------------------------------------------------
+	/**
+	 * The kettle component constructor
+	 * @param uri the kettle URI
+	 * @param kettleElectricMeterOutboundPortURI Port for the ketlle -&gt electric meter connection
+	 * @param kettleElectricMeterInboundPortURI Port for the kettle &lt- Electric meter connection
+	 * @param consumption the kettle consumption
+	 * @param kettleRef the ref of the kettle modle
+	 * @throws Exception
+	 * 
+	 * <pre>
+	 * pre uri != null
+     * pre kettleElectricMeterInboundPortURI != null
+     * pre kettleElectricMeterOutboundPortURI != null
+     * pre consumption > 0;
+     * pre kettleRef != null
+	 * </pre>
+	 * 
+	 */
 	protected Kettle(String uri,
 						 String kettleElectricMeterOutboundPortURI,
 						 String kettleElectricMeterInboundPortURI,

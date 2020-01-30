@@ -20,6 +20,11 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.electricMeter.ElectricMeterCoupledModel;
 import simulation.simulatorplugins.ElectricMeterSimulatorPlugin;
 
+/**
+ * This class represents the Electric meter of the house, its job is too get the consumption of the different consumers, then send it to the controller
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {ElectricMeterI.class, ElectricMeterControllerI.class})
 @OfferedInterfaces(offered = {ElectricMeterI.class, ElectricMeterControllerI.class})
 public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI {
@@ -57,6 +62,33 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	/**
+	 * Electric meter component constructor
+	 * @param uri the component URI
+	 * @param electricMeterOutboundPortURI Port for the electric meter -&gt controller connection
+	 * @param electricMeterInboundPortURI Port for the electric meter &lt- controller connection
+	 * @param electricMeterHeatingOutboundPortURI Port for the electric meter -&gt heating connection
+	 * @param electricMeterHeatingInboundPortURI Port for the electric meter &lt- heating connection
+	 * @param electricMeterKettleOutboundPortURI Port for the electric meter -&gt kettle connection
+	 * @param electricMeterKettleInboundPortURI Port for the electric meter &lt- kettle connection
+	 * @param electricMeterChargerOutboundPortURI Port for the electric meter -&gt charger connection
+	 * @param electricMeterChargerInboundPortURI Port for the electric meter &lt- charger connection
+	 * @param EMRef the ref of the Electric meter simulation
+	 * @throws Exception
+	 * 
+	 * <pre>
+	 * pre uri != null
+ 	 * pre electricMeterOutboundPortURI != null
+  	 * pre electricMeterInboundPortURI != null
+	 * pre electricMeterHeatingOutboundPortURI != null
+	 * pre electricMeterHeatingInboundPortURI != null
+	 * pre electricMeterKettleOutboundPortURI != null
+	 * pre electricMeterKettleInboundPortURI != null
+	 * pre electricMeterChargerOutboundPortURI != null
+	 * pre electricMeterChargerInboundPortURI != null
+	 * pre EMRef != null
+	 * </pre>
+	 */
 	protected ElectricMeter(String uri,
 					   String electricMeterOutboundPortURI,
 					   String electricMeterInboundPortURI,
@@ -72,6 +104,12 @@ public class ElectricMeter extends AbstractCyPhyComponent implements EmbeddingCo
 		assert uri != null;
 		assert electricMeterOutboundPortURI != null;
 		assert electricMeterInboundPortURI != null;
+		assert electricMeterHeatingOutboundPortURI != null;
+		assert electricMeterHeatingInboundPortURI != null;
+		assert electricMeterKettleOutboundPortURI != null;
+		assert electricMeterKettleInboundPortURI != null;
+		assert electricMeterChargerOutboundPortURI != null;
+		assert electricMeterChargerInboundPortURI != null;
 		assert EMRef != null;
 
 		this.uri = uri;

@@ -21,6 +21,12 @@ import simulation.models.windturbine.WindTurbineModel;
 import simulation.models.windturbine.WindTurbineModel.State;
 import simulation.simulatorplugins.WindTurbineSimulatorPlugin;
 
+
+/**
+ * this class represents the wind turbine of the house, it can produce energy and send it to the controller, and can be stopped if the wind is too strong  
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {WindTurbineI.class})
 @OfferedInterfaces(offered = {WindTurbineI.class})
 public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComponentStateAccessI{
@@ -45,11 +51,28 @@ public class WindTurbine extends AbstractCyPhyComponent implements EmbeddingComp
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	/**
+	 * the Wind turbine component constructor
+	 * @param uri the wind turbine URI
+	 * @param windTurbineOutboundPortURI Port for the wind turbine -&gt controller connection
+	 * @param windTurbineSensorInboundPortURI Port for the wind turbine &lt- wind sensor connection
+	 * @param windTurbineInboundPortURI Port for the wind turbine &lt- controller connection
+	 * @param windTurbineRef the ref of the wind turbine model
+	 * @throws Exception
+	 * 
+	 * <pre>
+     * pre uri != null
+     * pre windTurbineOutboundPortURI != null
+     * pre windTurbineInboundPortURI != null
+     * pre windTurbineSensorInboundPortURI != null
+     * pre windTurbineRef != null
+	 * </pre>
+	 */
 	protected WindTurbine(String uri,
-			String windTurbineOutboundPortURI,
-			String windTurbineSensorInboundPortURI,
-					   String windTurbineInboundPortURI,
-					   String windTurbineRef) throws Exception{
+						  String windTurbineOutboundPortURI,
+					      String windTurbineSensorInboundPortURI,
+						  String windTurbineInboundPortURI,
+						  String windTurbineRef) throws Exception{
 		super(uri, 2, 2);
 
 		assert uri != null;

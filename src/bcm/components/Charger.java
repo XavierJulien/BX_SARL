@@ -22,6 +22,11 @@ import fr.sorbonne_u.devs_simulation.simulators.SimulationEngine;
 import simulation.models.charger.ChargerCoupledModel;
 import simulation.simulatorplugins.ChargerSimulatorPlugin;
 
+/**
+ * This class represent the charger of the house, it can be turned on and of by the controller to charge the battery component
+ * @author Julien Xavier et Alexis Belanger
+ *
+ */
 @RequiredInterfaces(required = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
 @OfferedInterfaces(offered = {ChargerI.class, ChargerElectricMeterI.class, ChargerBatteryI.class})
 public class Charger 
@@ -52,6 +57,28 @@ implements	EmbeddingComponentStateAccessI{
 //------------------------------------------------------------------------
 //----------------------------CONSTRUCTOR---------------------------------
 //------------------------------------------------------------------------
+	
+	/**
+	 * Constructor of the Charger Component
+	 * @param uri the cmponent URI
+	 * @param chargerOutboundPortURI Port for the charger -&gt controller connection
+	 * @param chargerInboundPortURI Port for the charger &lt- controller connection
+	 * @param chargerElectricMeterOutboundPortURI Port for the charger -&gt Electric Meter connection
+	 * @param chargerElectricMeterInboundPortURI Port for the charger &lt- Electric Meter connection
+	 * @param chargerBatteryOutboundPortURI Port for the charger -&gt battery connection
+	 * @param conso the consumption of the charger
+	 * @param chargerRef the ref of the charger model
+	 * @throws Exception
+	 * 
+	 * <pre>
+	 * pre uri != null;
+	 * pre chargerOutboundPortURI != null;
+	 * pre chargerInboundPortURI != null;
+	 * pre chargerBatteryOutboundPortURI != null
+	 * pre conso &gt 0;
+	 * pre chargerRef != null 
+	 * </pre>
+	 */
 	protected Charger(String uri,
 					   String chargerOutboundPortURI,
 					   String chargerInboundPortURI,
