@@ -34,7 +34,6 @@ public class SwitchOn extends AbstractEvent{
 	@Override
 	public void				executeOn(AtomicModel model){
 		assert	model instanceof KettleModel ;
-
 		((KettleModel)model).updateState(KettleModel.State.ON) ;
 	}
 }

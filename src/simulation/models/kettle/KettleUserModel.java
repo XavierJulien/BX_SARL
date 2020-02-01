@@ -154,7 +154,7 @@ public class KettleUserModel extends AtomicES_Model {
 			d =	new Duration(2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new UpdaterKettle(this.getCurrentStateTime().add(d))) ;
 		}else if(this.nextEvent.equals(EmptyKettle.class)) {
-			d =	new Duration(this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
+			d =	new Duration(this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75)*4,this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new SwitchOff(this.getCurrentStateTime().add(d))) ;
 			d =	new Duration(2.0 * this.meanTimeBetweenTempUpdate * this.rg.nextBeta(1.75, 1.75),this.getSimulatedTimeUnit()) ;
 			this.scheduleEvent(new FillKettle(this.getCurrentStateTime().add(d))) ;

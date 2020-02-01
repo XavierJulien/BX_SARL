@@ -305,10 +305,10 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	public void updateTemperature() {
 		if(currentState == State.ON) {
 			if(currentContent == Content.FULL) {
-				currentTemperature.v += 3.0;
+				currentTemperature.v += 5.0;
 			}
 			if(currentContent == Content.HALF) {
-				currentTemperature.v += 6.0;
+				currentTemperature.v += 10.0;
 			}
 		}
 		if(currentState == State.OFF) {

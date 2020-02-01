@@ -87,6 +87,7 @@ public class KettleUpdaterModel extends AtomicES_Model{
 	 */
 	@Override
 	public void	initialiseState(Time initialTime) {
+		super.initialiseState(initialTime) ;
 		this.meanTimeBetweenTempUpdate = 7.0;
 		Duration d1 = new Duration(this.meanTimeBetweenTempUpdate,this.getSimulatedTimeUnit()) ;
 		Duration d2 = new Duration(

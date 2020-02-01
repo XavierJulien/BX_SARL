@@ -33,7 +33,6 @@ public class UpdaterKettle extends AbstractEvent {
 	@Override
 	public void executeOn(AtomicModel model){
 		assert	model instanceof KettleModel ;
-
 		((KettleModel)model).updateTemperature() ;
 		((KettleModel)model).updateState();
 	}
