@@ -38,7 +38,7 @@ import simulation.events.battery.UpdateBattery;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class BatteryCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

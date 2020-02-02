@@ -300,7 +300,6 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void updateTemperature() {
 		if(currentState == State.ON) {
@@ -332,7 +331,6 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void	updateState() {
 		if(currentTemperature.v >= 100.0 && currentState == State.ON) {
@@ -352,11 +350,11 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void	updateState(State s){assert s!= null;this.currentState = s;}
 	/**
 	 * update the content of the kettle with a defined content.
+
 	 * 
 	 * <p><strong>Contract</strong></p>
 	 * 
@@ -365,7 +363,6 @@ public class KettleModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void	updateContent(Content c){assert c!= null;this.currentContent = c;}
 }

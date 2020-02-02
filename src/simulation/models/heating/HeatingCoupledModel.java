@@ -39,7 +39,7 @@ import simulation.events.heating.UpdaterHeating;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class HeatingCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

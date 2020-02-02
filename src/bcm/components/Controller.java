@@ -231,7 +231,7 @@ public class Controller extends AbstractComponent {
 	/**
 	 * THis method is called by an inbound port to transmit the wind turbine production to the controller
 	 * @param production the energy got from the windTurbine
-	 * @throws Exception
+	 * @throws Exception 
 	 */
 	public void getProduction(double production) throws Exception {
 		this.remainingEnergy += production;

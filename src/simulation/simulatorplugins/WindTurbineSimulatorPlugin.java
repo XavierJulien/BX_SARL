@@ -21,7 +21,7 @@ import simulation.models.windturbine.WindTurbineModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class WindTurbineSimulatorPlugin extends AtomicSimulatorPlugin {
 	

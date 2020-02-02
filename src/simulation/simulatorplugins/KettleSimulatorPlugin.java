@@ -21,7 +21,7 @@ import simulation.models.kettle.KettleModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class KettleSimulatorPlugin extends AtomicSimulatorPlugin {
 	

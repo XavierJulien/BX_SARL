@@ -21,7 +21,7 @@ import simulation.models.windSensor.WindSensorModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class WindSensorSimulatorPlugin extends AtomicSimulatorPlugin {
 	

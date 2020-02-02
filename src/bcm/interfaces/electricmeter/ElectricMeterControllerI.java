@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.DataOfferedI;
 import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 /**
- * This class defines the interface ElectricMeterControllerI used for the Electric Meter -> Controller communication
+ * This class defines the interface ElectricMeterControllerI used for the Electric Meter to Controller communication
  * @author Julien Xavier et Alexis Belanger
  *
  */

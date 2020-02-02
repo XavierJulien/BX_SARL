@@ -18,7 +18,7 @@ import simulation.models.heating.HeatingModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class UpdaterHeating extends AbstractEvent {
 	

@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.DataOfferedI;
 import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 /**
- * This class defines the interface TemperatureSensorHetingI used in the Temperature Sensor -> Heating communication
+ * This class defines the interface TemperatureSensorHetingI used in the Temperature Sensor to Heating communication
  * @author Julien Xavier et Alexis Belanger
  *
  */

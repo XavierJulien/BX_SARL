@@ -5,7 +5,7 @@ import fr.sorbonne_u.components.interfaces.DataRequiredI;
 
 
 /**
- * this class defines the interface HeatingElectricMeterI used in the Heating -> electricMeter communication
+ * this class defines the interface HeatingElectricMeterI used in the Heating to electricMeter communication
  * @author Julien Xavier et Alexis Belanger
  *
  */

@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * This class defines the interface TemperatureSensorI used in the Temperature Sensor -> Controller Communication
+ * This class defines the interface TemperatureSensorI used in the Temperature Sensor to Controller Communication
  * @author Julien Xavier et Alexis Belanger
  *
  */

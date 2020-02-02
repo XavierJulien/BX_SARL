@@ -43,7 +43,7 @@ import simulation.events.kettle.SwitchOn;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class KettleCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

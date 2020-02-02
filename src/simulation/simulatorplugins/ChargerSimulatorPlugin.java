@@ -21,7 +21,7 @@ import simulation.models.charger.ChargerModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class ChargerSimulatorPlugin extends	AtomicSimulatorPlugin {
 	

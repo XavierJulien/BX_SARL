@@ -229,7 +229,6 @@ public class WindTurbineModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void updateProduction() {	
 		try {

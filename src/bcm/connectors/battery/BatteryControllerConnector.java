@@ -4,8 +4,8 @@ import bcm.interfaces.battery.BatteryI;
 import bcm.interfaces.controller.ControllerI;
 import fr.sorbonne_u.components.connectors.AbstractConnector;
 /**
- * This class is used to link the in/out ports used in the Battery - controler connection 
- * @author Julien Xavier & Alexis Belanger
+ * This class is used to link the in/out ports used in the Battery to controler connection 
+ * @author Julien Xavier et Alexis Belanger
  *
  */
 public class BatteryControllerConnector extends AbstractConnector implements BatteryI {

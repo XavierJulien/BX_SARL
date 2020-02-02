@@ -258,7 +258,6 @@ public class ChargerModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void.
 	 */
 	public void update() { //se demerder pour envoyer un event
 		try {

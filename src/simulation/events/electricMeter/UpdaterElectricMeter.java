@@ -18,7 +18,7 @@ import simulation.models.electricMeter.ElectricMeterModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class UpdaterElectricMeter extends AbstractEvent {
 	

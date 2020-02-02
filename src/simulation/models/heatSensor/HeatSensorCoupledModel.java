@@ -41,7 +41,7 @@ import simulation.events.heatSensor.HeatSensorWindowStillOpen;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class HeatSensorCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

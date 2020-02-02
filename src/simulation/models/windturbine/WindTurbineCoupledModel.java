@@ -72,7 +72,7 @@ import simulation.events.windturbine.UpdaterWindTurbine;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class WindTurbineCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

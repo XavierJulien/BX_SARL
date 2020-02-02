@@ -38,7 +38,7 @@ import simulation.events.charger.UpdateCharger;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class ChargerCoupledModel extends CoupledModel {
 	// -------------------------------------------------------------------------

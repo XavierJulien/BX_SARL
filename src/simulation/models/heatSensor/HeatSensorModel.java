@@ -197,7 +197,6 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void updateTemperature() {
 		try {
@@ -218,7 +217,6 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void openWindow() {this.currentTemperature.v -= 5;}
 	
@@ -232,7 +230,6 @@ public class HeatSensorModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void keepTemperature() {this.currentTemperature.v -=0.5;}
 }

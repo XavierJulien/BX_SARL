@@ -18,7 +18,7 @@ import simulation.models.heatSensor.HeatSensorModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class UpdaterHeatSensor extends AbstractEvent {
 	

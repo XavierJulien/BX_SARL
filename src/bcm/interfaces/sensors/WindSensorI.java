@@ -4,7 +4,7 @@ import fr.sorbonne_u.components.interfaces.OfferedI;
 import fr.sorbonne_u.components.interfaces.RequiredI;
 
 /**
- * This class defines the interface WindSensorI used in the Wind sensor -> wind turbine communication
+ * This class defines the interface WindSensorI used in the Wind sensor to wind turbine communication
  * @author Julien Xavier et Alexis Belanger
  *
  */

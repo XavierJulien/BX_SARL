@@ -191,7 +191,6 @@ public class WindSensorModel extends AtomicHIOAwithEquations {
 	 * post	true			// no postcondition
 	 * </pre>
 	 *
-	 * @return	void
 	 */
 	public void	updateWind() {
 		currentWind.v =(((Math.sin(xValue+8)+1.0/10*Math.cos((xValue+2)*5)+ Math.cos((xValue*7)/2.0))*3)+6);

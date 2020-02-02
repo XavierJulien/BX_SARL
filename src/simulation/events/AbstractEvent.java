@@ -18,7 +18,7 @@ import fr.sorbonne_u.devs_simulation.models.time.Time;
 * </pre>
 * 
 * 
-* @author	Julien Xavier & Alexis Belanger</a>
+* @author	Julien Xavier  Alexis Belanger
 */
 public class AbstractEvent extends ES_Event{
 

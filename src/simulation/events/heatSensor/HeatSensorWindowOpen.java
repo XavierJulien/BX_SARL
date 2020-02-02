@@ -6,7 +6,7 @@ import simulation.events.AbstractEvent;
 import simulation.models.heatSensor.HeatSensorModel;
 
 /**
- * The class <codeHeatSensorWindowOpen</code> defines the event of the window being
+ * The class <code>HeatSensorWindowOpen</code> defines the event of the window being
  * open.
  *
  * <p><strong>Description</strong></p>
@@ -18,7 +18,7 @@ import simulation.models.heatSensor.HeatSensorModel;
  * </pre>
  * 
  * 
- * @author	Julien Xavier & Alexis Belanger</a>
+ * @author	Julien Xavier et Alexis Belanger
  */
 public class HeatSensorWindowOpen extends AbstractEvent {
 	
